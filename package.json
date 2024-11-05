@@ -1,0 +1,22 @@
+{
+  "name": "company-case",
+  "version": "1.0.0",
+  "description": "OLA for the Company Case project",
+  "main": "index.js",
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "start:client": "npm run dev --workspace=client",
+    "start:server": "npm run start:dev --workspace=server",
+    "start": "concurrently \"npm run start:client\" \"npm run start:server\""
+  },
+  "keywords": [],
+  "author": "Alessia Amore, Andrea Di Claudio, Nikolett Dékány",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
