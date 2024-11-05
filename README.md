@@ -1,3 +1,2 @@
 # DAOS Project
-
-Trying out staff
+### By Alessia Amore, Andrea Di Claudio, Nikolett Dékány
