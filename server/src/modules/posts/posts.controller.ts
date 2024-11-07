@@ -1,7 +1,18 @@
-import { Controller, Get, Post, Patch, Delete, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Body,
+  Post,
+  Patch,
+  Delete,
+  Param,
+} from '@nestjs/common';
+import { PostsService } from './posts.service';
+import { CreatePostDto } from './dto/create-post.dto';
 
 @Controller('posts')
 export class PostsController {
+  constructor(private readonly postsService: PostsService) {}
   @Get()
   findAll() {
     // Empty endpoint to get all posts
@@ -13,8 +24,8 @@ export class PostsController {
   }
 
   @Post()
-  create() {
-    // Empty endpoint to create a post
+  async create(@Body() createPostDto: CreatePostDto) {
+    return await this.postsService.create(createPostDto);
   }
 
   @Patch(':id')
