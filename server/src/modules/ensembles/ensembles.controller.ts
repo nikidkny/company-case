@@ -1,7 +1,18 @@
-import { Controller, Get, Post, Patch, Delete, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Body,
+  Post,
+  Patch,
+  Delete,
+  Param,
+} from '@nestjs/common';
+import { EnsemblesService } from './ensembles.service';
+import { CreateEnsembleDto } from './dto/create-ensemble.dto';
 
 @Controller('ensembles')
 export class EnsemblesController {
+  constructor(private readonly ensembleService: EnsemblesService) {}
   @Get()
   findAll() {
     // Empty endpoint to get all ensembles
@@ -13,8 +24,8 @@ export class EnsemblesController {
   }
 
   @Post()
-  create() {
-    // Empty endpoint to create an ensemble
+  async create(@Body() createEnsembleDto: CreateEnsembleDto) {
+    return await this.ensembleService.create(createEnsembleDto);
   }
 
   @Patch(':id')
