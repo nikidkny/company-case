@@ -18,5 +18,8 @@
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^9.1.0"
+  },
+  "dependencies": {
+    "@nestjs/mongoose": "^10.1.0"
   }
 }
