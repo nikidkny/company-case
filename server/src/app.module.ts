@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UsersModule } from './modules/users/users.module';
 import { PostsModule } from './modules/posts/posts.module';
 import { EnsemblesModule } from './modules/ensembles/ensembles.module';
+import { SeederModule } from './seeder/seeder.module';
 
 const daosUri = 'mongodb://127.0.0.1:27017/DAOS';
 
@@ -13,6 +14,7 @@ const daosUri = 'mongodb://127.0.0.1:27017/DAOS';
     UsersModule,
     PostsModule,
     EnsemblesModule,
+    SeederModule,
     MongooseModule.forRoot(daosUri),
   ],
   controllers: [AppController],
