@@ -13,6 +13,7 @@ export default function SelectionTag(props: Props) {
     <div>
       <span className={classes} onClick={props.onSelect}>
         {props.label}
+        &times;
       </span>
     </div>
   );

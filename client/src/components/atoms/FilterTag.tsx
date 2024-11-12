@@ -1,18 +1,34 @@
 import classNames from "classnames";
+import { useState } from "react";
 
 interface Props {
   label: string;
-  onRemove: () => void;
+  onToggle?: (selected: boolean) => void;
 }
-export default function FilterTag({ label, onRemove }: Props) {
-  const classes = classNames(["filter-tag"]);
+
+export default function SelectionTag(props: Props) {
+  const [selected, setSelected] = useState(false);
+
+  const handleClick = () => {
+    const newSelectedState = !selected;
+    setSelected(newSelectedState);
+
+    if (props.onToggle) {
+      props.onToggle(newSelectedState);
+    }
+  };
+
+  const classes = classNames(
+    "inline-flex items-center px-3 py-1 rounded-full text-sm font-medium cursor-pointer transition-colors border-none focus:outline-none text-bold",
+    {
+      "bg-blue-500 text-white border-none": selected,
+      "text-blue-500 bg-gray-400": !selected,
+    }
+  );
 
   return (
-    <button onClick={onRemove}>
-      <span className={classes}>
-        {label}
-        &times;
-      </span>
+    <button onClick={handleClick} className={classes}>
+      {props.label}
     </button>
   );
 }

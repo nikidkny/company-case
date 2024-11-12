@@ -1,12 +1,12 @@
 import classNames from "classnames";
-
 interface Props {
   children: React.ReactNode;
-  variant?: "h1" | "h2" | "h3" | "body" | "caption";
+  variant?: "h1" | "h2" | "h3" | "body" | "caption" | "label";
+  size?: "desktop" | "mobile" | "sm";
 }
 
-export default function Text({ children, variant = "body" }: Props) {
-  const classes = classNames([`text--${variant}`]);
+export default function Text({ children, variant = "body", size = "desktop" }: Props) {
+  const classes = classNames([`text--${variant}-${size}`]);
   switch (variant) {
     case "h1":
       return <h1 className={classes}>{children}</h1>;

@@ -7,8 +7,8 @@ interface Props {
 }
 
 export default function Checkbox({ checkboxLabel, checked, onChange }: Props) {
-  const classes = classNames([`checkbox--${checked}`]);
-
+  const classes = classNames([`checkbox`]);
+  const labelClasses = classNames([`checkbox-label`, { "checkbox--checked": checked }]);
   return (
     <label className="flex items-center space-x-2">
       <input
@@ -17,7 +17,7 @@ export default function Checkbox({ checkboxLabel, checked, onChange }: Props) {
         onChange={(e) => onChange(e.target.checked)}
         className={classes}
       />
-      <span>{checkboxLabel}</span>
+      <span className={labelClasses}>{checkboxLabel}</span>
     </label>
   );
 }

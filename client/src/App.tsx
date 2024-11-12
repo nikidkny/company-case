@@ -1,5 +1,4 @@
 import "./App.css";
-import Badge from "./components/atoms/Badge";
 import Button from "./components/atoms/Button";
 import Checkbox from "./components/atoms/Checkbox";
 import DropdownItem from "./components/atoms/DropdownItem";
@@ -16,6 +15,8 @@ import { useState } from "react";
 import RangeInput from "./components/atoms/RangeInput";
 import ImageInput from "./components/atoms/ImageInput";
 import Text from "./components/atoms/Text";
+import PostBadge from "./components/atoms/PostBadge";
+import ProfileBadge from "./components/atoms/ProfileBadge";
 
 function App() {
   const [rangeValue, setRangeValue] = useState(50);
@@ -23,17 +24,37 @@ function App() {
   const [selected] = useState(false);
 
   // change selected to true to see the selected state
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const tags = ["React", "TypeScript", "Tailwind"];
+
+  const handleTagToggle = (tag: string, isSelected: boolean) => {
+    setSelectedTags((prev) => (isSelected ? [...prev, tag] : prev.filter((t) => t !== tag)));
+  };
 
   return (
     <div className="flex flex-col">
-      <h1 className="text-4xl text-orange-500 font-bold">
+      <h1 className="text-4xl text-blue font-bold font-montserrat ">
         Hello, this is an orange text styled with Tailwind CSS!
       </h1>
-      <Badge badgeLabel="New" badgeVariant="primary" />
+      <p className="text--body-sm">Body sm</p>
+      <PostBadge PostBadgeType="offer" PostBadgeSize="small" />
+      <PostBadge PostBadgeType="wanted" PostBadgeSize="large" />
+      <ProfileBadge ProfileBadgeSize="small" ProfileBadgeType="seeking" />
+      <ProfileBadge ProfileBadgeSize="large" ProfileBadgeType="not-seeking" />
       <Button buttonState="default" buttonLabel="Click me" buttonVariant="primary" />
+      <Button buttonState="default" buttonLabel="Click me" buttonVariant="secondary" />
       <Checkbox checkboxLabel="Check me" onChange={(checked) => console.log(checked)} />
       <DropdownItem />
-      <FilterTag label="Filter" onRemove={() => console.log("Removed")} />
+      <div className="flex space-x-2">
+        {tags.map((tag) => (
+          <FilterTag
+            key={tag}
+            label={tag}
+            onToggle={(isSelected) => handleTagToggle(tag, isSelected)}
+          />
+        ))}
+        <p>Selected Tags: {selectedTags.join(", ")}</p>
+      </div>{" "}
       <Icon name="" size="" color="" />
       <Image src="https://via.placeholder.com/150" alt="Placeholder" width="150" height="150" />
       <ImageInput onImageChange={(file) => console.log(file)} />
