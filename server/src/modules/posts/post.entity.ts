@@ -22,11 +22,13 @@ export class Post {
   @Prop()
   isReported: boolean;
 
-  //the instrument should be a selection from a drop down menu
+  //the instrument should be a selection from a drop down menu - but could be an id too to be consistent with the rest of the code
   @Prop({ required: true })
   instrument: string;
   @Prop()
   experienceRequired: string;
+  @Prop()
+  genre: string;
   @Prop()
   webPage: string;
   @Prop()

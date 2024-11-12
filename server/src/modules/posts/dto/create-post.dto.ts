@@ -14,4 +14,5 @@ export class CreatePostDto {
   location: string;
   webpage: string;
   experienceRequired: string;
+  genre: string;
 }

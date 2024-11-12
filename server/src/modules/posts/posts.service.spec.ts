@@ -50,6 +50,7 @@ describe('PostsService', () => {
       instrument: 'Violin',
       webpage: 'Webpage link',
       experienceRequired: '5 years',
+      genre: 'Rock',
     };
 
     // Act
