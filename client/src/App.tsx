@@ -1,4 +1,5 @@
 import "./App.css";
+// import components
 import Button from "./components/atoms/Button";
 import Checkbox from "./components/atoms/Checkbox";
 import DropdownItem from "./components/atoms/DropdownItem";
