@@ -15,15 +15,16 @@ import TextInput from "./components/atoms/TextInput";
 import { useState } from "react";
 import RangeInput from "./components/atoms/RangeInput";
 import ImageInput from "./components/atoms/ImageInput";
-import Text from "./components/atoms/Text";
 import PostBadge from "./components/atoms/PostBadge";
 import ProfileBadge from "./components/atoms/ProfileBadge";
-import IconButton from "./components/atoms/IconButton";
+import TextBody from "./components/atoms/TextBody";
+import TextHeadline from "./components/atoms/TextHeadline";
 
 function App() {
   const [rangeValue, setRangeValue] = useState(50);
   const [progressValue] = useState(50);
   const [selected] = useState(false);
+  const [IsChecked, setChecked] = useState(true);
 
   // change selected to true to see the selected state
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -35,17 +36,37 @@ function App() {
 
   return (
     <div className="flex flex-col">
-      <h1 className="text-4xl text-orange font-bold font-montserrat ">
-        Hello, this is an orange text styled with Tailwind CSS!
-      </h1>
-      <p className="text--body-sm">Body sm</p>
       <PostBadge PostBadgeType="offer" PostBadgeSize="small" />
       <PostBadge PostBadgeType="wanted" PostBadgeSize="large" />
       <ProfileBadge ProfileBadgeSize="small" ProfileBadgeType="seeking" />
       <ProfileBadge ProfileBadgeSize="large" ProfileBadgeType="not-seeking" />
-      <Button buttonState="default" buttonLabel="Click me" buttonVariant="primary" />
-      <Button buttonState="default" buttonLabel="Click me" buttonVariant="secondary" />
-      <Checkbox checkboxLabel="Check me" onChange={(checked) => console.log(checked)} />
+      <Button
+        iconPosition="none"
+        buttonState="default"
+        buttonLabel="Click me"
+        buttonVariant="primary"
+      />
+      <Button
+        iconPosition="none"
+        buttonState="default"
+        buttonLabel="Click me"
+        buttonVariant="secondary"
+      />
+      <Button
+        iconPosition="trailing"
+        buttonState="default"
+        buttonLabel="Click me"
+        buttonVariant="primary"
+        icon={ICON_NAMES.author_icon}
+      />
+      <Button
+        iconPosition="leading"
+        buttonState="disabled"
+        buttonLabel="Click me"
+        buttonVariant="secondary"
+        icon={ICON_NAMES.author_icon}
+      />
+      <Checkbox name="checkbox" label="Checkbox" checked={IsChecked} onChange={setChecked} />
       <DropdownItem />
       <div className="flex space-x-2">
         {tags.map((tag) => (
@@ -58,13 +79,6 @@ function App() {
         <p>Selected Tags: {selectedTags.join(", ")}</p>
       </div>
       <Icon name={ICON_NAMES.author_icon} height={24} width={24} />
-      <IconButton
-        buttonLabel="Button"
-        buttonVariant="primary"
-        buttonState="default"
-        icon={ICON_NAMES.author_icon}
-        iconPosition="left"
-      />
       <Image src="https://via.placeholder.com/150" alt="Placeholder" width="150" height="150" />
       <ImageInput onImageChange={(file) => console.log(file)} />
       <Link href="">Link</Link>
@@ -81,8 +95,45 @@ function App() {
         selected={selected}
         onSelect={() => console.log("Selected")}
       />
-      <Text>Body</Text>
-      <Text variant="h1">Heading</Text>
+      <TextBody>Body</TextBody>
+      <TextBody variant="strong">Strong</TextBody>
+      <TextBody variant="em">Emphasis</TextBody>
+      <TextBody variant="div">Div</TextBody>
+      <TextBody variant="span">Span</TextBody>
+      <TextBody variant="p">Paragraph</TextBody>
+      <TextBody size="lg">Large</TextBody>
+      <TextBody size="md">Medium</TextBody>
+      <TextBody size="sm">Small</TextBody>
+      <TextBody size="lg" variant="strong">
+        Large Strong
+      </TextBody>
+      <TextBody size="md" variant="strong">
+        Medium Strong
+      </TextBody>
+      <TextBody size="sm" variant="strong">
+        Small Strong
+      </TextBody>
+      <TextHeadline>Headline</TextHeadline>
+      <TextHeadline variant="h1">H1</TextHeadline>
+      <TextHeadline variant="h2">H2</TextHeadline>
+      <TextHeadline variant="h3">H3</TextHeadline>
+      <TextHeadline variant="span">Span</TextHeadline>
+      <TextHeadline variant="strong">Strong</TextHeadline>
+      <TextHeadline variant="em">Emphasis</TextHeadline>
+      <TextHeadline size="lg">Large</TextHeadline>
+      <TextHeadline size="sm">Small</TextHeadline>
+      <TextHeadline size="lg" variant="strong">
+        Large Strong
+      </TextHeadline>
+      <TextHeadline size="sm" variant="strong">
+        Small Strong
+      </TextHeadline>
+      <TextHeadline size="lg" variant="em">
+        Large Emphasis
+      </TextHeadline>
+      <TextHeadline size="sm" variant="em">
+        Small Emphasis
+      </TextHeadline>
       <Textarea
         textareaPlaceholder="Enter text..."
         textareaValue=""

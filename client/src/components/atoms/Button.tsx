@@ -1,4 +1,7 @@
+import { Icon } from "./Icon/Icon";
+import { ICON_NAMES } from "./Icon/IconNames";
 import classNames from "classnames";
+
 type type = "primary" | "secondary" | "tertiary";
 type state = "default" | "hover" | "disabled" | "active";
 
@@ -7,32 +10,46 @@ interface Props {
   buttonVariant: type;
   buttonState: state;
   size?: "desktop" | "mobile";
-  icon?: string;
-  iconPosition?: "left" | "right";
+  icon?: ICON_NAMES;
+  iconPosition: "none" | "leading" | "trailing";
   onClick?: () => void;
 }
 
-export default function Button({
+export default function IconButton({
   buttonLabel = "Button",
   buttonVariant = "primary",
   buttonState = "default",
-  // size = "desktop",
+  icon,
+  iconPosition = "trailing",
   onClick,
 }: Props) {
   const classes = classNames([
-    `btn`,
+    "btn",
     `btn-${buttonVariant}`,
     {
-      [`btn-${buttonState}`]: buttonState === "disabled",
+      [`icon-btn-${buttonState}`]: buttonState === "disabled",
     },
+    { [`icon-btn-${iconPosition}`]: iconPosition === "trailing" },
+    { [`icon-btn-${iconPosition}`]: iconPosition === "leading" },
   ]);
+
   return (
     <button
       className={classes}
       onClick={buttonState !== "disabled" ? onClick : undefined}
       disabled={buttonState === "disabled"}
     >
+      {icon && iconPosition === "leading" && (
+        <span className="icon-left">
+          <Icon name={icon} />
+        </span>
+      )}
       {buttonLabel}
+      {icon && iconPosition === "trailing" && (
+        <span className="icon-right">
+          <Icon name={icon} />
+        </span>
+      )}
     </button>
   );
 }
