@@ -14,6 +14,7 @@ export default function TextInput(props: Props) {
     <label>
       <input type={props.inputType} className={classes} placeholder={props.placeholder} />
       {props.inputType === "search" && <span className="icon-search">🔍</span>}
+      {props.inputType === "password" && <span className="icon-eye"></span>}
     </label>
   );
 }

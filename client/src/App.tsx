@@ -4,7 +4,8 @@ import Checkbox from "./components/atoms/Checkbox";
 import DropdownItem from "./components/atoms/DropdownItem";
 import Textarea from "./components/atoms/Textarea";
 import FilterTag from "./components/atoms/FilterTag";
-import Icon from "./components/atoms/Icon";
+import { Icon } from "./components/atoms/Icon/Icon";
+import { ICON_NAMES } from "./components/atoms/Icon/IconNames";
 import Image from "./components/atoms/Image";
 import Link from "./components/atoms/Link";
 import ProgressBar from "./components/atoms/ProgressBar";
@@ -17,6 +18,7 @@ import ImageInput from "./components/atoms/ImageInput";
 import Text from "./components/atoms/Text";
 import PostBadge from "./components/atoms/PostBadge";
 import ProfileBadge from "./components/atoms/ProfileBadge";
+import IconButton from "./components/atoms/IconButton";
 
 function App() {
   const [rangeValue, setRangeValue] = useState(50);
@@ -33,7 +35,7 @@ function App() {
 
   return (
     <div className="flex flex-col">
-      <h1 className="text-4xl text-blue font-bold font-montserrat ">
+      <h1 className="text-4xl text-orange font-bold font-montserrat ">
         Hello, this is an orange text styled with Tailwind CSS!
       </h1>
       <p className="text--body-sm">Body sm</p>
@@ -54,13 +56,20 @@ function App() {
           />
         ))}
         <p>Selected Tags: {selectedTags.join(", ")}</p>
-      </div>{" "}
-      <Icon name="" size="" color="" />
+      </div>
+      <Icon name={ICON_NAMES.author_icon} height={24} width={24} />
+      <IconButton
+        buttonLabel="Button"
+        buttonVariant="primary"
+        buttonState="default"
+        icon={ICON_NAMES.author_icon}
+        iconPosition="left"
+      />
       <Image src="https://via.placeholder.com/150" alt="Placeholder" width="150" height="150" />
       <ImageInput onImageChange={(file) => console.log(file)} />
       <Link href="">Link</Link>
       <ProgressBar progress={progressValue} />
-      <RangeInput value={rangeValue} onChange={(value) => setRangeValue(value)} max={100} />
+      <RangeInput value={rangeValue} onChange={setRangeValue} />
       <RadioButton
         radioLabel="Radio"
         radioName="radio"
@@ -84,6 +93,18 @@ function App() {
         value=""
         onChange={(value) => console.log(value)}
         placeholder="Text input"
+      />
+      <TextInput
+        inputType="search"
+        value=""
+        onChange={(value) => console.log(value)}
+        placeholder="Search input"
+      />
+      <TextInput
+        inputType="password"
+        value=""
+        onChange={(value) => console.log(value)}
+        placeholder="Password input"
       />
     </div>
   );

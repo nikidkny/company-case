@@ -2,10 +2,10 @@ import classNames from "classnames";
 interface Props {
   children: React.ReactNode;
   variant?: "h1" | "h2" | "h3" | "body" | "caption" | "label";
-  size?: "desktop" | "mobile" | "sm";
+  size?: "lg" | "md" | "sm";
 }
 
-export default function Text({ children, variant = "body", size = "desktop" }: Props) {
+export default function Text({ children, variant = "body", size = "lg" }: Props) {
   const classes = classNames([`text--${variant}-${size}`]);
   switch (variant) {
     case "h1":

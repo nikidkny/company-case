@@ -10,11 +10,9 @@ export default function SelectionTag(props: Props) {
   const classes = classNames(["selection-tag", { "selection-tag--selected": props.selected }]);
 
   return (
-    <div>
-      <span className={classes} onClick={props.onSelect}>
-        {props.label}
-        &times;
-      </span>
-    </div>
+    <span className={classes} onClick={props.onSelect}>
+      {props.label}
+      &times;
+    </span>
   );
 }

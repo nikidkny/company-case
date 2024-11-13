@@ -13,7 +13,7 @@ export default function Textarea({
   onChange,
   rows = 4,
 }: Props) {
-  const classes = classNames([`textarea--${textareaValue}`]);
+  const classes = classNames([`textarea`]);
 
   return (
     <textarea
