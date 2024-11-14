@@ -5,9 +5,10 @@ interface Props {
   alt: string;
   width?: string;
   height?: string;
+  classnames?: string;
 }
 
 export default function Image(props: Props) {
-  const classes = classNames(["image"]);
+  const classes = classNames("image", props.classnames);
   return <img className={classes} src={props.src} alt={props.alt} />;
 }

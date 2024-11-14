@@ -39,11 +39,12 @@ export default function IconButton({
     },
     { [`icon-btn-${iconPosition}`]: iconPosition === "trailing" },
     { [`icon-btn-${iconPosition}`]: iconPosition === "leading" },
+    classnames,
   ]);
 
   return (
     <button
-      className={classnames ? `${classes} ${classnames}` : classes}
+      className={classes}
       onClick={buttonState !== "disabled" ? onClick : undefined}
       disabled={buttonState === "disabled"}
     >

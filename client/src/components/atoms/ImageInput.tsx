@@ -4,10 +4,11 @@ import { useState } from "react";
 interface Props {
   onImageChange: (file: File | null) => void;
   placeholder?: string;
+  classnames?: string;
 }
 
 export default function ImageInput(props: Props) {
-  const classes = classNames("image-input");
+  const classes = classNames("image-input", props.classnames);
   const [preview, setPreview] = useState<string | null>(null);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {

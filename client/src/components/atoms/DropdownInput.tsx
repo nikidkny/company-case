@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import { Icon } from "./Icon/Icon";
 import { ICON_NAMES } from "./Icon/IconNames";
 
@@ -5,15 +6,23 @@ interface DropdownInputProps {
   selectedLabel: string;
   onClick: () => void;
   isOpen: boolean;
+  classnames?: string;
 }
 
-export default function DropdownInput({ selectedLabel, onClick, isOpen }: DropdownInputProps) {
+export default function DropdownInput({
+  selectedLabel,
+  onClick,
+  isOpen,
+  classnames,
+}: DropdownInputProps) {
+  const classes = classNames(["dropdown-input", classnames]);
+
   const handleClick = () => {
     onClick();
   };
 
   return (
-    <div onClick={handleClick} className="dropdown-input">
+    <div onClick={handleClick} className={classes}>
       <span>{selectedLabel}</span>
       <Icon
         name={ICON_NAMES.dropdown_arrow}

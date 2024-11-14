@@ -11,6 +11,7 @@ interface Props {
   isValid?: boolean;
   validityMsg?: string;
   disabled?: boolean;
+  classnames?: string;
 }
 
 export default function TextInput({
@@ -22,12 +23,17 @@ export default function TextInput({
   isValid,
   validityMsg,
   disabled,
+  classnames,
 }: Props) {
-  const containerClasses = classNames("input-container", {
-    "border-red-500": isValid === false, // Error border color
-    "border-blue-500": isValid, // Valid border color
-    "bg-gray-100 text-gray-500 cursor-not-allowed": disabled, // Disabled styles
-  });
+  const containerClasses = classNames(
+    "input-container",
+    {
+      "border-red-500": isValid === false, // Error border color
+      "border-blue-500": isValid, // Valid border color
+      "bg-gray-100 text-gray-500 cursor-not-allowed": disabled, // Disabled styles
+    },
+    classnames
+  );
 
   const inputClasses = classNames("input-text", {
     "text-red-500": isValid === false, // Error text color
