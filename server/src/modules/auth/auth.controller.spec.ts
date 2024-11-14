@@ -23,8 +23,8 @@ describe('AuthController (e2e)', () => {
                 // Define the User model based on the User schema for the test database
                 MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
             ],
-            controllers: [AuthController],  // Register the AuthController
-            providers: [AuthService],       // Register the AuthService
+            controllers: [AuthController],  
+            providers: [AuthService],       
         }).compile();
 
         // Initialize the Nest application from the module
@@ -43,7 +43,7 @@ describe('AuthController (e2e)', () => {
         const createUserDto = {
             firstName: 'John',
             lastName: 'Doe',
-            email: 'john.doe@example.com',  // Ensure this email is unique
+            email: 'john.doe@example.com', 
             password: 'password123',
             birthDate: new Date(),
             isAvailable: true,
@@ -53,17 +53,14 @@ describe('AuthController (e2e)', () => {
         const response = await request(app.getHttpServer())
             .post('/auth/signup')
             .send(createUserDto)
-            .expect(HttpStatus.CREATED);  // Expect a 201 Created status code
+            .expect(HttpStatus.CREATED); 
 
-        // Assert that the response contains a success message
         expect(response.body.message).toBe('User registered successfully');
     });
 
     afterAll(async () => {
         // Clean up the User collection after tests to reset the database
         await userModel.deleteMany({});
-
-        // Close the Nest application after all tests are done
         await app.close();
     });
 });

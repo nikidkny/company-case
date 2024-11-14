@@ -8,6 +8,7 @@ import { EnsemblesModule } from './modules/ensembles/ensembles.module';
 import { SeederModule } from './seeder/seeder.module';
 import { InstrumentsModule } from './seeder/instruments/instruments.module';
 import { User_InstrumentsModule } from './modules/user_Instruments/user_Instruments.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 const daosUri = 'mongodb://127.0.0.1:27017/DAOS';
 
@@ -19,6 +20,7 @@ const daosUri = 'mongodb://127.0.0.1:27017/DAOS';
     SeederModule,
     InstrumentsModule,
     User_InstrumentsModule,
+    AuthModule,
     MongooseModule.forRoot(daosUri),
   ],
   controllers: [AppController],

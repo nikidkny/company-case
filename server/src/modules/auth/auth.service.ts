@@ -33,10 +33,12 @@ export class AuthService {
       });
       await newUser.save();
 
+      console.log(`Successfuly Creates User: ${newUser}`);
+      
       return { message: 'User registered successfully' };
     } catch (error) {
       console.error('Error during signup:', error);
-      throw error; // re-throw the error to handle in the global error handler
+      throw error;
     }
   }
 
