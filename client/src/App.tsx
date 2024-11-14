@@ -93,7 +93,7 @@ function App() {
         onChange={handleCheckboxToggle}
       />
       <Dropdown options={options} />
-      <div className="flex space-x-2">
+      <div className="flex space-x-2 items-center">
         {tags.map((tag) => (
           <FilterTag
             key={tag}

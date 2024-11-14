@@ -75,9 +75,9 @@ export default defineConfig({
     "text--h2-sm": "text-h2-sm font-oswald text-blue-500 leading-1.13 my-0",
     "text--h3-sm": "text-h3-sm font-oswald text-blue-500 leading-1.5 my-0",
     // BODY
-    "text--body-lg": "text-body-lg font-montserrat text-gray-500 leading-1.625 my-0",
-    "text--body-md": "text-body-md font-montserrat text-gray-500 leading-1.29 my-0",
-    "text--body-sm": "text-body-sm font-montserrat text-gray-500 leading-1.25 font-bold my-0",
+    "text--body-lg": "text-body-lg font-montserrat text-gray-500 leading-1.625 m-0",
+    "text--body-md": "text-body-md font-montserrat text-gray-500 leading-1.29 m-0",
+    "text--body-sm": "text-body-sm font-montserrat text-gray-500 leading-1.25 font-bold m-0",
     // link
     link: "text-blue-500 font-montserrat text-body-md leading-1.19 font-bold no-underline",
     //button
@@ -95,7 +95,7 @@ export default defineConfig({
     "checkbox-label": "text-black font-montserrat text-body-md leading-1.29",
     //filter tag
     "filter-tag":
-      "text-blue-500 bg-gray-400 inline-flex items-center px-3 py-1 rounded-full text-sm font-medium cursor-pointer transition-colors border-none focus:outline-none font-bold",
+      "w-fit h-fit text-blue-500 bg-gray-400 px-4.5 py-2.5 rounded-4.5 text-body-sm font-bold cursor-pointer transition-colors border-none focus:outline-none ",
     "filter-tag-selected": "bg-blue-500 text-white border-none",
     //post badge
     "post-badge--large":
