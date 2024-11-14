@@ -15,6 +15,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './routes/__root'
 import { Route as PostsImport } from './routes/posts'
 import { Route as EnsemblesImport } from './routes/ensembles'
+import { Route as AssetsImport } from './routes/assets'
 import { Route as PostsIndexImport } from './routes/posts.index'
 import { Route as EnsemblesIndexImport } from './routes/ensembles.index'
 import { Route as ProfileProfileIdImport } from './routes/profile.$profileId'
@@ -36,6 +37,12 @@ const PostsRoute = PostsImport.update({
 const EnsemblesRoute = EnsemblesImport.update({
   id: '/ensembles',
   path: '/ensembles',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AssetsRoute = AssetsImport.update({
+  id: '/assets',
+  path: '/assets',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -84,6 +91,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/assets': {
+      id: '/assets'
+      path: '/assets'
+      fullPath: '/assets'
+      preLoaderRoute: typeof AssetsImport
       parentRoute: typeof rootRoute
     }
     '/ensembles': {
@@ -168,6 +182,7 @@ const PostsRouteWithChildren = PostsRoute._addFileChildren(PostsRouteChildren)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
+  '/assets': typeof AssetsRoute
   '/ensembles': typeof EnsemblesRouteWithChildren
   '/posts': typeof PostsRouteWithChildren
   '/ensembles/$ensembleId': typeof EnsemblesEnsembleIdRoute
@@ -179,6 +194,7 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
+  '/assets': typeof AssetsRoute
   '/ensembles/$ensembleId': typeof EnsemblesEnsembleIdRoute
   '/posts/$postId': typeof PostsPostIdRoute
   '/profile/$profileId': typeof ProfileProfileIdRoute
@@ -189,6 +205,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
+  '/assets': typeof AssetsRoute
   '/ensembles': typeof EnsemblesRouteWithChildren
   '/posts': typeof PostsRouteWithChildren
   '/ensembles/$ensembleId': typeof EnsemblesEnsembleIdRoute
@@ -202,6 +219,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/assets'
     | '/ensembles'
     | '/posts'
     | '/ensembles/$ensembleId'
@@ -212,6 +230,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/assets'
     | '/ensembles/$ensembleId'
     | '/posts/$postId'
     | '/profile/$profileId'
@@ -220,6 +239,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/assets'
     | '/ensembles'
     | '/posts'
     | '/ensembles/$ensembleId'
@@ -232,6 +252,7 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
+  AssetsRoute: typeof AssetsRoute
   EnsemblesRoute: typeof EnsemblesRouteWithChildren
   PostsRoute: typeof PostsRouteWithChildren
   ProfileProfileIdRoute: typeof ProfileProfileIdRoute
@@ -239,6 +260,7 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
+  AssetsRoute: AssetsRoute,
   EnsemblesRoute: EnsemblesRouteWithChildren,
   PostsRoute: PostsRouteWithChildren,
   ProfileProfileIdRoute: ProfileProfileIdRoute,
@@ -255,6 +277,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/assets",
         "/ensembles",
         "/posts",
         "/profile/$profileId"
@@ -262,6 +285,9 @@ export const routeTree = rootRoute
     },
     "/": {
       "filePath": "index.lazy.tsx"
+    },
+    "/assets": {
+      "filePath": "assets.tsx"
     },
     "/ensembles": {
       "filePath": "ensembles.tsx",
