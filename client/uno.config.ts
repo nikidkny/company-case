@@ -83,29 +83,23 @@ export default defineConfig({
     //button
     btn: "flex gap-2 items-center rounded-button p-4 text-center cursor-pointer font-bold font-montserrat text-button shadow-button leading-1.19 w-fit",
     "btn-primary": "bg-blue-500 text-white border-none hover:bg-blue-400",
-    "btn-secondary":
-      "bg-white text-blue-500 border-solid border-1px border-gray-400 hover:bg-gray-200 border-1px border-solid border-gray-400",
+    "btn-secondary": "bg-white text-blue-500 border-solid border-1px border-gray-400 hover:bg-gray-200 border-1px border-solid border-gray-400",
     "btn-tertiary": "bg-red-500 text-white hover:bg-red-400",
     "btn-disabled": "opacity-50 cursor-not-allowed",
     //checkbox
     checkbox: "w-4 h-4 border-1px border-gray-400 bg-gray-400 rounded-1px",
     "checkbox-label": "text-black font-montserrat text-body-md leading-1.29",
     //filter tag
-    "filter-tag":
-      "text-blue-500 bg-gray-400 inline-flex items-center px-3 py-1 rounded-full text-sm font-medium cursor-pointer transition-colors border-none focus:outline-none font-bold",
+    "filter-tag": "text-blue-500 bg-gray-400 inline-flex items-center px-3 py-1 rounded-full text-sm font-medium cursor-pointer transition-colors border-none focus:outline-none font-bold",
     "filter-tag-selected": "bg-blue-500 text-white border-none",
     //post badge
-    "post-badge--large":
-      "font-montserrat font-bold text-body-md leading-1.5 p-2 rounded-PostBadge w-fit",
-    "post-badge--small":
-      "font-montserrat font-bold text-body-sm leading-1.5 p-2 rounded-PostBadge w-fit",
+    "post-badge--large": "font-montserrat font-bold text-body-md leading-1.5 p-2 rounded-PostBadge w-fit",
+    "post-badge--small": "font-montserrat font-bold text-body-sm leading-1.5 p-2 rounded-PostBadge w-fit",
     "post-badge--offer": "bg-green-100 text-green-500",
     "post-badge--wanted": "bg-blue-100 text-blue-300",
     //profile badge
-    "profile-badge--large":
-      "text-blue-500 font-montserrat font-bold text-body-lg leading-1.625 p-2 rounded-ProfileBadge w-fit",
-    "profile-badge--small":
-      "text-blue-500 font-montserrat font-bold text--body-md  p-2 rounded-ProfileBadge w-fit",
+    "profile-badge--large": "text-blue-500 font-montserrat font-bold text-body-lg leading-1.625 p-2 rounded-ProfileBadge w-fit",
+    "profile-badge--small": "text-blue-500 font-montserrat font-bold text--body-md  p-2 rounded-ProfileBadge w-fit",
     "profile-badge--seeking": "bg-blue-200",
     "profile-badge--not-seeking": "bg-blue-200",
     // progress bar
@@ -116,17 +110,14 @@ export default defineConfig({
     "radio-btn--checked": "bg-blue-500",
     // range input
     //textarea
-    textarea:
-      "border-1px border-solid border-gray-400 rounded-input p-4 text--body-lg shadow-input hover:border-gray-500 focus:border-gray-500 focus-visible:border-gray-500",
+    textarea: "border-1px border-solid border-gray-400 rounded-input p-4 text--body-lg shadow-input hover:border-gray-500 focus:border-gray-500 focus-visible:border-gray-500",
     //text input
-    "input-container":
-      "w-full flex items-center rounded-md p4 gap-2 border-1px border-solid transition-colors  border-gray-400 hover:border-gray-500 focus-within:border-gray-500",
+    "input-container": "w-full flex items-center rounded-md p4 gap-2 border-1px border-solid transition-colors  border-gray-400 hover:border-gray-500 focus-within:border-gray-500",
     "input-text": "w-full outline-none border-none bg-transparent text-gray-800",
     // dropdown item
     "dropdown-item": "px-4 py-2 hover:bg-gray-200 cursor-pointer",
     // dropdown input
-    "dropdown-input":
-      "flex items-center justify-between px-4 py-2 border-1px border-solid border-gray-300 rounded-md shadow-sm text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 cursor-pointer",
+    "dropdown-input": "flex items-center justify-between px-4 py-2 border-1px border-solid border-gray-300 rounded-md shadow-sm text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 cursor-pointer",
   },
   safelist: [
     "text--h1-lg",

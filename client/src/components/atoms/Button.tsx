@@ -6,7 +6,7 @@ type type = "primary" | "secondary" | "tertiary";
 type state = "default" | "hover" | "disabled" | "active";
 
 interface Props {
-  buttonLabel: string;
+  buttonLabel?: string;
   buttonVariant: type;
   buttonState: state;
   size?: "desktop" | "mobile";
@@ -16,20 +16,12 @@ interface Props {
   iconWidth?: number;
   iconHeight?: number;
   iconViewbox?: string;
+  className?: string;
 }
 
-export default function IconButton({
-  buttonLabel = "Button",
-  buttonVariant = "primary",
-  buttonState = "default",
-  icon,
-  iconPosition = "trailing",
-  iconWidth = 24,
-  iconHeight = 24,
-  iconViewbox = "0 0 24 24",
-  onClick,
-}: Props) {
+export default function IconButton({ buttonLabel = "", buttonVariant = "primary", buttonState = "default", icon, iconPosition = "trailing", iconWidth = 24, iconHeight = 24, iconViewbox = "0 0 24 24", onClick, className = "" }: Props) {
   const classes = classNames([
+    className,
     "btn",
     `btn-${buttonVariant}`,
     {
@@ -40,11 +32,7 @@ export default function IconButton({
   ]);
 
   return (
-    <button
-      className={classes}
-      onClick={buttonState !== "disabled" ? onClick : undefined}
-      disabled={buttonState === "disabled"}
-    >
+    <button className={classes} onClick={buttonState !== "disabled" ? onClick : undefined} disabled={buttonState === "disabled"}>
       {icon && iconPosition === "leading" && (
         <span className="icon-left">
           <Icon name={icon} width={iconWidth} height={iconHeight} viewBox={iconViewbox} />
