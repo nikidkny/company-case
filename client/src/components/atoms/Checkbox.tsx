@@ -63,7 +63,13 @@ export default function Checkbox({
         className="hidden peer" // Hide the checkbox input
       />
       <div className={iconWrapperClasses}>
-        <Icon name={ICON_NAMES.checkbox_check} className={iconClasses} />
+        <Icon
+          name={ICON_NAMES.checkbox_check}
+          height={10.121}
+          width={13.414}
+          viewBox={"0 0 13.414 10.121"}
+          className={iconClasses}
+        />
       </div>
       <label htmlFor={name} className="text-gray-800 peer-disabled:text-gray-400">
         {label}

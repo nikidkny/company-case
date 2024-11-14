@@ -13,6 +13,9 @@ interface Props {
   icon?: ICON_NAMES;
   iconPosition: "none" | "leading" | "trailing";
   onClick?: () => void;
+  iconWidth?: number;
+  iconHeight?: number;
+  iconViewbox?: string;
 }
 
 export default function IconButton({
@@ -21,6 +24,9 @@ export default function IconButton({
   buttonState = "default",
   icon,
   iconPosition = "trailing",
+  iconWidth = 24,
+  iconHeight = 24,
+  iconViewbox = "0 0 24 24",
   onClick,
 }: Props) {
   const classes = classNames([
@@ -41,13 +47,13 @@ export default function IconButton({
     >
       {icon && iconPosition === "leading" && (
         <span className="icon-left">
-          <Icon name={icon} />
+          <Icon name={icon} width={iconWidth} height={iconHeight} viewBox={iconViewbox} />
         </span>
       )}
       {buttonLabel}
       {icon && iconPosition === "trailing" && (
         <span className="icon-right">
-          <Icon name={icon} />
+          <Icon name={icon} width={iconWidth} height={iconHeight} viewBox={iconViewbox} />
         </span>
       )}
     </button>
