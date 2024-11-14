@@ -6,6 +6,11 @@ export type User_InstrumentDocument = HydratedDocument<User_Instrument>;
 @Schema()
 export class User_Instrument {
   _id: Types.ObjectId;
+  //reference to the User and Instrument via id (FK)
+  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
+  userId: Types.ObjectId;
+  @Prop({ type: Types.ObjectId, ref: 'Instrument', required: true })
+  instrumentId: Types.ObjectId;
   @Prop({ required: true })
   levelOfExperience: string;
   @Prop({ required: true })
