@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsEmail } from 'class-validator';
+import { IsNotEmpty, IsEmail, IsDate, IsBoolean } from 'class-validator';
 
 //this is what the data the user will need to fill in when creating their profile. Very basic validation for now
 export class CreateUserDto {
@@ -11,7 +11,9 @@ export class CreateUserDto {
   @IsNotEmpty()
   password: string;
   @IsNotEmpty()
+  @IsDate()
   birthdate: Date;
   @IsNotEmpty()
+  @IsBoolean()
   isAvailable: boolean;
 }
