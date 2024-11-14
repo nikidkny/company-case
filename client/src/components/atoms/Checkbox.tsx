@@ -75,7 +75,7 @@ export default function Checkbox({
           className={iconClasses}
         />
       </div>
-      <label htmlFor={name} className="text-gray-800 peer-disabled:text-gray-400">
+      <label htmlFor={name} className="text-gray-800 peer-disabled:text-gray-400 cursor-pointer">
         {label}
       </label>
     </div>
