@@ -25,9 +25,12 @@ function App() {
   const [rangeValue, setRangeValue] = useState(50);
   const [progressValue] = useState(50);
   const [selected] = useState(false);
-  const [IsChecked, setChecked] = useState(true);
+  const [IsChecked, setChecked] = useState(false);
   const options = ["Option 1", "Option 2", "Option 3"];
 
+  const handleCheckboxToggle = (checked: boolean) => {
+    setChecked(checked);
+  };
   // change selected to true to see the selected state
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const tags = ["React", "TypeScript", "Tailwind"];
@@ -83,7 +86,12 @@ function App() {
         iconWidth={13.887}
         iconViewbox={"0 0 13.887 13.887"}
       />
-      <Checkbox name="checkbox" label="Checkbox" checked={IsChecked} onChange={setChecked} />
+      <Checkbox
+        name="checkbox"
+        label="Checkbox"
+        checked={IsChecked}
+        onChange={handleCheckboxToggle}
+      />
       <Dropdown options={options} />
       <div className="flex space-x-2">
         {tags.map((tag) => (

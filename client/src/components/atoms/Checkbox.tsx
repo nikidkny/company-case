@@ -51,8 +51,12 @@ export default function Checkbox({
     }
   );
 
+  const handleChange = () => {
+    onChange(!checked);
+  };
+
   return (
-    <div className={containerClasses}>
+    <div className={containerClasses} onClick={handleChange}>
       <input
         type="checkbox"
         name={name}
