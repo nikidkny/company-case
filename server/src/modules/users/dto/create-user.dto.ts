@@ -12,7 +12,6 @@ export class CreateUserDto {
   email: string;
   @IsNotEmpty()
   password: string;
-
   @IsNotEmpty()
   @IsDate()
   @Type(() => Date) // Use Type to transform the string into a Date object

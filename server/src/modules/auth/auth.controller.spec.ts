@@ -1,6 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { HttpStatus, INestApplication } from "@nestjs/common";
-import { AuthService } from "./auth.service";
+
 import { MongooseModule } from "@nestjs/mongoose";
 
 import * as request from 'supertest';
@@ -8,6 +8,8 @@ import { User, UserSchema } from "../users/user.entity";
 import { AuthController } from "./auth.controller";
 import { Model } from 'mongoose';
 import { getModelToken } from '@nestjs/mongoose';
+import { AuthService } from "./auth.service";
+import { JwtService } from "@nestjs/jwt";
 
 describe('AuthController (e2e)', () => {
     let app: INestApplication;
@@ -24,7 +26,7 @@ describe('AuthController (e2e)', () => {
                 MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
             ],
             controllers: [AuthController],  
-            providers: [AuthService],       
+            providers: [AuthService, JwtService],       
         }).compile();
 
         // Initialize the Nest application from the module
@@ -59,8 +61,12 @@ describe('AuthController (e2e)', () => {
     });
 
     afterAll(async () => {
-        // Clean up the User collection after tests to reset the database
-        await userModel.deleteMany({});
-        await app.close();
+        try {
+            await userModel.deleteMany({});
+        } catch (error) {
+            console.error('Error during cleanup:', error);
+        } finally {
+            await app.close();
+        }
     });
 });

@@ -14,8 +14,8 @@ export class AuthController {
   }
 
   @Post('login')
-  login() {
-    // Empty endpoint for login
+  async login(@Body() body: {email: string, password: string}) {
+    return this.authService.login(body.email, body.password);
   }
 
   @Post('logout')
@@ -27,4 +27,17 @@ export class AuthController {
   refresh() {
     // Empty endpoint for token refresh
   }
+
+  //TODO:
+  // - Review auth logic
+  // - Test login
+  // - Implemnet refresh token
+  // - implement logout
+  /* Example on how to use guard:
+ @UseGuards(JwtAuthGuard)  // Protect routes with the guard
+  @Post('protected')
+  async protectedRoute(@Body() body) {
+    return { message: 'You have access to this route' };
+  }
+  */
 }
