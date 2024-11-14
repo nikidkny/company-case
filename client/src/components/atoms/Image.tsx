@@ -10,5 +10,13 @@ interface Props {
 
 export default function Image(props: Props) {
   const classes = classNames("image", props.classnames);
-  return <img className={classes} src={props.src} alt={props.alt} />;
+  return (
+    <img
+      className={classes}
+      src={props.src}
+      alt={props.alt}
+      width={props.width}
+      height={props.height}
+    />
+  );
 }

@@ -95,7 +95,7 @@ function App() {
         ))}
         <p>Selected Tags: {selectedTags.join(", ")}</p>
       </div>
-      <Image src="https://via.placeholder.com/150" alt="Placeholder" width="150" height="150" />
+      <Image src="https://picsum.photos/150" alt="Placeholder" width="150" height="150" />
       <ImageInput onImageChange={(file) => console.log(file)} />
       <Link href="">Link</Link>
       <ProgressBar progress={progressValue} />
