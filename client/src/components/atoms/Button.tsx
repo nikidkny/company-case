@@ -2,11 +2,11 @@ import { Icon } from "./Icon/Icon";
 import { ICON_NAMES } from "./Icon/IconNames";
 import classNames from "classnames";
 
-type type = "primary" | "secondary" | "tertiary";
+type type = "primary" | "secondary" | "tertiary" | "menu";
 type state = "default" | "hover" | "disabled" | "active";
 
 interface Props {
-  buttonLabel: string;
+  buttonLabel?: string;
   buttonVariant: type;
   buttonState: state;
   size?: "desktop" | "mobile";
@@ -16,10 +16,11 @@ interface Props {
   iconWidth?: number;
   iconHeight?: number;
   iconViewbox?: string;
+  classnames?: string;
 }
 
 export default function IconButton({
-  buttonLabel = "Button",
+  buttonLabel,
   buttonVariant = "primary",
   buttonState = "default",
   icon,
@@ -28,12 +29,13 @@ export default function IconButton({
   iconHeight = 24,
   iconViewbox = "0 0 24 24",
   onClick,
+  classnames,
 }: Props) {
   const classes = classNames([
     "btn",
     `btn-${buttonVariant}`,
     {
-      [`icon-btn-${buttonState}`]: buttonState === "disabled",
+      [`btn-${buttonState}`]: buttonState === "disabled",
     },
     { [`icon-btn-${iconPosition}`]: iconPosition === "trailing" },
     { [`icon-btn-${iconPosition}`]: iconPosition === "leading" },
@@ -41,7 +43,7 @@ export default function IconButton({
 
   return (
     <button
-      className={classes}
+      className={classnames ? `${classes} ${classnames}` : classes}
       onClick={buttonState !== "disabled" ? onClick : undefined}
       disabled={buttonState === "disabled"}
     >

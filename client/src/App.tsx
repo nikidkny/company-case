@@ -66,9 +66,18 @@ function App() {
       />
       <Button
         iconPosition="leading"
-        buttonState="disabled"
+        buttonState="default"
         buttonLabel="Click me"
         buttonVariant="secondary"
+        icon={ICON_NAMES.author_icon}
+        iconHeight={13.887}
+        iconWidth={13.887}
+        iconViewbox={"0 0 13.887 13.887"}
+      />
+      <Button
+        iconPosition="trailing"
+        buttonState="default"
+        buttonVariant="menu"
         icon={ICON_NAMES.author_icon}
         iconHeight={13.887}
         iconWidth={13.887}
@@ -121,7 +130,9 @@ function App() {
         Small Strong
       </TextBody>
       <TextHeadline>Headline</TextHeadline>
-      <TextHeadline variant="h1">H1</TextHeadline>
+      <TextHeadline variant="h1" size="sm">
+        H1
+      </TextHeadline>
       <TextHeadline variant="h2">H2</TextHeadline>
       <TextHeadline variant="h3">H3</TextHeadline>
       <TextHeadline variant="span">Span</TextHeadline>

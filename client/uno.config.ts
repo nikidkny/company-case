@@ -67,17 +67,17 @@ export default defineConfig({
     // TYPOGRAPHY
     // HEADINGS
     // desktop
-    "text--h1-lg": "text-h1-lg font-oswald text-red leading-1.08",
-    "text--h2-lg": "text-h2-lg font-oswald text-blue-500 leading-1.11",
-    "text--h3-lg": "text-h3-lg font-oswald text-blue-500 leading-1.5",
+    "text--h1-lg": "text-h1-lg font-oswald text-red leading-1.08 my-0",
+    "text--h2-lg": "text-h2-lg font-oswald text-blue-500 leading-1.11 my-0",
+    "text--h3-lg": "text-h3-lg font-oswald text-blue-500 leading-1.5 my-0",
     // mobile
-    "text--h1-sm": "text-h1-sm font-oswald text-red leading-1.13",
-    "text--h2-sm": "text-h2-sm font-oswald text-blue-500 leading-1.13",
-    "text--h3-sm": "text-h3-sm font-oswald text-blue-500 leading-1.5",
+    "text--h1-sm": "text-h1-sm font-oswald text-red leading-1.13 my-0",
+    "text--h2-sm": "text-h2-sm font-oswald text-blue-500 leading-1.13 my-0",
+    "text--h3-sm": "text-h3-sm font-oswald text-blue-500 leading-1.5 my-0",
     // BODY
-    "text--body-lg": "text-body-lg font-montserrat text-gray-500 leading-1.625",
-    "text--body-md": "text-body-md font-montserrat text-gray-500 leading-1.29",
-    "text--body-sm": "text-body-sm font-montserrat text-gray-500 leading-1.25 font-bold",
+    "text--body-lg": "text-body-lg font-montserrat text-gray-500 leading-1.625 my-0",
+    "text--body-md": "text-body-md font-montserrat text-gray-500 leading-1.29 my-0",
+    "text--body-sm": "text-body-sm font-montserrat text-gray-500 leading-1.25 font-bold my-0",
     // link
     link: "text-blue-500 font-montserrat text-body-md leading-1.19 font-bold no-underline",
     //button
@@ -86,7 +86,10 @@ export default defineConfig({
     "btn-secondary":
       "bg-white text-blue-500 border-solid border-1px border-gray-400 hover:bg-gray-200 border-1px border-solid border-gray-400",
     "btn-tertiary": "bg-red-500 text-white hover:bg-red-400",
+    "btn-menu": "bg-transparent border-none shadow-none",
     "btn-disabled": "opacity-50 cursor-not-allowed",
+    "icon-btn-leading": "flex items-center gap-2",
+    "icon-btn-trailing": "flex items-center gap-2",
     //checkbox
     checkbox: "w-4 h-4 border-1px border-gray-400 bg-gray-400 rounded-1px",
     "checkbox-label": "text-black font-montserrat text-body-md leading-1.29",
@@ -142,6 +145,7 @@ export default defineConfig({
     "btn-primary",
     "btn-secondary",
     "btn-tertiary",
+    "btn-menu",
     "btn-disabled",
     "checkbox",
     "checkbox-label",
