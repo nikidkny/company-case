@@ -8,11 +8,11 @@ import { JwtPayload } from "./jwtPayload.interface";
 // It handles the extraction and validation of JWT tokens from incoming requests.
 @Injectable()
 export class JwtAuthStrategy extends PassportStrategy(Strategy) {
-    constructor(    ) {
+    constructor() {
         super({
             // Extract JWT from Authorization header
-            jwtFromReqeust: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            secret: 'should-be-inside-inside-.env' //TODO:
+            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+            secretOrKey: 'should-be-inside-inside-.env' //TODO:
         })
 
     }
