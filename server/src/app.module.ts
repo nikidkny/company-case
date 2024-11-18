@@ -9,8 +9,7 @@ import { SeederModule } from './seeder/seeder.module';
 import { InstrumentsModule } from './seeder/instruments/instruments.module';
 import { User_InstrumentsModule } from './modules/user_Instruments/user_Instruments.module';
 import { AuthModule } from './modules/auth/auth.module';
-
-const daosUri = 'mongodb://127.0.0.1:27017/DAOS';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -21,9 +20,20 @@ const daosUri = 'mongodb://127.0.0.1:27017/DAOS';
     InstrumentsModule,
     User_InstrumentsModule,
     AuthModule,
-    MongooseModule.forRoot(daosUri),
+    MongooseModule.forRootAsync(
+      {
+        useFactory: async (configService: ConfigService) => ({
+          uri: configService.get<string>('MONGODB_URI'),
+        }),
+        inject: [ConfigService],
+      }
+    ),
+    ConfigModule.forRoot({
+      isGlobal: true
+    })
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+
+export class AppModule { }
