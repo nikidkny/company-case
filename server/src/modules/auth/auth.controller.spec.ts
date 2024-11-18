@@ -1,64 +1,118 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { HttpStatus, INestApplication } from "@nestjs/common";
-
 import { MongooseModule } from "@nestjs/mongoose";
-
-import * as request from 'supertest';
 import { User, UserSchema } from "../users/user.entity";
 import { AuthController } from "./auth.controller";
 import { Model } from 'mongoose';
 import { getModelToken } from '@nestjs/mongoose';
 import { AuthService } from "./auth.service";
-import { JwtService } from "@nestjs/jwt";
+import { JwtModule, } from "@nestjs/jwt";
+import * as request from 'supertest';
+import { ConfigService } from "@nestjs/config";
+import { JwtAuthStrategy } from "./jwt.strategy";
 
 describe('AuthController (e2e)', () => {
     let app: INestApplication;
     let authService: AuthService;
     let userModel: Model<User>;
+    let validToken: string;
 
     beforeAll(async () => {
-        // Create a testing module with Mongoose configuration for the test database
+        const mockConfigService = {
+          get: jest.fn().mockReturnValue('test-secret'),  // Mocking the return value for JWT_SECRET
+        };
+    
         const moduleFixture: TestingModule = await Test.createTestingModule({
-            imports: [
-                // Connect to the test database
-                MongooseModule.forRoot('mongodb://localhost/test'),
-                // Define the User model based on the User schema for the test database
-                MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
-            ],
-            controllers: [AuthController],  
-            providers: [AuthService, JwtService],       
+          imports: [
+            MongooseModule.forRoot('mongodb://localhost/test'),
+            MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+            JwtModule.register({
+              secret: 'test-secret',  // Ensure this secret matches the one in JwtStrategy
+              signOptions: { expiresIn: '1h' },
+            }),
+          ],
+          controllers: [AuthController],
+          providers: [
+            AuthService,
+            {
+              provide: ConfigService,
+              useValue: mockConfigService, 
+            },
+            JwtAuthStrategy,
+          ],
         }).compile();
-
-        // Initialize the Nest application from the module
+    
         app = moduleFixture.createNestApplication();
-        
-        // Retrieve instances of the AuthService and User model
-        authService = moduleFixture.get<AuthService>(AuthService);
-        userModel = moduleFixture.get<Model<User>>(getModelToken(User.name));
-
-        // Start the Nest application
         await app.init();
-    });
-
+    
+        authService = moduleFixture.get(AuthService);
+        userModel = moduleFixture.get(getModelToken(User.name));
+      });
+    
+    
+    
     it('should create a new user (signup)', async () => {
         // Define a sample user DTO with unique data for the test
         const createUserDto = {
             firstName: 'John',
             lastName: 'Doe',
-            email: 'john.doe@example.com', 
+            email: 'john.doe@example.com',
             password: 'password123',
             birthDate: new Date(),
             isAvailable: true,
         };
-
+        
         // Make a POST request to the /auth/signup route with the sample data
         const response = await request(app.getHttpServer())
-            .post('/auth/signup')
-            .send(createUserDto)
-            .expect(HttpStatus.CREATED); 
-
+        .post('/auth/signup')
+        .send(createUserDto)
+        .expect(HttpStatus.CREATED);
+        
+        const userInDb = await userModel.findOne({ email: createUserDto.email });
+        expect(userInDb).not.toBeNull();
         expect(response.body.message).toBe('User registered successfully');
     });
+    
+    it('should login an existing user and return a JWT token', async () => {
+        
+        // Check if the user exists in the database
+        //POST request. IMPORTANT: Keep same credentials as the test for signup
+        const loginResponse = await request(app.getHttpServer())
+        .post("/auth/login")
+        .send({
+            email: "john.doe@example.com",
+            password: "password123"
+        })
+        .expect(HttpStatus.OK);
+        
+        expect(loginResponse.body.message).toBe('Login successful');
+        expect(loginResponse.body.accessToken).toBeDefined();
+        validToken = loginResponse.body.accessToken;
+    });
+
+    it('should reject access to protected route without a token or with an invalid token (401)', async () => {
+        // Try to access protected route without an access token
+        await request(app.getHttpServer())
+            .post('/auth/protected')
+            .expect(HttpStatus.UNAUTHORIZED);
+
+        // Try to access protected route with an invalid token
+        await request(app.getHttpServer())
+            .post('/auth/protected')
+            .set('Authorization', 'Bearer invalid_token')
+            .expect(HttpStatus.UNAUTHORIZED);
+    });
+
+    it('should allow access to protected route with a valid token (200)', async () => {
+        // Access the protected route with a valid JWT token
+        const response = await request(app.getHttpServer())
+            .post('/auth/protected')
+            .set('Authorization', `Bearer ${validToken}`)
+            .expect(HttpStatus.OK);
+
+        expect(response.body.message).toBe('You have access to this route');
+    });
+
 
     afterAll(async () => {
         try {

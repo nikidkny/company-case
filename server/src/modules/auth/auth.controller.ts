@@ -1,11 +1,12 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from "@nestjs/common";
+import { Body, Controller, HttpCode, HttpStatus, Post, UseGuards } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { CreateUserDto } from "../users/dto/create-user.dto";
+import { JwtAuthGuard } from "./jwt-auth.guard";
 
 @Controller('auth')
 export class AuthController {
 
-  constructor(private readonly authService: AuthService) {};
+  constructor(private readonly authService: AuthService) { };
 
   @Post('signup')
   @HttpCode(HttpStatus.CREATED)
@@ -14,7 +15,8 @@ export class AuthController {
   }
 
   @Post('login')
-  async login(@Body() body: {email: string, password: string}) {
+  @HttpCode(HttpStatus.OK)
+  async login(@Body() body: { email: string, password: string }) {
     return this.authService.login(body.email, body.password);
   }
 
@@ -29,15 +31,15 @@ export class AuthController {
   }
 
   //TODO:
-  // - Review auth logic
-  // - Test login
   // - Implemnet refresh token
   // - implement logout
-  /* Example on how to use guard:
- @UseGuards(JwtAuthGuard)  // Protect routes with the guard
+
+  /* Example on how to use guard:*/
+  // This route is protected by the JwtAuthGuard
+  @UseGuards(JwtAuthGuard)
   @Post('protected')
+  @HttpCode(HttpStatus.OK)
   async protectedRoute(@Body() body) {
     return { message: 'You have access to this route' };
   }
-  */
 }

@@ -44,11 +44,11 @@ export class AuthService {
       return { message: 'User registered successfully' };
     } catch (error) {
       // Log the error in more detail
-      console.error('Error during singup',error);
+      console.error('Error during singup', error);
       if (error instanceof BadRequestException) {
         throw error;  // Re-throw the existing BadRequestException
       }
-  
+
       // If it's an unexpected error, throw an internal server error
       throw new InternalServerErrorException('An error occurred during the signup process. Please try again later.');
     }
@@ -65,6 +65,8 @@ export class AuthService {
       // Compare the provided password with the hashed password
       const isPasswordValid = await bcrypt.compare(password, userFound.password);
       if (!isPasswordValid) {
+        console.log("NOT SAME PASSWORD");
+
         throw new BadRequestException('Invalid credentials');
       }
 
@@ -77,10 +79,10 @@ export class AuthService {
         message: 'Login successful',
         accessToken
       }
-    } catch {
+    } catch (error) {
       console.error('Error during login', error);
       if (error instanceof NotFoundException || error instanceof BadRequestException) {
-        throw error; 
+        throw error;
       }
       throw new InternalServerErrorException('An unexpected error occurred');
     }

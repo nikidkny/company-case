@@ -15,7 +15,6 @@ export class JwtAuthStrategy extends PassportStrategy(Strategy) {
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             secretOrKey: configService.get<string>('JWT_SECRET')
         })
-
     }
 
     //Validate JWT payload and return user details
