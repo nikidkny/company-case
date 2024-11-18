@@ -9,8 +9,8 @@ export default function NavigationBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   return (
-    <div className="border-0 border-b border-solid border-gray-300">
-      <div className="flex flex-row items-center justify-between px-6 ">
+    <div className="border-0 border-b border-solid border-gray-300 relative">
+      <div className="flex flex-row items-center justify-between px-6 relative z-20 bg-white">
         <div className="flex flex-col">
           <TextHeadline size="sm" variant="h1">
             Musik Samspil
@@ -19,7 +19,6 @@ export default function NavigationBar() {
             Part of DAOS - Danish{" "}
           </TextBody>
         </div>
-
         {/*this button is to change to burgerbutton */}
         <Button
           iconPosition="trailing"
@@ -35,9 +34,10 @@ export default function NavigationBar() {
         {/* burgermenu when open */}
       </div>
       {isMenuOpen && (
-        <div className="bg-white">
-          <ul className="space-y-2 list-none flex flex-col items-center text-center">
-            {/* links font size should be changed to match the buttons */}
+        <div className="absolute top-33 z-20 b-white w-full">
+          <ul className="space-y-2 bg-white list-none flex flex-col text-center m-0 px-6 pt-6">
+            {/* links font size should be changed to match the buttons 
+             "*/}
             <li>
               <Link href="#">Home</Link>
             </li>
@@ -59,6 +59,8 @@ export default function NavigationBar() {
           </ul>
         </div>
       )}
+
+      {isMenuOpen && <div className="fixed inset-0 bg-black bg-opacity-50 z-10" onClick={toggleMenu}></div>}
     </div>
   );
 }
