@@ -6,7 +6,7 @@ interface Props {
   step?: number;
   value: number;
   onChange: (value: number) => void;
-  classnames?: string;
+  className?: string;
 }
 
 export default function RangeInput({
@@ -15,9 +15,9 @@ export default function RangeInput({
   step = 1,
   value,
   onChange,
-  classnames,
+  className,
 }: Props) {
-  const classes = classNames("range-input", classnames);
+  const classes = classNames("range-input", className);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onChange(Number(event.target.value));

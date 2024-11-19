@@ -6,16 +6,16 @@ interface DropdownInputProps {
   selectedLabel: string;
   onClick: () => void;
   isOpen: boolean;
-  classnames?: string;
+  className?: string;
 }
 
 export default function DropdownInput({
   selectedLabel,
   onClick,
   isOpen,
-  classnames,
+  className,
 }: DropdownInputProps) {
-  const classes = classNames(["dropdown-input", classnames]);
+  const classes = classNames(["dropdown-input", className]);
 
   const handleClick = () => {
     onClick();

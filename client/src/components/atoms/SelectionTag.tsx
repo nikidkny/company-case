@@ -4,14 +4,14 @@ interface Props {
   label: string;
   selected: boolean;
   onSelect: () => void;
-  classnames?: string;
+  className?: string;
 }
 
 export default function SelectionTag(props: Props) {
   const classes = classNames(
     "selection-tag",
     [{ "selection-tag--selected": props.selected }],
-    props.classnames
+    props.className
   );
 
   return (

@@ -16,7 +16,7 @@ interface Props {
   iconWidth?: number;
   iconHeight?: number;
   iconViewbox?: string;
-  classnames?: string;
+  className?: string;
 }
 
 export default function IconButton({
@@ -29,7 +29,7 @@ export default function IconButton({
   iconHeight = 24,
   iconViewbox = "0 0 24 24",
   onClick,
-  classnames,
+  className,
 }: Props) {
   const classes = classNames([
     "btn",
@@ -38,7 +38,7 @@ export default function IconButton({
       [`btn-${buttonState}`]: buttonState === "disabled",
     },
     { [`icon-btn-${iconPosition}`]: iconPosition },
-    classnames,
+    className,
   ]);
 
   return (

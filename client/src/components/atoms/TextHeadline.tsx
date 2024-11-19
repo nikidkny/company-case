@@ -4,10 +4,10 @@ interface Props {
   children: React.ReactNode;
   variant?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "span" | "strong" | "em";
   size?: "lg" | "sm";
-  classnames?: string;
+  className?: string;
 }
 
-export default function TextHeadline({ children, variant = "h1", size = "lg", classnames }: Props) {
+export default function TextHeadline({ children, variant = "h1", size = "lg", className }: Props) {
   const classes = classNames(
     [
       { "text--h1-lg": size === "lg" && variant === "h1" },
@@ -25,7 +25,7 @@ export default function TextHeadline({ children, variant = "h1", size = "lg", cl
       { "text-bold": variant === "strong" },
       { "text-italic": variant === "em" },
     ],
-    classnames
+    className
   );
 
   const Element = variant;

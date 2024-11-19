@@ -3,11 +3,11 @@ import classNames from "classnames";
 interface Props {
   label: string;
   onSelect: () => void;
-  classnames?: string;
+  className?: string;
 }
 
-export default function DropdownItem({ label, onSelect, classnames }: Props) {
-  const classes = classNames(["dropdown-item", classnames]);
+export default function DropdownItem({ label, onSelect, className }: Props) {
+  const classes = classNames(["dropdown-item", className]);
   return (
     <div onClick={onSelect} className={classes}>
       {label}

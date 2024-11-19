@@ -4,10 +4,10 @@ interface Props {
   children: React.ReactNode;
   variant?: "p" | "span" | "div" | "strong" | "em";
   size?: "lg" | "md" | "sm";
-  classnames?: string;
+  className?: string;
 }
 
-export default function TextBody({ children, variant = "p", size = "md", classnames }: Props) {
+export default function TextBody({ children, variant = "p", size = "md", className }: Props) {
   const classes = classNames(
     [
       { "text--body-sm": size === "sm" },
@@ -16,7 +16,7 @@ export default function TextBody({ children, variant = "p", size = "md", classna
       { "text-bold": variant === "strong" },
       { "text-italic": variant === "em" },
     ],
-    classnames
+    className
   );
 
   const Element = variant;

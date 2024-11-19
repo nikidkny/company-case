@@ -5,7 +5,7 @@ import { Icon } from "./Icon/Icon";
 interface Props {
   name: string;
   checked?: boolean;
-  classnames?: string;
+  className?: string;
   disabled?: boolean;
   label: string;
   shouldValidate?: boolean;
@@ -17,7 +17,7 @@ interface Props {
 export default function Checkbox({
   name,
   label,
-  classnames,
+  className,
   disabled,
   required,
   shouldValidate,
@@ -32,7 +32,7 @@ export default function Checkbox({
       "text-green-500": shouldValidate && valid,
       "text-red-500": shouldValidate && !valid,
     },
-    classnames
+    className
   );
 
   const iconWrapperClasses = classNames(

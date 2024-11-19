@@ -6,13 +6,13 @@ import classNames from "classnames";
 interface DropdownProps {
   options: string[];
   initialSelectedLabel?: string;
-  classnames?: string;
+  className?: string;
 }
 
 export function Dropdown({
   options,
   initialSelectedLabel = "Select an option",
-  classnames,
+  className,
 }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedLabel, setSelectedLabel] = useState(initialSelectedLabel);
@@ -22,7 +22,7 @@ export function Dropdown({
     setIsOpen(false);
   };
 
-  const classes = classNames("relative inline-block w-64", classnames);
+  const classes = classNames("relative inline-block w-64", className);
   return (
     <div className={classes}>
       <DropdownInput

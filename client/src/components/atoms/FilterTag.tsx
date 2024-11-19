@@ -4,7 +4,7 @@ import { useState } from "react";
 interface Props {
   label: string;
   onToggle?: (selected: boolean) => void;
-  classnames?: string;
+  className?: string;
 }
 
 export default function SelectionTag(props: Props) {
@@ -25,7 +25,7 @@ export default function SelectionTag(props: Props) {
       [`filter-tag-selected`]: selected === true,
       // "text-blue-500 bg-gray-400": !selected,
     },
-    props.classnames,
+    props.className,
   ]);
 
   return (
