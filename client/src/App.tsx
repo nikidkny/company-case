@@ -26,9 +26,12 @@ function App() {
   const [rangeValue, setRangeValue] = useState(50);
   const [progressValue] = useState(50);
   const [selected] = useState(false);
-  const [IsChecked, setChecked] = useState(true);
+  const [IsChecked, setChecked] = useState(false);
   const options = ["Option 1", "Option 2", "Option 3"];
 
+  const handleCheckboxToggle = (checked: boolean) => {
+    setChecked(checked);
+  };
   // change selected to true to see the selected state
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const tags = ["React", "TypeScript", "Tailwind"];
@@ -43,20 +46,83 @@ function App() {
       <PostBadge PostBadgeType="wanted" PostBadgeSize="large" />
       <ProfileBadge ProfileBadgeSize="small" ProfileBadgeType="seeking" />
       <ProfileBadge ProfileBadgeSize="large" ProfileBadgeType="not-seeking" />
-      <Button iconPosition="none" buttonState="default" buttonLabel="Click me" buttonVariant="primary" />
-      <Button iconPosition="none" buttonState="default" buttonLabel="Click me" buttonVariant="secondary" />
-      <Button iconPosition="trailing" buttonState="default" buttonLabel="Click me" buttonVariant="primary" icon={ICON_NAMES.author_icon} iconHeight={13.887} iconWidth={13.887} iconViewbox={"0 0 13.887 13.887"} />
-      <Button iconPosition="leading" buttonState="disabled" buttonLabel="Click me" buttonVariant="secondary" icon={ICON_NAMES.author_icon} iconHeight={13.887} iconWidth={13.887} iconViewbox={"0 0 13.887 13.887"} />
-      <NavigationBar />
-      <Checkbox name="checkbox" label="Checkbox" checked={IsChecked} onChange={setChecked} />
+
+      <Button
+        iconPosition="none"
+        buttonState="default"
+        buttonLabel="Click me"
+        buttonVariant="primary"
+      />
+      <Button
+        iconPosition="none"
+        buttonState="default"
+        buttonLabel="Click me"
+        buttonVariant="secondary"
+      />
+      <Button
+        iconPosition="trailing"
+        buttonState="default"
+        buttonLabel="Click me"
+        buttonVariant="primary"
+        icon={ICON_NAMES.author_icon}
+        iconHeight={13.887}
+        iconWidth={13.887}
+        iconViewbox={"0 0 13.887 13.887"}
+      />
+      <Button
+        iconPosition="leading"
+        buttonState="default"
+        buttonLabel="Click me"
+        buttonVariant="secondary"
+        icon={ICON_NAMES.author_icon}
+        iconHeight={13.887}
+        iconWidth={13.887}
+        iconViewbox={"0 0 13.887 13.887"}
+      />
+      <Button
+        iconPosition="trailing"
+        buttonState="default"
+        buttonVariant="borderless"
+        icon={ICON_NAMES.author_icon}
+        iconHeight={13.887}
+        iconWidth={13.887}
+        iconViewbox={"0 0 13.887 13.887"}
+      />
+      <Button
+        iconPosition="top"
+        buttonState="default"
+        buttonVariant="primary"
+        buttonLabel="Click me"
+        icon={ICON_NAMES.author_icon}
+        iconHeight={13.887}
+        iconWidth={13.887}
+        iconViewbox={"0 0 13.887 13.887"}
+      />
+      <Button
+        iconPosition="bottom"
+        buttonState="default"
+        buttonVariant="primary"
+        buttonLabel="Click me"
+        icon={ICON_NAMES.author_icon}
+        iconHeight={13.887}
+        iconWidth={13.887}
+        iconViewbox={"0 0 13.887 13.887"}
+      />
+      <Checkbox
+        name="checkbox"
+        label="Checkbox"
+        checked={IsChecked}
+        onChange={handleCheckboxToggle}
+      />
+
       <Dropdown options={options} />
-      <div className="flex space-x-2">
+      <div className="flex space-x-2 items-center">
         {tags.map((tag) => (
           <FilterTag key={tag} label={tag} onToggle={(isSelected) => handleTagToggle(tag, isSelected)} />
         ))}
         <p>Selected Tags: {selectedTags.join(", ")}</p>
       </div>
-      <Image src="https://via.placeholder.com/150" alt="Placeholder" width="150" height="150" />
+      <Image src="https://picsum.photos/150" alt="Placeholder" width="150" height="150" />
       <ImageInput onImageChange={(file) => console.log(file)} />
       <Link href="">Link</Link>
       <ProgressBar progress={progressValue} />
@@ -82,7 +148,9 @@ function App() {
         Small Strong
       </TextBody>
       <TextHeadline>Headline</TextHeadline>
-      <TextHeadline variant="h1">H1</TextHeadline>
+      <TextHeadline variant="h1" size="sm">
+        H1
+      </TextHeadline>
       <TextHeadline variant="h2">H2</TextHeadline>
       <TextHeadline variant="h3">H3</TextHeadline>
       <TextHeadline variant="span">Span</TextHeadline>

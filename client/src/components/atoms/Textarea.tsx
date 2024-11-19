@@ -5,6 +5,7 @@ interface Props {
   textareaValue?: string;
   onChange: (value: string) => void;
   rows?: number;
+  className?: string;
 }
 
 export default function Textarea({
@@ -12,8 +13,9 @@ export default function Textarea({
   textareaValue = "",
   onChange,
   rows = 4,
+  className,
 }: Props) {
-  const classes = classNames([`textarea`]);
+  const classes = classNames(`textarea`, className);
 
   return (
     <textarea

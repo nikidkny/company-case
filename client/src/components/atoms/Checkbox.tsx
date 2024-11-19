@@ -51,8 +51,12 @@ export default function Checkbox({
     }
   );
 
+  const handleChange = () => {
+    onChange(!checked);
+  };
+
   return (
-    <div className={containerClasses}>
+    <div className={containerClasses} onClick={handleChange}>
       <input
         type="checkbox"
         name={name}
@@ -71,7 +75,7 @@ export default function Checkbox({
           className={iconClasses}
         />
       </div>
-      <label htmlFor={name} className="text-gray-800 peer-disabled:text-gray-400">
+      <label htmlFor={name} className="text-gray-800 peer-disabled:text-gray-400 cursor-pointer">
         {label}
       </label>
     </div>
