@@ -67,17 +67,17 @@ export default defineConfig({
     // TYPOGRAPHY
     // HEADINGS
     // desktop
-    "text--h1-lg": "text-h1-lg font-oswald text-red leading-1.08",
-    "text--h2-lg": "text-h2-lg font-oswald text-blue-500 leading-1.11",
-    "text--h3-lg": "text-h3-lg font-oswald text-blue-500 leading-1.5",
+    "text--h1-lg": "text-h1-lg font-oswald text-red-500 leading-1.08 my-0",
+    "text--h2-lg": "text-h2-lg font-oswald text-blue-500 leading-1.11 my-0",
+    "text--h3-lg": "text-h3-lg font-oswald text-blue-500 leading-1.5 my-0",
     // mobile
-    "text--h1-sm": "text-h1-sm font-oswald text-red leading-1.13",
-    "text--h2-sm": "text-h2-sm font-oswald text-blue-500 leading-1.13",
-    "text--h3-sm": "text-h3-sm font-oswald text-blue-500 leading-1.5",
+    "text--h1-sm": "text-h1-sm font-oswald text-red-500 leading-1.13 my-0",
+    "text--h2-sm": "text-h2-sm font-oswald text-blue-500 leading-1.13 my-0",
+    "text--h3-sm": "text-h3-sm font-oswald text-blue-500 leading-1.5 my-0",
     // BODY
-    "text--body-lg": "text-body-lg font-montserrat text-gray-500 leading-1.625",
-    "text--body-md": "text-body-md font-montserrat text-gray-500 leading-1.29",
-    "text--body-sm": "text-body-sm font-montserrat text-gray-500 leading-1.25 font-bold",
+    "text--body-lg": "text-body-lg font-montserrat text-gray-500 leading-1.625 m-0",
+    "text--body-md": "text-body-md font-montserrat text-gray-500 leading-1.29 m-0",
+    "text--body-sm": "text-body-sm font-montserrat text-gray-500 leading-1.25 font-bold m-0",
     // link
     link: "text-blue-500 font-montserrat text-body-md leading-1.19 font-bold no-underline",
     //button
@@ -86,13 +86,18 @@ export default defineConfig({
     "btn-secondary":
       "bg-white text-blue-500 border-solid border-1px border-gray-400 hover:bg-gray-200 border-1px border-solid border-gray-400",
     "btn-tertiary": "bg-red-500 text-white hover:bg-red-400",
+    "btn-borderless": "bg-transparent border-none shadow-none",
     "btn-disabled": "opacity-50 cursor-not-allowed",
+    "icon-btn-leading": "flex items-center gap-2",
+    "icon-btn-trailing": "flex items-center gap-2",
+    "icon-btn-top": "flex flex-col items-center gap-2",
+    "icon-btn-bottom": "flex flex-col items-center gap-2",
     //checkbox
     checkbox: "w-4 h-4 border-1px border-gray-400 bg-gray-400 rounded-1px",
     "checkbox-label": "text-black font-montserrat text-body-md leading-1.29",
     //filter tag
     "filter-tag":
-      "text-blue-500 bg-gray-400 inline-flex items-center px-3 py-1 rounded-full text-sm font-medium cursor-pointer transition-colors border-none focus:outline-none font-bold",
+      "w-fit h-fit text-blue-500 bg-gray-400 px-4.5 py-2.5 rounded-4.5 text-body-sm font-bold cursor-pointer transition-colors border-none focus:outline-none ",
     "filter-tag-selected": "bg-blue-500 text-white border-none",
     //post badge
     "post-badge--large":
@@ -139,9 +144,15 @@ export default defineConfig({
     "text--body-md",
     "text--body-sm",
     "link",
+    "btn",
     "btn-primary",
     "btn-secondary",
     "btn-tertiary",
+    "btn-borderless",
+    "icon-btn-leading",
+    "icon-btn-trailing",
+    "icon-btn-top",
+    "icon-btn-bottom",
     "btn-disabled",
     "checkbox",
     "checkbox-label",

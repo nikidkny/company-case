@@ -6,7 +6,7 @@ interface Props {
 }
 
 export default function ProgressBar(props: Props) {
-  const classes = classNames(["progress-bar"]);
+  const classes = classNames("progress-bar", props.className);
   return (
     <div className={classes}>
       <div className="progress-bar__fill" style={{ width: `${props.progress}%` }} />

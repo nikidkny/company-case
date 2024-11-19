@@ -6,10 +6,11 @@ interface Props {
   radioValue: string;
   checked?: boolean;
   onChange: (value: string) => void;
+  className?: string;
 }
 
 export default function RadioButton(props: Props) {
-  const labelClasses = classNames("radio-btn");
+  const labelClasses = classNames("radio-btn", props.className);
   const inputClasses = classNames({ ["radio-btn--checked"]: props.checked === true });
 
   return (
