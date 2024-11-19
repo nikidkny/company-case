@@ -67,11 +67,11 @@ export default defineConfig({
     // TYPOGRAPHY
     // HEADINGS
     // desktop
-    "text--h1-lg": "text-h1-lg font-oswald text-red leading-1.08 my-0",
+    "text--h1-lg": "text-h1-lg font-oswald text-red-500 leading-1.08 my-0",
     "text--h2-lg": "text-h2-lg font-oswald text-blue-500 leading-1.11 my-0",
     "text--h3-lg": "text-h3-lg font-oswald text-blue-500 leading-1.5 my-0",
     // mobile
-    "text--h1-sm": "text-h1-sm font-oswald text-red leading-1.13 my-0",
+    "text--h1-sm": "text-h1-sm font-oswald text-red-500 leading-1.13 my-0",
     "text--h2-sm": "text-h2-sm font-oswald text-blue-500 leading-1.13 my-0",
     "text--h3-sm": "text-h3-sm font-oswald text-blue-500 leading-1.5 my-0",
     // BODY
@@ -90,6 +90,8 @@ export default defineConfig({
     "btn-disabled": "opacity-50 cursor-not-allowed",
     "icon-btn-leading": "flex items-center gap-2",
     "icon-btn-trailing": "flex items-center gap-2",
+    "icon-btn-top": "flex flex-col items-center gap-2",
+    "icon-btn-bottom": "flex flex-col items-center gap-2",
     //checkbox
     checkbox: "w-4 h-4 border-1px border-gray-400 bg-gray-400 rounded-1px",
     "checkbox-label": "text-black font-montserrat text-body-md leading-1.29",
@@ -142,10 +144,15 @@ export default defineConfig({
     "text--body-md",
     "text--body-sm",
     "link",
+    "btn",
     "btn-primary",
     "btn-secondary",
     "btn-tertiary",
     "btn-menu",
+    "icon-btn-leading",
+    "icon-btn-trailing",
+    "icon-btn-top",
+    "icon-btn-bottom",
     "btn-disabled",
     "checkbox",
     "checkbox-label",

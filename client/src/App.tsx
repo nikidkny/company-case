@@ -86,6 +86,26 @@ function App() {
         iconWidth={13.887}
         iconViewbox={"0 0 13.887 13.887"}
       />
+      <Button
+        iconPosition="top"
+        buttonState="default"
+        buttonVariant="primary"
+        buttonLabel="Click me"
+        icon={ICON_NAMES.author_icon}
+        iconHeight={13.887}
+        iconWidth={13.887}
+        iconViewbox={"0 0 13.887 13.887"}
+      />
+      <Button
+        iconPosition="bottom"
+        buttonState="default"
+        buttonVariant="primary"
+        buttonLabel="Click me"
+        icon={ICON_NAMES.author_icon}
+        iconHeight={13.887}
+        iconWidth={13.887}
+        iconViewbox={"0 0 13.887 13.887"}
+      />
       <Checkbox
         name="checkbox"
         label="Checkbox"
