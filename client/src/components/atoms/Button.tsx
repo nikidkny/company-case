@@ -2,7 +2,7 @@ import { Icon } from "./Icon/Icon";
 import { ICON_NAMES } from "./Icon/IconNames";
 import classNames from "classnames";
 
-type type = "primary" | "secondary" | "tertiary" | "menu";
+type type = "primary" | "secondary" | "tertiary" | "borderless";
 type state = "default" | "hover" | "disabled" | "active";
 
 interface Props {

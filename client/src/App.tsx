@@ -80,7 +80,7 @@ function App() {
       <Button
         iconPosition="trailing"
         buttonState="default"
-        buttonVariant="menu"
+        buttonVariant="borderless"
         icon={ICON_NAMES.author_icon}
         iconHeight={13.887}
         iconWidth={13.887}
