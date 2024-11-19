@@ -1,11 +1,12 @@
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from '../users/user.entity';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import * as bcrypt from "bcryptjs";
 import { JwtService } from '@nestjs/jwt';
 import { error } from 'console';
+import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
 
 @Injectable()
 export class AuthService {
@@ -105,9 +106,9 @@ export class AuthService {
       const payload = this.jwtService.verify(refreshToken, {
         secret: process.env.JWT_REFRESH_SECRET
       });
-      
+
       const user = await this.userModel.findById(payload.sub);
-      
+
       //Generate new acess token
       const newAccessToken = this.jwtService.sign(
         { email: user.email, sub: user.id },
@@ -116,7 +117,7 @@ export class AuthService {
           expiresIn: '60m'
         }
       );
-      
+
       return {
         accessToken: newAccessToken
       }
@@ -125,6 +126,4 @@ export class AuthService {
     }
 
   }
-
-  async logout() { }
 }
