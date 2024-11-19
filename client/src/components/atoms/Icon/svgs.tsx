@@ -111,7 +111,7 @@ export default {
   } satisfies SvgReturnType,
   [ICON_NAMES.footer_music]: {
     svg: (
-      <g id="footer-music" transform="translate(0 0)" opacity="0.3">
+      <g id="footer-music" opacity="0.3">
         <g id="Group_689" data-name="Group 689">
           <g id="Group_684" data-name="Group 684">
             <path

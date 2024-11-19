@@ -31,7 +31,7 @@ export default function Hero({ loginStatus }: Props) {
             iconHeight={13.887}
             iconWidth={13.887}
             iconViewbox={"0 0 13.887 13.887"}
-            to={"/posts#top"}
+            to={"/posts"}
             className="no-underline"
           ></Button>
           <Button

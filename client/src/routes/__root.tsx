@@ -1,5 +1,6 @@
 import { createRootRoute, Outlet, ScrollRestoration } from "@tanstack/react-router";
 import NavigationBar from "../components/molecules/NavigationBar";
+import Footer from "../components/molecules/Footer";
 
 //elements that apply to all pages can be put here fx navigation, footer
 export const Route = createRootRoute({
@@ -25,6 +26,7 @@ export const Route = createRootRoute({
       {/* //the outlet component is the content extracted from the respective route. */}
       <Outlet />
       {/*footer */}
+      <Footer />
     </>
   ),
 });
