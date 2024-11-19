@@ -86,7 +86,7 @@ export default defineConfig({
     "btn-secondary":
       "bg-white text-blue-500 border-solid border-1px border-gray-400 hover:bg-gray-200 border-1px border-solid border-gray-400",
     "btn-tertiary": "bg-red-500 text-white hover:bg-red-400",
-    "btn-menu": "bg-transparent border-none shadow-none",
+    "btn-borderless": "bg-transparent border-none shadow-none",
     "btn-disabled": "opacity-50 cursor-not-allowed",
     "icon-btn-leading": "flex items-center gap-2",
     "icon-btn-trailing": "flex items-center gap-2",
@@ -148,7 +148,7 @@ export default defineConfig({
     "btn-primary",
     "btn-secondary",
     "btn-tertiary",
-    "btn-menu",
+    "btn-borderless",
     "icon-btn-leading",
     "icon-btn-trailing",
     "icon-btn-top",
