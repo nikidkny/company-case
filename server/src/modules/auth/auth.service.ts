@@ -126,5 +126,5 @@ export class AuthService {
 
   }
 
-  logout() { }
+  async logout() { }
 }

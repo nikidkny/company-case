@@ -34,6 +34,7 @@ export class AuthController {
 
   //TODO:
   // - implement logout
+  // - Test logout logic both postman and e2e
 
   /* Example on how to use guard:*/
   // This route is protected by the JwtAuthGuard
