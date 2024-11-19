@@ -10,7 +10,7 @@ interface Props {
 export default function Hero({ loginStatus }: Props) {
   return (
     //hero container
-    <div>
+    <>
       {/* 
   CTA for profile?
   buttons */}
@@ -18,15 +18,15 @@ export default function Hero({ loginStatus }: Props) {
         <div className="w-full max-w-sm xs:max-w-xs">
           {(!loginStatus && <Icon name={ICON_NAMES.hero_image} viewBox={"0 0 470 325.475"} className="w-full h-auto" />) || <Icon name={ICON_NAMES.profile_welcome} viewBox={"0 0 153.993 159.24"} className="w-full h-auto" />}
         </div>
-        <TextHeadline size="sm" variant="h1">
+        <TextHeadline size="sm" variant="h1" className="py-6">
           {(!loginStatus && "A place where musicians find musicians and play music together") || `Welcome back '${"user.name"}'!`}
         </TextHeadline>
-        <div className="flex flex-row justify-between gap-4 w-full">
+        <div className="flex flex-row justify-between gap-4 w-full text-blue-500">
           <Button
             buttonState="default"
             buttonLabel="Find posts"
             buttonVariant="secondary"
-            iconPosition="leading"
+            iconPosition="top"
             icon={ICON_NAMES.author_icon}
             iconHeight={13.887}
             iconWidth={13.887}
@@ -38,7 +38,7 @@ export default function Hero({ loginStatus }: Props) {
             buttonState="default"
             buttonLabel="Find ensembles"
             buttonVariant="secondary"
-            iconPosition="leading"
+            iconPosition="top"
             icon={ICON_NAMES.author_icon}
             iconHeight={13.887}
             iconWidth={13.887}
@@ -48,6 +48,6 @@ export default function Hero({ loginStatus }: Props) {
           ></Button>
         </div>
       </div>
-    </div>
+    </>
   );
 }

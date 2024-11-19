@@ -10,9 +10,9 @@ export default function NavigationBar() {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   return (
     <div className="border-0 border-b border-solid border-gray-300 relative">
-      <div className="flex flex-row items-center justify-between px-6 relative z-20 bg-white">
+      <div className="flex flex-row items-center justify-between  relative z-20 bg-white h-auto w-auto p-6">
         <div className="flex flex-col">
-          <TextHeadline size="sm" variant="h1">
+          <TextHeadline size="sm" variant="h1" className="py-1">
             Musik Samspil
           </TextHeadline>
           <TextBody variant="p" size="lg">
@@ -34,7 +34,7 @@ export default function NavigationBar() {
         {/* burgermenu when open */}
       </div>
       {isMenuOpen && (
-        <div className="absolute top-33 z-20 b-white w-full">
+        <div className="absolute top-28 z-20 b-white w-full">
           <ul className="space-y-2 bg-white list-none flex flex-col text-center m-0 px-6 pt-6">
             {/* links font size should be changed to match the buttons 
              "*/}
