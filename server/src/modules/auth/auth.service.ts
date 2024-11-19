@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from '../users/user.entity';
 import { Model } from 'mongoose';
@@ -72,12 +72,22 @@ export class AuthService {
 
       // Create the payload for the JW
       const payload = { email: userFound.email, sub: userFound._id };
-      // Sign the JWT with the payload and return it
-      const accessToken = this.jwtService.sign(payload);
+
+      // Sign the JWT with the payload 
+      const accessToken = this.jwtService.sign(payload, {
+        secret: process.env.JWT_SECRET,
+        expiresIn: '60min'
+      });
+
+      const refreshToken = this.jwtService.sign(payload, {
+        secret: process.env.JWT_REFRESH_SECRET,
+        expiresIn: '1d'
+      })
 
       return {
         message: 'Login successful',
-        accessToken
+        accessToken,
+        refreshToken
       }
     } catch (error) {
       console.error('Error during login', error);
@@ -88,6 +98,33 @@ export class AuthService {
     }
   }
 
+  async refreshToken(refreshToken: string) {
+    try {
+
+      //Verify refresh token
+      const payload = this.jwtService.verify(refreshToken, {
+        secret: process.env.JWT_REFRESH_SECRET
+      });
+      
+      const user = await this.userModel.findById(payload.sub);
+      
+      //Generate new acess token
+      const newAccessToken = this.jwtService.sign(
+        { email: user.email, sub: user.id },
+        {
+          secret: process.env.JWT_SECRET,
+          expiresIn: '60m'
+        }
+      );
+      
+      return {
+        accessToken: newAccessToken
+      }
+    } catch (error) {
+      throw new UnauthorizedException('Invalid or expired refresh token')
+    }
+
+  }
+
   logout() { }
-  refresh() { }
 }

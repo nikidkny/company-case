@@ -25,13 +25,14 @@ export class AuthController {
     // Empty endpoint for logout
   }
 
+  //TODO: implement in the client-side to detect '401 unauthorised' and call te refresh endpoint
   @Post('refresh')
-  refresh() {
-    // Empty endpoint for token refresh
+  @HttpCode(HttpStatus.OK)
+  async refresh(@Body('refreshToken') refreshToken: string) {
+    return this.authService.refreshToken(refreshToken);
   }
 
   //TODO:
-  // - Implemnet refresh token
   // - implement logout
 
   /* Example on how to use guard:*/
