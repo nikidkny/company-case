@@ -17,25 +17,37 @@ export class AuthController {
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Body() body: { email: string, password: string }) {
-    return this.authService.login(body.email, body.password);
+  async login(@Body() body: { email: string, password: string }, @Res() res: Response) {
+    const { accessToken, refreshToken } = await this.authService.login(body.email, body.password);
+
+    // Set the access token and refresh token as HTTP-only cookies
+    res.cookie('accessToken', accessToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production'});
+    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production'});
+
+    return res.json({ message: 'Login successful' });
   }
 
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   async logout(@Res() res: Response) {
-    // Clear both the accessToken and refreshToken from cookies
-    res.clearCookie('accessToken', { httpOnly: true, secure: true });  // Optional: secure flag for HTTPS cookies
-    res.clearCookie('refreshToken', { httpOnly: true, secure: true });
+    // Clear both the accessToken and refreshToken cookies
+    res.clearCookie('accessToken', { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+    res.clearCookie('refreshToken', { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
 
-    return { message: 'Logout successful' };
+    return res.json({ message: 'Logout successful' });
   }
 
   //TODO: implement in the client-side to detect '401 unauthorised' and call te refresh endpoint
+ 
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
-  async refresh(@Body('refreshToken') refreshToken: string) {
-    return this.authService.refreshToken(refreshToken);
+  async refresh(@Body('refreshToken') refreshToken: string, @Res() res: Response) {
+    const { accessToken } = await this.authService.refreshToken(refreshToken);
+
+    // Set the new access token as an HTTP-only cookie
+    res.cookie('accessToken', accessToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+
+    return res.json({ message: 'Access token refreshed' });
   }
 
   //TODO:
