@@ -21,12 +21,13 @@ export class AuthController {
     const { accessToken, refreshToken } = await this.authService.login(body.email, body.password);
 
     // Set the access token and refresh token as HTTP-only cookies
-    res.cookie('accessToken', accessToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production'});
-    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production'});
+    res.cookie('accessToken', accessToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict'});
+    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict'});
 
     return res.json({ message: 'Login successful' });
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   async logout(@Res() res: Response) {
@@ -38,21 +39,19 @@ export class AuthController {
   }
 
   //TODO: implement in the client-side to detect '401 unauthorised' and call te refresh endpoint
- 
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
   async refresh(@Body('refreshToken') refreshToken: string, @Res() res: Response) {
     const { accessToken } = await this.authService.refreshToken(refreshToken);
 
     // Set the new access token as an HTTP-only cookie
-    res.cookie('accessToken', accessToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+    res.cookie('accessToken', accessToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict' });
 
     return res.json({ message: 'Access token refreshed' });
   }
 
   //TODO:
-  // - Improve the login logic to send cookies
-  // - Test logout logic both postman and e2e
+  // - Double check e2e test for every ednpoint since you've implemented cookies 
 
   /* Example on how to use guard:*/
   // This route is protected by the JwtAuthGuard
