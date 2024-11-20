@@ -124,11 +124,36 @@ describe('AuthController (e2e)', () => {
     expect(response.body.message).toBe('Unauthorized');
   });
 
-  /* TODO:
-  it('should allow access to protected route with a valid token (200)', async () => {
- 
- });
+  //TODO: 'Should issue a new access token using the refresh token'
   
+  /* TODO: cannot find a way to set cookies properrly
+  it('should allow access to protected route with a valid token (200)', async () => {
+    // Re-login to get a fresh valid token for this test
+    const loginResponse = await request(app.getHttpServer())
+      .post("/auth/login")
+      .send({
+        email: "john.doe@example.com",
+        password: "password123"
+      })
+      .expect(HttpStatus.OK);
+
+    // Verify the response contains accessToken and refreshToken cookies
+    const cookies = loginResponse.headers['set-cookie'] as unknown as string[];
+    expect(cookies).toBeDefined();
+    expect(cookies.some(cookie => cookie.startsWith('accessToken='))).toBeTruthy();
+
+    const accessTokenCookie = cookies.find(cookie => cookie.startsWith('accessToken='));
+    const accessToken = accessTokenCookie?.split(';')[0].split('=')[1];
+
+    // Make a POST request to the protected route with the valid token in the cookies
+    const response = await request(app.getHttpServer())
+      .post('/auth/protected')
+      .set('Cookie', `accessToken=${accessToken}; Path=/; HttpOnly`)
+      .expect(HttpStatus.OK);
+
+    // Check that the response is successful and contains the expected data
+    expect(response.body.message).toBe('Protected route accessed');
+  });
   */
 
   afterAll(async () => {
