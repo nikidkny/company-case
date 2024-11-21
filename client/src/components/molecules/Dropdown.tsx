@@ -1,13 +1,19 @@
 import { useState } from "react";
 import DropdownInput from "../atoms/DropdownInput";
 import DropdownItem from "../atoms/DropdownItem";
+import classNames from "classnames";
 
 interface DropdownProps {
   options: string[];
   initialSelectedLabel?: string;
+  className?: string;
 }
 
-export function Dropdown({ options, initialSelectedLabel = "Select an option" }: DropdownProps) {
+export function Dropdown({
+  options,
+  initialSelectedLabel = "Select an option",
+  className,
+}: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedLabel, setSelectedLabel] = useState(initialSelectedLabel);
 
@@ -16,8 +22,9 @@ export function Dropdown({ options, initialSelectedLabel = "Select an option" }:
     setIsOpen(false);
   };
 
+  const classes = classNames("relative inline-block w-64", className);
   return (
-    <div className="relative inline-block w-64">
+    <div className={classes}>
       <DropdownInput
         selectedLabel={selectedLabel}
         onClick={() => setIsOpen(!isOpen)}
