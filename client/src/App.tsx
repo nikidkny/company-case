@@ -20,7 +20,6 @@ import ProfileBadge from "./components/atoms/ProfileBadge";
 import TextBody from "./components/atoms/TextBody";
 import TextHeadline from "./components/atoms/TextHeadline";
 import { Dropdown } from "./components/molecules/Dropdown";
-import NavigationBar from "./components/molecules/NavigationBar";
 
 function App() {
   const [rangeValue, setRangeValue] = useState(50);
@@ -47,73 +46,14 @@ function App() {
       <ProfileBadge ProfileBadgeSize="small" ProfileBadgeType="seeking" />
       <ProfileBadge ProfileBadgeSize="large" ProfileBadgeType="not-seeking" />
 
-      <Button
-        iconPosition="none"
-        buttonState="default"
-        buttonLabel="Click me"
-        buttonVariant="primary"
-      />
-      <Button
-        iconPosition="none"
-        buttonState="default"
-        buttonLabel="Click me"
-        buttonVariant="secondary"
-      />
-      <Button
-        iconPosition="trailing"
-        buttonState="default"
-        buttonLabel="Click me"
-        buttonVariant="primary"
-        icon={ICON_NAMES.author_icon}
-        iconHeight={13.887}
-        iconWidth={13.887}
-        iconViewbox={"0 0 13.887 13.887"}
-      />
-      <Button
-        iconPosition="leading"
-        buttonState="default"
-        buttonLabel="Click me"
-        buttonVariant="secondary"
-        icon={ICON_NAMES.author_icon}
-        iconHeight={13.887}
-        iconWidth={13.887}
-        iconViewbox={"0 0 13.887 13.887"}
-      />
-      <Button
-        iconPosition="trailing"
-        buttonState="default"
-        buttonVariant="borderless"
-        icon={ICON_NAMES.author_icon}
-        iconHeight={13.887}
-        iconWidth={13.887}
-        iconViewbox={"0 0 13.887 13.887"}
-      />
-      <Button
-        iconPosition="top"
-        buttonState="default"
-        buttonVariant="primary"
-        buttonLabel="Click me"
-        icon={ICON_NAMES.author_icon}
-        iconHeight={13.887}
-        iconWidth={13.887}
-        iconViewbox={"0 0 13.887 13.887"}
-      />
-      <Button
-        iconPosition="bottom"
-        buttonState="default"
-        buttonVariant="primary"
-        buttonLabel="Click me"
-        icon={ICON_NAMES.author_icon}
-        iconHeight={13.887}
-        iconWidth={13.887}
-        iconViewbox={"0 0 13.887 13.887"}
-      />
-      <Checkbox
-        name="checkbox"
-        label="Checkbox"
-        checked={IsChecked}
-        onChange={handleCheckboxToggle}
-      />
+      <Button iconPosition="none" buttonState="default" buttonLabel="Click me" buttonVariant="primary" />
+      <Button iconPosition="none" buttonState="default" buttonLabel="Click me" buttonVariant="secondary" />
+      <Button iconPosition="trailing" buttonState="default" buttonLabel="Click me" buttonVariant="primary" icon={ICON_NAMES.author_icon} iconHeight={13.887} iconWidth={13.887} iconViewbox={"0 0 13.887 13.887"} />
+      <Button iconPosition="leading" buttonState="default" buttonLabel="Click me" buttonVariant="secondary" icon={ICON_NAMES.author_icon} iconHeight={13.887} iconWidth={13.887} iconViewbox={"0 0 13.887 13.887"} />
+      <Button iconPosition="trailing" buttonState="default" buttonVariant="borderless" icon={ICON_NAMES.author_icon} iconHeight={13.887} iconWidth={13.887} iconViewbox={"0 0 13.887 13.887"} />
+      <Button iconPosition="top" buttonState="default" buttonVariant="primary" buttonLabel="Click me" icon={ICON_NAMES.author_icon} iconHeight={13.887} iconWidth={13.887} iconViewbox={"0 0 13.887 13.887"} />
+      <Button iconPosition="bottom" buttonState="default" buttonVariant="primary" buttonLabel="Click me" icon={ICON_NAMES.author_icon} iconHeight={13.887} iconWidth={13.887} iconViewbox={"0 0 13.887 13.887"} />
+      <Checkbox name="checkbox" label="Checkbox" checked={IsChecked} onChange={handleCheckboxToggle} />
 
       <Dropdown options={options} />
       <div className="flex space-x-2 items-center">
