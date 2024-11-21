@@ -1,6 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/ensembles/$ensembleId")({
+export const Route = createLazyFileRoute("/ensembles/$ensembleId")({
   component: EnsembleProfile,
 });
 //single ensemble profile page

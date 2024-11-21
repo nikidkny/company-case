@@ -19,10 +19,25 @@ interface Props {
   iconViewbox?: string;
   className?: string;
   to?: string;
+  customData?: { [key: string]: string }; //this is to allow the button to redirect to a page with components rendered conditionally based on the key provided. fx login/register
   children?: React.ReactNode;
 }
 
-export default function Button({ buttonLabel = "", buttonVariant = "primary", buttonState = "default", icon, iconPosition = "trailing", iconWidth = 24, iconHeight = 24, iconViewbox = "0 0 24 24", onClick, className = "", to, children }: Props) {
+export default function Button({
+  buttonLabel = "",
+  buttonVariant = "primary",
+  buttonState = "default",
+  icon,
+  iconPosition = "trailing",
+  iconWidth = 24,
+  iconHeight = 24,
+  iconViewbox = "0 0 24 24",
+  onClick,
+  className = "",
+  to,
+  customData,
+  children,
+}: Props) {
   const classes = classNames([
     "btn",
     `btn-${buttonVariant}`,
@@ -32,11 +47,12 @@ export default function Button({ buttonLabel = "", buttonVariant = "primary", bu
     { [`icon-btn-${iconPosition}`]: iconPosition },
     className,
   ]);
+  const linkHref = customData ? `${to}?${new URLSearchParams(customData).toString()}` : to;
 
   return (
     <>
       {(to && (
-        <Link href={to} className={classes} onClick={buttonState !== "disabled" ? onClick : undefined} disabled={buttonState === "disabled"}>
+        <Link href={linkHref} className={classes} params onClick={buttonState !== "disabled" ? onClick : undefined} disabled={buttonState === "disabled"}>
           {icon && iconPosition === "leading" && (
             <span className="icon-left">
               <Icon name={icon} width={iconWidth} height={iconHeight} viewBox={iconViewbox} />

@@ -25,7 +25,6 @@ export const Route = createRootRoute({
       <NavigationBar />
       {/* //the outlet component is the content extracted from the respective route. */}
       <Outlet />
-      {/*footer */}
       <Footer />
     </>
   ),

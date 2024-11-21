@@ -3,9 +3,10 @@ import TextBody from "../atoms/TextBody";
 import TextHeadline from "../atoms/TextHeadline";
 import Button from "../atoms/Button";
 import { ICON_NAMES } from "../atoms/Icon/IconNames";
-import Link from "../atoms/Link";
+import { Link } from "@tanstack/react-router";
 
 export default function NavigationBar() {
+  //need to lift this state
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   return (
@@ -15,8 +16,8 @@ export default function NavigationBar() {
           <TextHeadline size="sm" variant="h1" className="py-1">
             Musik Samspil
           </TextHeadline>
-          <TextBody variant="p" size="lg">
-            Part of DAOS - Danish{" "}
+          <TextBody variant="p" size="md" className="pt-2">
+            Created by DAOS - Danish Amateur Orchestra
           </TextBody>
         </div>
         {/*this button is to change to burgerbutton */}
@@ -34,27 +35,69 @@ export default function NavigationBar() {
         {/* burgermenu when open */}
       </div>
       {isMenuOpen && (
-        <div className="absolute top-28 z-20 b-white w-full">
-          <ul className="space-y-2 bg-white list-none flex flex-col text-center m-0 px-6 pt-6">
+        <div className="absolute top-29 z-20 b-white w-full">
+          <ul className="space-y-2 bg-white list-none flex flex-col text-center m-0 px-6 pt-6 items-stretch">
             {/* links font size should be changed to match the buttons 
              "*/}
             <li>
-              <Link href="#">Home</Link>
+              <Link to="/" onClick={toggleMenu} className="link text-base">
+                Home
+              </Link>
             </li>
             <li>
-              <Link href="#">See posts</Link>
+              {/* ------THIS IS HOW THE LINKS ARE SUPPOSED TO BE AFTER WE LIFT STATE/USESTORE------- <Link onClick={() => !loginStatus && displayPopUp(true)} to={loginStatus ? "/posts" : toggleMenu} className="link text-base">
+                See posts
+              </Link>  */}
+              <Link to="/posts" onClick={toggleMenu} className="link text-base">
+                See posts
+              </Link>
             </li>
             <li>
-              <Link href="#">Find ensemble</Link>
+              <Link to="/ensembles" onClick={toggleMenu} className="link text-base">
+                Find ensemble
+              </Link>
             </li>
             <li className="p-b">
-              <Link href="#">Profile</Link>
+              <Link
+                to="/profile/$profileId"
+                onClick={toggleMenu}
+                className="link text-base"
+                params={{
+                  profileId: "profileNameOrId",
+                }}
+              >
+                Profile
+              </Link>
             </li>
-            <li className="w-full">
-              <Button size="mobile" iconPosition="none" buttonState="default" buttonVariant="primary" buttonLabel="Create profile" className="w-full inline"></Button>
+            <li className="">
+              <Button
+                size="mobile"
+                iconPosition="top"
+                buttonState="default"
+                buttonVariant="primary"
+                buttonLabel="Create profile"
+                to="/accounts"
+                customData={{
+                  intent: "register",
+                }}
+                onClick={toggleMenu}
+                className="no-underline w-auto"
+              ></Button>
             </li>
-            <li className="w-full p-be-6">
-              <Button size="mobile" iconPosition="none" buttonState="default" buttonVariant="secondary" buttonLabel="Log in" className="w-full inline"></Button>
+            <li className="p-be-8">
+              <Button
+                size="mobile"
+                iconPosition="top"
+                buttonState="default"
+                buttonVariant="secondary"
+                buttonLabel="Log in"
+                customData={{
+                  intent: "login",
+                }}
+                to="/accounts"
+                onClick={toggleMenu}
+                className="no-underline w-auto"
+              ></Button>
             </li>
           </ul>
         </div>

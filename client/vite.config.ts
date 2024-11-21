@@ -11,7 +11,7 @@ export default defineConfig({
     TanStackRouterVite(),
     UnoCSS({
       presets: [presetUno()],
-      include: [/\.tsx?$/, /\.jsx?$/],
+      content: { pipeline: { include: [/\.tsx?$/, /\.jsx?$/] } },
     }),
   ],
 });

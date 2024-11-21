@@ -13,38 +13,48 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as PostsImport } from './routes/posts'
-import { Route as EnsemblesImport } from './routes/ensembles'
-import { Route as AssetsImport } from './routes/assets'
-import { Route as PostsIndexImport } from './routes/posts.index'
-import { Route as EnsemblesIndexImport } from './routes/ensembles.index'
-import { Route as ProfileProfileIdImport } from './routes/profile.$profileId'
-import { Route as PostsPostIdImport } from './routes/posts.$postId'
-import { Route as EnsemblesEnsembleIdImport } from './routes/ensembles.$ensembleId'
 
 // Create Virtual Routes
 
+const PostsLazyImport = createFileRoute('/posts')()
+const EnsemblesLazyImport = createFileRoute('/ensembles')()
+const AssetsLazyImport = createFileRoute('/assets')()
+const AccountsLazyImport = createFileRoute('/accounts')()
 const IndexLazyImport = createFileRoute('/')()
+const PostsIndexLazyImport = createFileRoute('/posts/')()
+const EnsemblesIndexLazyImport = createFileRoute('/ensembles/')()
+const AccountsIndexLazyImport = createFileRoute('/accounts/')()
+const ProfileProfileIdLazyImport = createFileRoute('/profile/$profileId')()
+const PostsPostIdLazyImport = createFileRoute('/posts/$postId')()
+const EnsemblesEnsembleIdLazyImport = createFileRoute(
+  '/ensembles/$ensembleId',
+)()
 
 // Create/Update Routes
 
-const PostsRoute = PostsImport.update({
+const PostsLazyRoute = PostsLazyImport.update({
   id: '/posts',
   path: '/posts',
   getParentRoute: () => rootRoute,
-} as any)
+} as any).lazy(() => import('./routes/posts.lazy').then((d) => d.Route))
 
-const EnsemblesRoute = EnsemblesImport.update({
+const EnsemblesLazyRoute = EnsemblesLazyImport.update({
   id: '/ensembles',
   path: '/ensembles',
   getParentRoute: () => rootRoute,
-} as any)
+} as any).lazy(() => import('./routes/ensembles.lazy').then((d) => d.Route))
 
-const AssetsRoute = AssetsImport.update({
+const AssetsLazyRoute = AssetsLazyImport.update({
   id: '/assets',
   path: '/assets',
   getParentRoute: () => rootRoute,
-} as any)
+} as any).lazy(() => import('./routes/assets.lazy').then((d) => d.Route))
+
+const AccountsLazyRoute = AccountsLazyImport.update({
+  id: '/accounts',
+  path: '/accounts',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/accounts.lazy').then((d) => d.Route))
 
 const IndexLazyRoute = IndexLazyImport.update({
   id: '/',
@@ -52,35 +62,49 @@ const IndexLazyRoute = IndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
-const PostsIndexRoute = PostsIndexImport.update({
+const PostsIndexLazyRoute = PostsIndexLazyImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => PostsRoute,
-} as any)
+  getParentRoute: () => PostsLazyRoute,
+} as any).lazy(() => import('./routes/posts.index.lazy').then((d) => d.Route))
 
-const EnsemblesIndexRoute = EnsemblesIndexImport.update({
+const EnsemblesIndexLazyRoute = EnsemblesIndexLazyImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => EnsemblesRoute,
-} as any)
+  getParentRoute: () => EnsemblesLazyRoute,
+} as any).lazy(() =>
+  import('./routes/ensembles.index.lazy').then((d) => d.Route),
+)
 
-const ProfileProfileIdRoute = ProfileProfileIdImport.update({
+const AccountsIndexLazyRoute = AccountsIndexLazyImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AccountsLazyRoute,
+} as any).lazy(() =>
+  import('./routes/accounts.index.lazy').then((d) => d.Route),
+)
+
+const ProfileProfileIdLazyRoute = ProfileProfileIdLazyImport.update({
   id: '/profile/$profileId',
   path: '/profile/$profileId',
   getParentRoute: () => rootRoute,
-} as any)
+} as any).lazy(() =>
+  import('./routes/profile.$profileId.lazy').then((d) => d.Route),
+)
 
-const PostsPostIdRoute = PostsPostIdImport.update({
+const PostsPostIdLazyRoute = PostsPostIdLazyImport.update({
   id: '/$postId',
   path: '/$postId',
-  getParentRoute: () => PostsRoute,
-} as any)
+  getParentRoute: () => PostsLazyRoute,
+} as any).lazy(() => import('./routes/posts.$postId.lazy').then((d) => d.Route))
 
-const EnsemblesEnsembleIdRoute = EnsemblesEnsembleIdImport.update({
+const EnsemblesEnsembleIdLazyRoute = EnsemblesEnsembleIdLazyImport.update({
   id: '/$ensembleId',
   path: '/$ensembleId',
-  getParentRoute: () => EnsemblesRoute,
-} as any)
+  getParentRoute: () => EnsemblesLazyRoute,
+} as any).lazy(() =>
+  import('./routes/ensembles.$ensembleId.lazy').then((d) => d.Route),
+)
 
 // Populate the FileRoutesByPath interface
 
@@ -93,138 +117,173 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/accounts': {
+      id: '/accounts'
+      path: '/accounts'
+      fullPath: '/accounts'
+      preLoaderRoute: typeof AccountsLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/assets': {
       id: '/assets'
       path: '/assets'
       fullPath: '/assets'
-      preLoaderRoute: typeof AssetsImport
+      preLoaderRoute: typeof AssetsLazyImport
       parentRoute: typeof rootRoute
     }
     '/ensembles': {
       id: '/ensembles'
       path: '/ensembles'
       fullPath: '/ensembles'
-      preLoaderRoute: typeof EnsemblesImport
+      preLoaderRoute: typeof EnsemblesLazyImport
       parentRoute: typeof rootRoute
     }
     '/posts': {
       id: '/posts'
       path: '/posts'
       fullPath: '/posts'
-      preLoaderRoute: typeof PostsImport
+      preLoaderRoute: typeof PostsLazyImport
       parentRoute: typeof rootRoute
     }
     '/ensembles/$ensembleId': {
       id: '/ensembles/$ensembleId'
       path: '/$ensembleId'
       fullPath: '/ensembles/$ensembleId'
-      preLoaderRoute: typeof EnsemblesEnsembleIdImport
-      parentRoute: typeof EnsemblesImport
+      preLoaderRoute: typeof EnsemblesEnsembleIdLazyImport
+      parentRoute: typeof EnsemblesLazyImport
     }
     '/posts/$postId': {
       id: '/posts/$postId'
       path: '/$postId'
       fullPath: '/posts/$postId'
-      preLoaderRoute: typeof PostsPostIdImport
-      parentRoute: typeof PostsImport
+      preLoaderRoute: typeof PostsPostIdLazyImport
+      parentRoute: typeof PostsLazyImport
     }
     '/profile/$profileId': {
       id: '/profile/$profileId'
       path: '/profile/$profileId'
       fullPath: '/profile/$profileId'
-      preLoaderRoute: typeof ProfileProfileIdImport
+      preLoaderRoute: typeof ProfileProfileIdLazyImport
       parentRoute: typeof rootRoute
+    }
+    '/accounts/': {
+      id: '/accounts/'
+      path: '/'
+      fullPath: '/accounts/'
+      preLoaderRoute: typeof AccountsIndexLazyImport
+      parentRoute: typeof AccountsLazyImport
     }
     '/ensembles/': {
       id: '/ensembles/'
       path: '/'
       fullPath: '/ensembles/'
-      preLoaderRoute: typeof EnsemblesIndexImport
-      parentRoute: typeof EnsemblesImport
+      preLoaderRoute: typeof EnsemblesIndexLazyImport
+      parentRoute: typeof EnsemblesLazyImport
     }
     '/posts/': {
       id: '/posts/'
       path: '/'
       fullPath: '/posts/'
-      preLoaderRoute: typeof PostsIndexImport
-      parentRoute: typeof PostsImport
+      preLoaderRoute: typeof PostsIndexLazyImport
+      parentRoute: typeof PostsLazyImport
     }
   }
 }
 
 // Create and export the route tree
 
-interface EnsemblesRouteChildren {
-  EnsemblesEnsembleIdRoute: typeof EnsemblesEnsembleIdRoute
-  EnsemblesIndexRoute: typeof EnsemblesIndexRoute
+interface AccountsLazyRouteChildren {
+  AccountsIndexLazyRoute: typeof AccountsIndexLazyRoute
 }
 
-const EnsemblesRouteChildren: EnsemblesRouteChildren = {
-  EnsemblesEnsembleIdRoute: EnsemblesEnsembleIdRoute,
-  EnsemblesIndexRoute: EnsemblesIndexRoute,
+const AccountsLazyRouteChildren: AccountsLazyRouteChildren = {
+  AccountsIndexLazyRoute: AccountsIndexLazyRoute,
 }
 
-const EnsemblesRouteWithChildren = EnsemblesRoute._addFileChildren(
-  EnsemblesRouteChildren,
+const AccountsLazyRouteWithChildren = AccountsLazyRoute._addFileChildren(
+  AccountsLazyRouteChildren,
 )
 
-interface PostsRouteChildren {
-  PostsPostIdRoute: typeof PostsPostIdRoute
-  PostsIndexRoute: typeof PostsIndexRoute
+interface EnsemblesLazyRouteChildren {
+  EnsemblesEnsembleIdLazyRoute: typeof EnsemblesEnsembleIdLazyRoute
+  EnsemblesIndexLazyRoute: typeof EnsemblesIndexLazyRoute
 }
 
-const PostsRouteChildren: PostsRouteChildren = {
-  PostsPostIdRoute: PostsPostIdRoute,
-  PostsIndexRoute: PostsIndexRoute,
+const EnsemblesLazyRouteChildren: EnsemblesLazyRouteChildren = {
+  EnsemblesEnsembleIdLazyRoute: EnsemblesEnsembleIdLazyRoute,
+  EnsemblesIndexLazyRoute: EnsemblesIndexLazyRoute,
 }
 
-const PostsRouteWithChildren = PostsRoute._addFileChildren(PostsRouteChildren)
+const EnsemblesLazyRouteWithChildren = EnsemblesLazyRoute._addFileChildren(
+  EnsemblesLazyRouteChildren,
+)
+
+interface PostsLazyRouteChildren {
+  PostsPostIdLazyRoute: typeof PostsPostIdLazyRoute
+  PostsIndexLazyRoute: typeof PostsIndexLazyRoute
+}
+
+const PostsLazyRouteChildren: PostsLazyRouteChildren = {
+  PostsPostIdLazyRoute: PostsPostIdLazyRoute,
+  PostsIndexLazyRoute: PostsIndexLazyRoute,
+}
+
+const PostsLazyRouteWithChildren = PostsLazyRoute._addFileChildren(
+  PostsLazyRouteChildren,
+)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
-  '/assets': typeof AssetsRoute
-  '/ensembles': typeof EnsemblesRouteWithChildren
-  '/posts': typeof PostsRouteWithChildren
-  '/ensembles/$ensembleId': typeof EnsemblesEnsembleIdRoute
-  '/posts/$postId': typeof PostsPostIdRoute
-  '/profile/$profileId': typeof ProfileProfileIdRoute
-  '/ensembles/': typeof EnsemblesIndexRoute
-  '/posts/': typeof PostsIndexRoute
+  '/accounts': typeof AccountsLazyRouteWithChildren
+  '/assets': typeof AssetsLazyRoute
+  '/ensembles': typeof EnsemblesLazyRouteWithChildren
+  '/posts': typeof PostsLazyRouteWithChildren
+  '/ensembles/$ensembleId': typeof EnsemblesEnsembleIdLazyRoute
+  '/posts/$postId': typeof PostsPostIdLazyRoute
+  '/profile/$profileId': typeof ProfileProfileIdLazyRoute
+  '/accounts/': typeof AccountsIndexLazyRoute
+  '/ensembles/': typeof EnsemblesIndexLazyRoute
+  '/posts/': typeof PostsIndexLazyRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
-  '/assets': typeof AssetsRoute
-  '/ensembles/$ensembleId': typeof EnsemblesEnsembleIdRoute
-  '/posts/$postId': typeof PostsPostIdRoute
-  '/profile/$profileId': typeof ProfileProfileIdRoute
-  '/ensembles': typeof EnsemblesIndexRoute
-  '/posts': typeof PostsIndexRoute
+  '/assets': typeof AssetsLazyRoute
+  '/ensembles/$ensembleId': typeof EnsemblesEnsembleIdLazyRoute
+  '/posts/$postId': typeof PostsPostIdLazyRoute
+  '/profile/$profileId': typeof ProfileProfileIdLazyRoute
+  '/accounts': typeof AccountsIndexLazyRoute
+  '/ensembles': typeof EnsemblesIndexLazyRoute
+  '/posts': typeof PostsIndexLazyRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
-  '/assets': typeof AssetsRoute
-  '/ensembles': typeof EnsemblesRouteWithChildren
-  '/posts': typeof PostsRouteWithChildren
-  '/ensembles/$ensembleId': typeof EnsemblesEnsembleIdRoute
-  '/posts/$postId': typeof PostsPostIdRoute
-  '/profile/$profileId': typeof ProfileProfileIdRoute
-  '/ensembles/': typeof EnsemblesIndexRoute
-  '/posts/': typeof PostsIndexRoute
+  '/accounts': typeof AccountsLazyRouteWithChildren
+  '/assets': typeof AssetsLazyRoute
+  '/ensembles': typeof EnsemblesLazyRouteWithChildren
+  '/posts': typeof PostsLazyRouteWithChildren
+  '/ensembles/$ensembleId': typeof EnsemblesEnsembleIdLazyRoute
+  '/posts/$postId': typeof PostsPostIdLazyRoute
+  '/profile/$profileId': typeof ProfileProfileIdLazyRoute
+  '/accounts/': typeof AccountsIndexLazyRoute
+  '/ensembles/': typeof EnsemblesIndexLazyRoute
+  '/posts/': typeof PostsIndexLazyRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/accounts'
     | '/assets'
     | '/ensembles'
     | '/posts'
     | '/ensembles/$ensembleId'
     | '/posts/$postId'
     | '/profile/$profileId'
+    | '/accounts/'
     | '/ensembles/'
     | '/posts/'
   fileRoutesByTo: FileRoutesByTo
@@ -234,17 +293,20 @@ export interface FileRouteTypes {
     | '/ensembles/$ensembleId'
     | '/posts/$postId'
     | '/profile/$profileId'
+    | '/accounts'
     | '/ensembles'
     | '/posts'
   id:
     | '__root__'
     | '/'
+    | '/accounts'
     | '/assets'
     | '/ensembles'
     | '/posts'
     | '/ensembles/$ensembleId'
     | '/posts/$postId'
     | '/profile/$profileId'
+    | '/accounts/'
     | '/ensembles/'
     | '/posts/'
   fileRoutesById: FileRoutesById
@@ -252,18 +314,20 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
-  AssetsRoute: typeof AssetsRoute
-  EnsemblesRoute: typeof EnsemblesRouteWithChildren
-  PostsRoute: typeof PostsRouteWithChildren
-  ProfileProfileIdRoute: typeof ProfileProfileIdRoute
+  AccountsLazyRoute: typeof AccountsLazyRouteWithChildren
+  AssetsLazyRoute: typeof AssetsLazyRoute
+  EnsemblesLazyRoute: typeof EnsemblesLazyRouteWithChildren
+  PostsLazyRoute: typeof PostsLazyRouteWithChildren
+  ProfileProfileIdLazyRoute: typeof ProfileProfileIdLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
-  AssetsRoute: AssetsRoute,
-  EnsemblesRoute: EnsemblesRouteWithChildren,
-  PostsRoute: PostsRouteWithChildren,
-  ProfileProfileIdRoute: ProfileProfileIdRoute,
+  AccountsLazyRoute: AccountsLazyRouteWithChildren,
+  AssetsLazyRoute: AssetsLazyRoute,
+  EnsemblesLazyRoute: EnsemblesLazyRouteWithChildren,
+  PostsLazyRoute: PostsLazyRouteWithChildren,
+  ProfileProfileIdLazyRoute: ProfileProfileIdLazyRoute,
 }
 
 export const routeTree = rootRoute
@@ -277,6 +341,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/accounts",
         "/assets",
         "/ensembles",
         "/posts",
@@ -286,40 +351,50 @@ export const routeTree = rootRoute
     "/": {
       "filePath": "index.lazy.tsx"
     },
+    "/accounts": {
+      "filePath": "accounts.lazy.tsx",
+      "children": [
+        "/accounts/"
+      ]
+    },
     "/assets": {
-      "filePath": "assets.tsx"
+      "filePath": "assets.lazy.tsx"
     },
     "/ensembles": {
-      "filePath": "ensembles.tsx",
+      "filePath": "ensembles.lazy.tsx",
       "children": [
         "/ensembles/$ensembleId",
         "/ensembles/"
       ]
     },
     "/posts": {
-      "filePath": "posts.tsx",
+      "filePath": "posts.lazy.tsx",
       "children": [
         "/posts/$postId",
         "/posts/"
       ]
     },
     "/ensembles/$ensembleId": {
-      "filePath": "ensembles.$ensembleId.tsx",
+      "filePath": "ensembles.$ensembleId.lazy.tsx",
       "parent": "/ensembles"
     },
     "/posts/$postId": {
-      "filePath": "posts.$postId.tsx",
+      "filePath": "posts.$postId.lazy.tsx",
       "parent": "/posts"
     },
     "/profile/$profileId": {
-      "filePath": "profile.$profileId.tsx"
+      "filePath": "profile.$profileId.lazy.tsx"
+    },
+    "/accounts/": {
+      "filePath": "accounts.index.lazy.tsx",
+      "parent": "/accounts"
     },
     "/ensembles/": {
-      "filePath": "ensembles.index.tsx",
+      "filePath": "ensembles.index.lazy.tsx",
       "parent": "/ensembles"
     },
     "/posts/": {
-      "filePath": "posts.index.tsx",
+      "filePath": "posts.index.lazy.tsx",
       "parent": "/posts"
     }
   }
