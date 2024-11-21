@@ -72,49 +72,49 @@ describe('AuthController (e2e)', () => {
     expect(response.body.message).toBe('User registered successfully');
   });
 
-  //TODO: not working
-  /*
-
+  
   it('should login an existing user and return a JWT token', async () => {
     // Check if the user exists in the database
     //POST request. IMPORTANT: Keep same credentials as the test for signup
     const loginResponse = await request(app.getHttpServer())
-      .post("/auth/login")
-      .send({
-        email: "john.doe@example.com",
-        password: "password123"
+    .post("/auth/login")
+    .send({
+      email: "john.doe@example.com",
+      password: "password123"
       })
       .expect(HttpStatus.OK);
-
-    // Verify the response contains accessToken and refreshToken cookies
-    const cookies = loginResponse.headers['set-cookie'] as unknown as string[];
-    expect(cookies).toBeDefined();
-    expect(cookies.some(cookie => cookie.startsWith('accessToken='))).toBeTruthy();
-    expect(cookies.some(cookie => cookie.startsWith('refreshToken='))).toBeTruthy();
-
-    // Optionally, decode the JWT to verify its content (optional)
-    const accessTokenCookie = cookies.find(cookie => cookie.startsWith('accessToken='));
-    const accessToken = accessTokenCookie?.split(';')[0].split('=')[1];
-
-    // Save the accessToken for later use in protected route test
-    validToken = accessToken;
-
-    // Decode the JWT to verify its payload (you can use a library like `jsonwebtoken`)
-    const jwt = require('jsonwebtoken');
-    const decodedToken = jwt.decode(accessToken);
-
-    expect(decodedToken).toHaveProperty('sub'); // The user ID should be in the token
-    expect(decodedToken).toHaveProperty('email', 'john.doe@example.com'); // Ensure email matches
-  });
-
-  it('should return 401 if no cookies are present', async () => {
-    const response = await request(app.getHttpServer())
-      .post('/auth/protected')
-      .expect(HttpStatus.UNAUTHORIZED);
-
-    expect(response.body.message).toBe('Unauthorized');
-  });
-
+      
+      // Verify the response contains accessToken and refreshToken cookies
+      const cookies = loginResponse.headers['set-cookie'] as unknown as string[];
+      expect(cookies).toBeDefined();
+      expect(cookies.some(cookie => cookie.startsWith('accessToken='))).toBeTruthy();
+      expect(cookies.some(cookie => cookie.startsWith('refreshToken='))).toBeTruthy();
+      
+      // Optionally, decode the JWT to verify its content (optional)
+      const accessTokenCookie = cookies.find(cookie => cookie.startsWith('accessToken='));
+      const accessToken = accessTokenCookie?.split(';')[0].split('=')[1];
+      
+      // Save the accessToken for later use in protected route test
+      validToken = accessToken;
+      
+      // Decode the JWT to verify its payload (you can use a library like `jsonwebtoken`)
+      const jwt = require('jsonwebtoken');
+      const decodedToken = jwt.decode(accessToken);
+      
+      expect(decodedToken).toHaveProperty('sub'); // The user ID should be in the token
+      expect(decodedToken).toHaveProperty('email', 'john.doe@example.com'); // Ensure email matches
+      });
+      
+      it('should return 401 if no cookies are present', async () => {
+        const response = await request(app.getHttpServer())
+        .post('/auth/protected')
+        .expect(HttpStatus.UNAUTHORIZED);
+        
+        expect(response.body.message).toBe('Unauthorized');
+        });
+        
+        //TODO: not working
+        /*
   it('should reject access to protected route with an invalid token (401)', async () => {
     // Create a fake invalid token (for instance, a token with random data)
     const invalidToken = 'invalid.jwt.token';

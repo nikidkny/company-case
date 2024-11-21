@@ -14,7 +14,8 @@ export class AuthController {
   async signup(@Body() createUserDto: CreateUserDto) {
     return this.authService.signup(createUserDto);
   }
-
+  
+  //TODO: maybe check if the user is already logged in before loggin in again and issue new tokens
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(@Body() body: { email: string, password: string }, @Res() res: Response) {
