@@ -20,6 +20,7 @@ import ProfileBadge from "./components/atoms/ProfileBadge";
 import TextBody from "./components/atoms/TextBody";
 import TextHeadline from "./components/atoms/TextHeadline";
 import { Dropdown } from "./components/molecules/Dropdown";
+import { useStore } from "./store/useStore";
 
 function App() {
   const [rangeValue, setRangeValue] = useState(50);
@@ -39,6 +40,7 @@ function App() {
     setSelectedTags((prev) => (isSelected ? [...prev, tag] : prev.filter((t) => t !== tag)));
   };
 
+  const { bears } = useStore();
   return (
     <div className="flex flex-col">
       <PostBadge PostBadgeType="offer" PostBadgeSize="small" />
@@ -142,6 +144,8 @@ function App() {
       <Icon name={ICON_NAMES.report_icon} height={12} width={12} viewBox="0 0 12 12" />
       <Icon name={ICON_NAMES.search_icon} height={16} width={16} viewBox="0 0 16 16" />
       <Icon name={ICON_NAMES.show_password} height={16} width={22} viewBox={"0 0 22 16"} />
+
+      <div>{bears}</div>
     </div>
   );
 }
