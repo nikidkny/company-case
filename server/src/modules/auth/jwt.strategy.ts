@@ -9,6 +9,7 @@ export class JwtAuthStrategy extends PassportStrategy(Strategy) {
   constructor(private readonly configService: ConfigService) {
     super({
       jwtFromRequest: (req) => {
+        console.log('Request', req)
         console.log('Request Cookies:', req.cookies)
         if (req && req.cookies && req.cookies['accessToken']) {
           console.log('Access Token found in cookies:', req.cookies['accessToken']);
