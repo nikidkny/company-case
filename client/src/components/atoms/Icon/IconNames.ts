@@ -27,4 +27,6 @@ export enum ICON_NAMES {
   report_icon = "report_icon",
   search_icon = "search_icon",
   show_password = "show_password",
+  burger_lines = "burger_lines",
+  burger_crossed = "burger_crossed",
 }

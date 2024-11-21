@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { Icon } from "./Icon/Icon";
 import { ICON_NAMES } from "./Icon/IconNames";
 import classNames from "classnames";
@@ -17,10 +18,13 @@ interface Props {
   iconHeight?: number;
   iconViewbox?: string;
   className?: string;
+  to?: string;
+  customData?: { [key: string]: string }; //this is to allow the button to redirect to a page with components rendered conditionally based on the key provided. fx login/register
+  children?: React.ReactNode;
 }
 
-export default function IconButton({
-  buttonLabel,
+export default function Button({
+  buttonLabel = "",
   buttonVariant = "primary",
   buttonState = "default",
   icon,
@@ -29,7 +33,10 @@ export default function IconButton({
   iconHeight = 24,
   iconViewbox = "0 0 24 24",
   onClick,
-  className,
+  className = "",
+  to,
+  customData,
+  children,
 }: Props) {
   const classes = classNames([
     "btn",
@@ -40,34 +47,59 @@ export default function IconButton({
     { [`icon-btn-${iconPosition}`]: iconPosition },
     className,
   ]);
+  const linkHref = customData ? `${to}?${new URLSearchParams(customData).toString()}` : to;
 
   return (
-    <button
-      className={classes}
-      onClick={buttonState !== "disabled" ? onClick : undefined}
-      disabled={buttonState === "disabled"}
-    >
-      {icon && iconPosition === "leading" && (
-        <span className="icon-left">
-          <Icon name={icon} width={iconWidth} height={iconHeight} viewBox={iconViewbox} />
-        </span>
+    <>
+      {(to && (
+        <Link href={linkHref} className={classes} params onClick={buttonState !== "disabled" ? onClick : undefined} disabled={buttonState === "disabled"}>
+          {icon && iconPosition === "leading" && (
+            <span className="icon-left">
+              <Icon name={icon} width={iconWidth} height={iconHeight} viewBox={iconViewbox} />
+            </span>
+          )}
+          {icon && iconPosition === "top" && (
+            <span className="icon-top">
+              <Icon name={icon} width={iconWidth} height={iconHeight} viewBox={iconViewbox} />
+            </span>
+          )}
+          {children || buttonLabel}
+          {icon && iconPosition === "bottom" && (
+            <span className="icon-bottom">
+              <Icon name={icon} width={iconWidth} height={iconHeight} viewBox={iconViewbox} />
+            </span>
+          )}
+          {icon && iconPosition === "trailing" && (
+            <span className="icon-right">
+              <Icon name={icon} width={iconWidth} height={iconHeight} viewBox={iconViewbox} />
+            </span>
+          )}
+        </Link>
+      )) || (
+        <button className={classes} onClick={buttonState !== "disabled" ? onClick : undefined} disabled={buttonState === "disabled"}>
+          {icon && iconPosition === "leading" && (
+            <span className="icon-left">
+              <Icon name={icon} width={iconWidth} height={iconHeight} viewBox={iconViewbox} />
+            </span>
+          )}
+          {icon && iconPosition === "top" && (
+            <span className="icon-top">
+              <Icon name={icon} width={iconWidth} height={iconHeight} viewBox={iconViewbox} />
+            </span>
+          )}
+          {children || buttonLabel}
+          {icon && iconPosition === "bottom" && (
+            <span className="icon-bottom">
+              <Icon name={icon} width={iconWidth} height={iconHeight} viewBox={iconViewbox} />
+            </span>
+          )}
+          {icon && iconPosition === "trailing" && (
+            <span className="icon-right">
+              <Icon name={icon} width={iconWidth} height={iconHeight} viewBox={iconViewbox} />
+            </span>
+          )}
+        </button>
       )}
-      {icon && iconPosition === "top" && (
-        <span className="icon-top">
-          <Icon name={icon} width={iconWidth} height={iconHeight} viewBox={iconViewbox} />
-        </span>
-      )}
-      {buttonLabel}
-      {icon && iconPosition === "bottom" && (
-        <span className="icon-bottom">
-          <Icon name={icon} width={iconWidth} height={iconHeight} viewBox={iconViewbox} />
-        </span>
-      )}
-      {icon && iconPosition === "trailing" && (
-        <span className="icon-right">
-          <Icon name={icon} width={iconWidth} height={iconHeight} viewBox={iconViewbox} />
-        </span>
-      )}
-    </button>
+    </>
   );
 }
