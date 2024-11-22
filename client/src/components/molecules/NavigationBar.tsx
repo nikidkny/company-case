@@ -1,14 +1,23 @@
-import { useState } from "react";
 import TextBody from "../atoms/TextBody";
 import TextHeadline from "../atoms/TextHeadline";
 import Button from "../atoms/Button";
 import { ICON_NAMES } from "../atoms/Icon/IconNames";
 import { Link } from "@tanstack/react-router";
+import { useStore } from "../../store/useStore";
 
 export default function NavigationBar() {
   //need to lift this state
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const { isMenuOpen, setIsMenuOpen, setPopUp, loginStatus } = useStore();
+
+  const displayPopUp = (arg: boolean) => {
+    setPopUp(arg);
+    toggleMenu();
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen();
+  };
+
   return (
     <div className="border-0 border-b border-solid border-gray-300 relative">
       <div className="flex flex-row items-center justify-between  relative z-20 bg-white h-auto w-auto p-6">
@@ -37,30 +46,25 @@ export default function NavigationBar() {
       {isMenuOpen && (
         <div className="absolute top-29 z-20 b-white w-full">
           <ul className="space-y-2 bg-white list-none flex flex-col text-center m-0 px-6 pt-6 items-stretch">
-            {/* links font size should be changed to match the buttons 
-             "*/}
             <li>
               <Link to="/" onClick={toggleMenu} className="link text-base">
                 Home
               </Link>
             </li>
             <li>
-              {/* ------THIS IS HOW THE LINKS ARE SUPPOSED TO BE AFTER WE LIFT STATE/USESTORE------- <Link onClick={() => !loginStatus && displayPopUp(true)} to={loginStatus ? "/posts" : toggleMenu} className="link text-base">
-                See posts
-              </Link>  */}
-              <Link to="/posts" onClick={toggleMenu} className="link text-base">
+              <Link onClick={() => (!loginStatus && displayPopUp(true)) || toggleMenu()} to={(loginStatus && "/posts") || "/"} className="link text-base">
                 See posts
               </Link>
             </li>
             <li>
-              <Link to="/ensembles" onClick={toggleMenu} className="link text-base">
+              <Link onClick={() => (!loginStatus && displayPopUp(true)) || toggleMenu()} to={(loginStatus && "/ensembles") || "/"} className="link text-base">
                 Find ensemble
               </Link>
             </li>
             <li className="p-b">
               <Link
-                to="/profile/$profileId"
-                onClick={toggleMenu}
+                onClick={() => (!loginStatus && displayPopUp(true)) || toggleMenu()}
+                to={(loginStatus && "/profile/$profileId") || "/"}
                 className="link text-base"
                 params={{
                   profileId: "profileNameOrId",
