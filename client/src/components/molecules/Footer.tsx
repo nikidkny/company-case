@@ -3,8 +3,15 @@ import { Icon } from "../atoms/Icon/Icon";
 import { ICON_NAMES } from "../atoms/Icon/IconNames";
 
 import TextHeadline from "../atoms/TextHeadline";
+import { useStore } from "../../store/useStore";
 
 export default function Footer() {
+  const { setPopUp, loginStatus } = useStore();
+
+  const displayPopUp = (arg: boolean) => {
+    setPopUp(arg);
+  };
+
   return (
     <div className="bg-red-6 p-6">
       {/* footer */}
@@ -18,21 +25,19 @@ export default function Footer() {
           </Link>
         </li>
         <li>
-          {/* ------THIS IS HOW THE LINKS ARE SUPPOSED TO BE AFTER WE LIFT STATE/USESTORE------- <Link onClick={() => !loginStatus && displayPopUp(true)} to={loginStatus ? "/posts" : toggleMenu} className="link text-base">
-                See posts
-              </Link>  */}
-          <Link to="/posts" className="link text-white">
+          <Link onClick={() => !loginStatus && displayPopUp(true)} to={(loginStatus && "/posts") || "/"} className="link text-white">
             See posts
           </Link>
         </li>
         <li>
-          <Link to="/ensembles" className="link text-white">
+          <Link onClick={() => !loginStatus && displayPopUp(true)} to={(loginStatus && "/ensembles") || "/"} className="link text-white">
             Find ensemble
           </Link>
         </li>
         <li className="p-b">
           <Link
-            to="/profile/$profileId"
+            onClick={() => !loginStatus && displayPopUp(true)}
+            to={(loginStatus && "/profile/$profileId") || "/"}
             className="link text-white"
             params={{
               profileId: "profileNameOrId",

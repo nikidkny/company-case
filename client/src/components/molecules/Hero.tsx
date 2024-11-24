@@ -1,18 +1,16 @@
-import { useState } from "react";
 import Button from "../atoms/Button";
 import { Icon } from "../atoms/Icon/Icon";
 import { ICON_NAMES } from "../atoms/Icon/IconNames";
-
 import TextHeadline from "../atoms/TextHeadline";
 import TextBody from "../atoms/TextBody";
 import DividerWithText from "../atoms/DividerWithText";
+import { useStore } from "../../store/useStore";
 
-interface Props {
-  loginStatus: boolean;
-}
-export default function Hero({ loginStatus }: Props) {
-  //need to lift this state
-  const [popUp, displayPopUp] = useState(false);
+export default function Hero() {
+  const { popUp, setPopUp, loginStatus } = useStore();
+  const displayPopUp = (arg: boolean) => {
+    setPopUp(arg);
+  };
   return (
     //hero container
     <>
@@ -51,8 +49,6 @@ export default function Hero({ loginStatus }: Props) {
             className="no-underline w-full"
           ></Button>
         </div>
-
-        {/* {popUp && <div className="fixed inset-0 bg-black bg-opacity-50 z-30"></div>} */}
 
         {popUp && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => displayPopUp(false)}>
