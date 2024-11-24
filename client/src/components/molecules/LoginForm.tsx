@@ -4,6 +4,7 @@ import TextInput from "../atoms/TextInput";
 import Button from "../atoms/Button";
 
 export default function LoginForm() {
+  //TODO: empty after finishing testing
   const [formData, setFormData] = useState({
     email: "andrea@gmail.com",
     password: "password",
