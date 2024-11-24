@@ -5,8 +5,8 @@ import Button from "../atoms/Button";
 
 export default function LoginForm() {
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+    email: "andrea@gmail.com",
+    password: "password",
   });
 
   const handleChange = (name: string, value: string) => {
