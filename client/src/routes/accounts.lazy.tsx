@@ -1,19 +1,21 @@
 import { createLazyFileRoute, useLocation } from "@tanstack/react-router";
+import SignupForm from "../components/molecules/SignupForm";
+import LoginForm from "../components/molecules/LoginForm";
 
 export const Route = createLazyFileRoute("/accounts")({
   component: AccountsPage,
 });
-//where register/login will be
+
 function AccountsPage() {
-  //this is how we access the customData key for the intent
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const intent = searchParams.get("intent"); // Get the query parameter 'intent'
+
   return (
-    <>
-      <p>/accounts page with both login and register components</p>
-      {intent === "register" && "<RegisterComponent />"}
-      {intent === "login" && "<LoginComponent />"}
-    </>
+    <div>
+      {intent === "register" && <SignupForm />}
+      {intent === "login" && <LoginForm />}
+      {!intent && <p>Please select login or register from the navigation.</p>}
+    </div>
   );
 }

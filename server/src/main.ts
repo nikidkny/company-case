@@ -7,9 +7,14 @@ import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  
+
   app.use(cookieParser());
-  
+
+  app.enableCors({
+    origin: 'http://localhost:5173', // Frontend URL
+    credentials: true,              // Allow cookies if needed
+  });
+
   app.useGlobalPipes(
     new ValidationPipe(),
     //validation goes here if we want to include field with the error and a message
@@ -25,5 +30,6 @@ async function bootstrap() {
   console.log('Seeding complete');
 
   await app.listen(process.env.PORT);
+  console.log('Server running on port', process.env.PORT)
 }
 bootstrap();

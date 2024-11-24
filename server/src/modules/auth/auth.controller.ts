@@ -51,9 +51,6 @@ export class AuthController {
     return res.json({ message: 'Access token refreshed' });
   }
 
-  //TODO:
-  // - Double check e2e test for every ednpoint since you've implemented cookies 
-
   /* Example on how to use guard:*/
   // This route is protected by the JwtAuthGuard
   @UseGuards(JwtAuthGuard)
