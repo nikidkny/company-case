@@ -56,7 +56,6 @@ export default function ProfilePage() {
     (ensemble) => ensemble.memberList.includes(user._id) || ensemble.createdBy.equals(user._id)
   );
   const posts = mockPosts.filter((post) => post.createdBy.equals(user._id));
-  console.log(user);
   return (
     <div className="flex flex-col gap-6">
       <div className="profile-base-wrapper p-4 border-y-solid border-y-gray-400 border-y-1px">
