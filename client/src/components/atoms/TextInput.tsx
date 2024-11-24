@@ -12,6 +12,8 @@ interface Props {
   validityMsg?: string;
   disabled?: boolean;
   className?: string;
+  id?: string;
+  name?: string;
 }
 
 export default function TextInput({
@@ -24,6 +26,8 @@ export default function TextInput({
   validityMsg,
   disabled,
   className,
+  id,
+  name,
 }: Props) {
   const containerClasses = classNames(
     "input-container",
@@ -45,6 +49,8 @@ export default function TextInput({
       {icon && <Icon name={icon} />}
       <input
         type={inputType}
+        id={id}
+        name={name}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}

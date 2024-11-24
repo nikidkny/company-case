@@ -2,11 +2,11 @@ import classNames from "classnames";
 
 interface Props {
   PostBadgeType: "offer" | "wanted";
-  PostBadgeSize: "small" | "large";
+  PostBadgeSize: "sm" | "lg";
   className?: string;
 }
 
-export default function PostBadge({ PostBadgeType, PostBadgeSize = "large", className }: Props) {
+export default function PostBadge({ PostBadgeType, PostBadgeSize = "lg", className }: Props) {
   const badgeLabel =
     PostBadgeType.charAt(0).toUpperCase() + PostBadgeType.slice(1).replace("-", " ");
 

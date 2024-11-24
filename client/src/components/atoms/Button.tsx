@@ -7,12 +7,12 @@ type type = "primary" | "secondary" | "tertiary" | "borderless";
 type state = "default" | "hover" | "disabled" | "active";
 
 interface Props {
-  buttonLabel?: string;
   buttonVariant: type;
-  buttonState: state;
-  size?: "desktop" | "mobile";
-  icon?: ICON_NAMES;
+  buttonState?: state;
+  buttonLabel?: string;
   iconPosition: "none" | "leading" | "trailing" | "top" | "bottom";
+  size?: "lg" | "sm";
+  icon?: ICON_NAMES;
   onClick?: () => void;
   iconWidth?: number;
   iconHeight?: number;
@@ -24,22 +24,23 @@ interface Props {
 }
 
 export default function Button({
-  buttonLabel = "",
   buttonVariant = "primary",
   buttonState = "default",
-  icon,
+  buttonLabel = "",
   iconPosition = "trailing",
+  size = "sm",
+  icon,
+  onClick,
   iconWidth = 24,
   iconHeight = 24,
   iconViewbox = "0 0 24 24",
-  onClick,
   className = "",
   to,
   customData,
   children,
 }: Props) {
   const classes = classNames([
-    "btn",
+    `btn-${size}`,
     `btn-${buttonVariant}`,
     {
       [`btn-${buttonState}`]: buttonState === "disabled",
@@ -52,7 +53,13 @@ export default function Button({
   return (
     <>
       {(to && (
-        <Link href={linkHref} className={classes} params onClick={buttonState !== "disabled" ? onClick : undefined} disabled={buttonState === "disabled"}>
+        <Link
+          href={linkHref}
+          className={classes}
+          params
+          onClick={buttonState !== "disabled" ? onClick : undefined}
+          disabled={buttonState === "disabled"}
+        >
           {icon && iconPosition === "leading" && (
             <span className="icon-left">
               <Icon name={icon} width={iconWidth} height={iconHeight} viewBox={iconViewbox} />
@@ -76,7 +83,11 @@ export default function Button({
           )}
         </Link>
       )) || (
-        <button className={classes} onClick={buttonState !== "disabled" ? onClick : undefined} disabled={buttonState === "disabled"}>
+        <button
+          className={classes}
+          onClick={buttonState !== "disabled" ? onClick : undefined}
+          disabled={buttonState === "disabled"}
+        >
           {icon && iconPosition === "leading" && (
             <span className="icon-left">
               <Icon name={icon} width={iconWidth} height={iconHeight} viewBox={iconViewbox} />

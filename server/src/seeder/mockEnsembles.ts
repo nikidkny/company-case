@@ -11,7 +11,7 @@ const mockEnsembles = [
     ],
     createdBy: new Types.ObjectId(mockUsers[0]._id), // Linked to John Doe (userId)
     description: 'A rock band looking for more members to join.',
-    numberOfMembers: 4,
+    numberOfMembers: '4',
     location: 'Odense, Denmark',
     sessionFrequency: 'Weekly',
     genre: ['Rock', 'Alternative'],
@@ -28,7 +28,7 @@ const mockEnsembles = [
     ],
     createdBy: new Types.ObjectId(mockUsers[2]._id), // Linked to Katherine S. (userId)
     description: 'A jazz band looking for musicians to jam with.',
-    numberOfMembers: 3,
+    numberOfMembers: '3',
     location: 'Copenhagen, Denmark',
     sessionFrequency: 'Monthly',
     genre: ['Jazz', 'Blues'],
@@ -45,7 +45,7 @@ const mockEnsembles = [
     ],
     createdBy: new Types.ObjectId(mockUsers[1]._id), // Linked to Emil D. (userId)
     description: 'Indie band with a relaxed vibe. We need a lead guitarist.',
-    numberOfMembers: 4,
+    numberOfMembers: '4',
     location: 'Copenhagen, Denmark',
     sessionFrequency: 'Weekly',
     genre: ['Indie', 'Pop'],
@@ -62,7 +62,7 @@ const mockEnsembles = [
     ],
     createdBy: new Types.ObjectId(mockUsers[3]._id), // Linked to Emma F. (userId)
     description: 'Classical music group. Looking for violinists.',
-    numberOfMembers: 5,
+    numberOfMembers: '5',
     location: 'Aarhus, Denmark',
     sessionFrequency: 'Bi-Weekly',
     genre: ['Classical'],
@@ -79,7 +79,7 @@ const mockEnsembles = [
     ],
     createdBy: new Types.ObjectId(mockUsers[4]._id), // Linked to Anders T. (userId)
     description: 'Electronic music duo. Looking for a vocalist.',
-    numberOfMembers: 2,
+    numberOfMembers: '2',
     location: 'Copenhagen, Denmark',
     sessionFrequency: 'Monthly',
     genre: ['Electronic', 'Synthwave'],

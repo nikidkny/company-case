@@ -21,17 +21,19 @@ export default function NavigationBar() {
           </TextBody>
         </div>
         {/*this button is to change to burgerbutton */}
-        <Button
-          iconPosition="trailing"
-          buttonState="default"
-          buttonVariant="secondary"
-          icon={(!isMenuOpen && ICON_NAMES.burger_lines) || ICON_NAMES.burger_crossed}
-          iconHeight={14}
-          iconWidth={20}
-          iconViewbox={"0 0 20 14"}
-          onClick={toggleMenu}
-          className="border-none shadow-none"
-        />
+        <div>
+          <Button
+            iconPosition="trailing"
+            buttonState="default"
+            buttonVariant="secondary"
+            icon={(!isMenuOpen && ICON_NAMES.burger_lines) || ICON_NAMES.burger_crossed}
+            iconHeight={14}
+            iconWidth={20}
+            iconViewbox={"0 0 20 14"}
+            onClick={toggleMenu}
+            className="border-none shadow-none"
+          />
+        </div>
         {/* burgermenu when open */}
       </div>
       {isMenuOpen && (
@@ -71,7 +73,7 @@ export default function NavigationBar() {
             </li>
             <li className="">
               <Button
-                size="mobile"
+                size="sm"
                 iconPosition="top"
                 buttonState="default"
                 buttonVariant="primary"
@@ -86,7 +88,7 @@ export default function NavigationBar() {
             </li>
             <li className="p-be-8">
               <Button
-                size="mobile"
+                size="sm"
                 iconPosition="top"
                 buttonState="default"
                 buttonVariant="secondary"
@@ -103,7 +105,9 @@ export default function NavigationBar() {
         </div>
       )}
 
-      {isMenuOpen && <div className="fixed inset-0 bg-black bg-opacity-50 z-10" onClick={toggleMenu}></div>}
+      {isMenuOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-10" onClick={toggleMenu}></div>
+      )}
     </div>
   );
 }

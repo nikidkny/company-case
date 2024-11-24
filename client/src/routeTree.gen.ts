@@ -202,7 +202,9 @@ const EnsemblesLazyRouteChildren: EnsemblesLazyRouteChildren = {
   EnsemblesIndexLazyRoute: EnsemblesIndexLazyRoute,
 };
 
-const EnsemblesLazyRouteWithChildren = EnsemblesLazyRoute._addFileChildren(EnsemblesLazyRouteChildren);
+const EnsemblesLazyRouteWithChildren = EnsemblesLazyRoute._addFileChildren(
+  EnsemblesLazyRouteChildren
+);
 
 interface PostsLazyRouteChildren {
   PostsPostIdLazyRoute: typeof PostsPostIdLazyRoute;
@@ -258,10 +260,41 @@ export interface FileRoutesById {
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: "/" | "/accounts" | "/assets" | "/ensembles" | "/posts" | "/ensembles/$ensembleId" | "/posts/$postId" | "/profile/$profileId" | "/accounts/" | "/ensembles/" | "/posts/";
+  fullPaths:
+    | "/"
+    | "/accounts"
+    | "/assets"
+    | "/ensembles"
+    | "/posts"
+    | "/ensembles/$ensembleId"
+    | "/posts/$postId"
+    | "/profile/$profileId"
+    | "/accounts/"
+    | "/ensembles/"
+    | "/posts/";
   fileRoutesByTo: FileRoutesByTo;
-  to: "/" | "/assets" | "/ensembles/$ensembleId" | "/posts/$postId" | "/profile/$profileId" | "/accounts" | "/ensembles" | "/posts";
-  id: "__root__" | "/" | "/accounts" | "/assets" | "/ensembles" | "/posts" | "/ensembles/$ensembleId" | "/posts/$postId" | "/profile/$profileId" | "/accounts/" | "/ensembles/" | "/posts/";
+  to:
+    | "/"
+    | "/assets"
+    | "/ensembles/$ensembleId"
+    | "/posts/$postId"
+    | "/profile/$profileId"
+    | "/accounts"
+    | "/ensembles"
+    | "/posts";
+  id:
+    | "__root__"
+    | "/"
+    | "/accounts"
+    | "/assets"
+    | "/ensembles"
+    | "/posts"
+    | "/ensembles/$ensembleId"
+    | "/posts/$postId"
+    | "/profile/$profileId"
+    | "/accounts/"
+    | "/ensembles/"
+    | "/posts/";
   fileRoutesById: FileRoutesById;
 }
 
@@ -283,7 +316,9 @@ const rootRouteChildren: RootRouteChildren = {
   ProfileProfileIdLazyRoute: ProfileProfileIdLazyRoute,
 };
 
-export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileTypes<FileRouteTypes>();
+export const routeTree = rootRoute
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>();
 
 /* ROUTE_MANIFEST_START
 {
