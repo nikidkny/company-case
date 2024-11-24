@@ -19,6 +19,7 @@ interface Props {
   iconViewbox?: string;
   className?: string;
   to?: string;
+  type?: "button" | "submit";
   customData?: { [key: string]: string }; //this is to allow the button to redirect to a page with components rendered conditionally based on the key provided. fx login/register
   children?: React.ReactNode;
 }
@@ -37,6 +38,7 @@ export default function Button({
   to,
   customData,
   children,
+  type,
 }: Props) {
   const classes = classNames([
     "btn",
@@ -76,7 +78,7 @@ export default function Button({
           )}
         </Link>
       )) || (
-        <button className={classes} onClick={buttonState !== "disabled" ? onClick : undefined} disabled={buttonState === "disabled"}>
+        <button className={classes} onClick={buttonState !== "disabled" ? onClick : undefined} disabled={buttonState === "disabled"} type={type}>
           {icon && iconPosition === "leading" && (
             <span className="icon-left">
               <Icon name={icon} width={iconWidth} height={iconHeight} viewBox={iconViewbox} />

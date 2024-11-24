@@ -10,7 +10,6 @@ import Image from "./components/atoms/Image";
 import Link from "./components/atoms/Link";
 import ProgressBar from "./components/atoms/ProgressBar";
 import RadioButton from "./components/atoms/RadioButton";
-import SelectionTag from "./components/atoms/SelectionTag";
 import TextInput from "./components/atoms/TextInput";
 import { useState } from "react";
 import RangeInput from "./components/atoms/RangeInput";
@@ -21,12 +20,14 @@ import TextBody from "./components/atoms/TextBody";
 import TextHeadline from "./components/atoms/TextHeadline";
 import { Dropdown } from "./components/molecules/Dropdown";
 import { useStore } from "./store/useStore";
+import OptionTag from "./components/atoms/OptionTag";
 
 function App() {
   const [rangeValue, setRangeValue] = useState(50);
   const [progressValue] = useState(50);
   const [selected] = useState(false);
   const [IsChecked, setChecked] = useState(false);
+  const [selectedOption, setSelectedOption] = useState("Select an option");
   const options = ["Option 1", "Option 2", "Option 3"];
 
   const handleCheckboxToggle = (checked: boolean) => {
@@ -57,7 +58,7 @@ function App() {
       <Button iconPosition="bottom" buttonState="default" buttonVariant="primary" buttonLabel="Click me" icon={ICON_NAMES.author_icon} iconHeight={13.887} iconWidth={13.887} iconViewbox={"0 0 13.887 13.887"} />
       <Checkbox name="checkbox" label="Checkbox" checked={IsChecked} onChange={handleCheckboxToggle} />
 
-      <Dropdown options={options} />
+      <Dropdown options={options} selectedOption={selectedOption} onSelect={(selectedOption) => setSelectedOption(selectedOption)} />
       <div className="flex space-x-2 items-center">
         {tags.map((tag) => (
           <FilterTag key={tag} label={tag} onToggle={(isSelected) => handleTagToggle(tag, isSelected)} />
@@ -70,7 +71,7 @@ function App() {
       <ProgressBar progress={progressValue} />
       <RangeInput value={rangeValue} onChange={setRangeValue} />
       <RadioButton radioLabel="Radio" radioName="radio" radioValue="radio" onChange={(value) => console.log(value)} />
-      <SelectionTag label="Selection" selected={selected} onSelect={() => console.log("Selected")} />
+      <OptionTag label="Selection" selected={selected} onClick={() => console.log("removed")} />
       <TextBody>Body</TextBody>
       <TextBody variant="strong">Strong</TextBody>
       <TextBody variant="em">Emphasis</TextBody>
@@ -113,9 +114,9 @@ function App() {
         Small Emphasis
       </TextHeadline>
       <Textarea textareaPlaceholder="Enter text..." textareaValue="" onChange={(value) => console.log(value)} />
-      <TextInput inputType="text" value="" onChange={(value) => console.log(value)} placeholder="Text input" />
-      <TextInput inputType="search" value="" onChange={(value) => console.log(value)} placeholder="Search input" />
-      <TextInput inputType="password" value="" onChange={(value) => console.log(value)} placeholder="Password input" />
+      <TextInput id="text" name="text" inputType="text" value="" onChange={(value) => console.log(value)} placeholder="Text input" />
+      <TextInput id="search" name="search" inputType="search" value="" onChange={(value) => console.log(value)} placeholder="Search input" />
+      <TextInput id="password" name="password" inputType="password" value="" onChange={(value) => console.log(value)} placeholder="Password input" />
       <Icon name={ICON_NAMES.author_icon} height={13.887} width={13.887} viewBox={"0 0 13.887 13.887"} />
       <Icon name={ICON_NAMES.checkbox_check} height={10.121} width={13.414} viewBox={"0 0 13.414 10.121"} />
       <Icon name={ICON_NAMES.contact_info} height={22} width={26} viewBox={"0 0 26 22"} />

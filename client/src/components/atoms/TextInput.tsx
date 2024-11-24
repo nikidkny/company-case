@@ -12,19 +12,11 @@ interface Props {
   validityMsg?: string;
   disabled?: boolean;
   className?: string;
+  id: string;
+  name: string;
 }
 
-export default function TextInput({
-  value,
-  onChange,
-  placeholder,
-  inputType,
-  icon,
-  isValid,
-  validityMsg,
-  disabled,
-  className,
-}: Props) {
+export default function TextInput({ value, onChange, placeholder, inputType, icon, isValid, validityMsg, disabled, className, id, name }: Props) {
   const containerClasses = classNames(
     "input-container",
     {
@@ -43,19 +35,8 @@ export default function TextInput({
   return (
     <div className={containerClasses}>
       {icon && <Icon name={icon} />}
-      <input
-        type={inputType}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        className={inputClasses}
-        aria-invalid={!isValid}
-        aria-disabled={disabled}
-        disabled={disabled}
-      />
-      {isValid === false && validityMsg && (
-        <span className="text-red-500 text-sm mt-1">{validityMsg}</span>
-      )}
+      <input type={inputType} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} className={inputClasses} aria-invalid={!isValid} aria-disabled={disabled} disabled={disabled} id={id} name={name} />
+      {isValid === false && validityMsg && <span className="text-red-500 text-sm mt-1">{validityMsg}</span>}
     </div>
   );
 }
