@@ -3,8 +3,11 @@ import TextHeadline from "../atoms/TextHeadline";
 import TextInput from "../atoms/TextInput";
 import Button from "../atoms/Button";
 import { jwtDecode } from "jwt-decode";
+import { useStore } from "../../store/useStore";
+
 
 export default function LoginForm() {
+  const setLoginStatus = useStore((state) => state.setLoginStatus);
   //TODO: empty after finishing testing
   const [formData, setFormData] = useState({
     email: "andrea@gmail.com",
@@ -32,6 +35,7 @@ export default function LoginForm() {
       });
 
       if (response.ok) {
+        setLoginStatus(true);
         //TODO: example now how to extract user infor from token. Delete when not needed anymore
         const cookies = document.cookie.split("; ");
         const authCodeCookie = cookies.find(cookie => cookie.startsWith("authCode="));

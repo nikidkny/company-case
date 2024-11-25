@@ -1,12 +1,15 @@
 import React from "react";
 import { Navigate } from "@tanstack/react-router";
-// import jwt_decode from "jwt-decode"; // Optional: for decoding the JWT and checking expiration
+import { useStore } from "../store/useStore";
 
 const AuthGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  
+  const setLoginStatus = useStore((state) => state.setLoginStatus);
+
   const isAuthenticated = document.cookie.includes("authCode");
 
   if (!isAuthenticated) {
+    setLoginStatus(false);
+
     return (
       <Navigate
         to="/accounts"

@@ -3,10 +3,13 @@ import TextHeadline from "../atoms/TextHeadline";
 import Button from "../atoms/Button";
 import { ICON_NAMES } from "../atoms/Icon/IconNames";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Link } from "@tanstack/react-router";
 import { useStore } from "../../store/useStore";
 
+
 export default function NavigationBar() {
+  const setLoginStatus = useStore((state) => state.setLoginStatus);
+
+  //TODO: FIX LOGINSTATUS to check if user is loggedin or not
   
   //need to lift this state
   const { isMenuOpen, setIsMenuOpen, setPopUp, loginStatus } = useStore();
@@ -20,12 +23,11 @@ export default function NavigationBar() {
       document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
     });
 
-    setIsMenuOpen(!isMenuOpen);
+    setLoginStatus(false);
+    setIsMenuOpen();
   };
 
-  const isAuthenticated = document.cookie.includes("authCode");
-
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const isAuthenticated = document.cookie.includes("authCode");;
 
   const displayPopUp = (arg: boolean) => {
     setPopUp(arg);
