@@ -38,8 +38,8 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async logout(@Res() res: Response) {
     // Clear both the accessToken and refreshToken cookies
-    res.clearCookie('accessToken', { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
-    res.clearCookie('refreshToken', { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+    res.clearCookie('accessToken', { httpOnly: false, secure: process.env.NODE_ENV === 'production' ? true : false, });
+    res.clearCookie('refreshToken', { httpOnly: false,secure: process.env.NODE_ENV === 'production' ? true : false, });
 
     return res.json({ message: 'Logout successful' });
   }
@@ -51,7 +51,7 @@ export class AuthController {
     const { accessToken } = await this.authService.refreshToken(refreshToken);
 
     // Set the new access token as an HTTP-only cookie
-    res.cookie('accessToken', accessToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict' });
+    res.cookie('accessToken', accessToken, { httpOnly: false, secure: process.env.NODE_ENV === 'production' ? true : false });
 
     return res.json({ message: 'Access token refreshed' });
   }

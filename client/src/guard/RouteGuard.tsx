@@ -6,13 +6,6 @@ const AuthGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   
   const isAuthenticated = document.cookie.includes("authCode");
 
-  //TODO: hit the refreshtoken endpoint
-  // Optional: If you want to decode the JWT and check expiration
-  // const checkTokenExpiration = (token: string) => {
-  //   const decoded = jwt_decode(token);
-  //   return decoded.exp * 1000 > Date.now(); // Check if token is expired
-  // };
-
   if (!isAuthenticated) {
     return (
       <Navigate

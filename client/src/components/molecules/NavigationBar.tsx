@@ -21,6 +21,8 @@ export default function NavigationBar() {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const isAuthenticated = document.cookie.includes("authCode");
+
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   return (
     <div className="border-0 border-b border-solid border-gray-300 relative">
@@ -82,48 +84,54 @@ export default function NavigationBar() {
                 Profile
               </Link>
             </li>
-            <li className="">
-              <Button
-                size="mobile"
-                iconPosition="top"
-                buttonState="default"
-                buttonVariant="primary"
-                buttonLabel="Create profile"
-                to="/accounts"
-                customData={{
-                  intent: "register",
-                }}
-                onClick={toggleMenu}
-                className="no-underline w-auto"
-              ></Button>
-            </li>
-            <li className="p-be-8">
-              <Button
-                size="mobile"
-                iconPosition="top"
-                buttonState="default"
-                buttonVariant="secondary"
-                buttonLabel="Log in"
-                customData={{
-                  intent: "login",
-                }}
-                to="/accounts"
-                onClick={toggleMenu}
-                className="no-underline w-auto"
-              ></Button>
-            </li>
-            <li className="p-be-8">
-              <Button
-                size="mobile"
-                iconPosition="top"
-                buttonState="default"
-                buttonVariant="secondary"
-                buttonLabel="logout"
-                onClick={handleLogout}
-                to="/"
-                className="no-underline w-auto"
-              ></Button>
-            </li>
+            {!isAuthenticated && (
+              <>
+                <li className="">
+                  <Button
+                    size="mobile"
+                    iconPosition="top"
+                    buttonState="default"
+                    buttonVariant="primary"
+                    buttonLabel="Create profile"
+                    to="/accounts"
+                    customData={{
+                      intent: "register",
+                    }}
+                    onClick={toggleMenu}
+                    className="no-underline w-auto"
+                  ></Button>
+                </li>
+                <li className="p-be-8">
+                  <Button
+                    size="mobile"
+                    iconPosition="top"
+                    buttonState="default"
+                    buttonVariant="secondary"
+                    buttonLabel="Log in"
+                    customData={{
+                      intent: "login",
+                    }}
+                    to="/accounts"
+                    onClick={toggleMenu}
+                    className="no-underline w-auto"
+                  ></Button>
+                </li>
+              </>
+            )}
+            {isAuthenticated && (
+              <li className="p-be-8">
+                <Button
+                  size="mobile"
+                  iconPosition="top"
+                  buttonState="default"
+                  buttonVariant="secondary"
+                  buttonLabel="Logout"
+                  onClick={handleLogout}
+                  to="/"
+                  className="no-underline w-auto"
+                ></Button>
+              </li>
+            )}
           </ul>
         </div>
       )}
