@@ -1,19 +1,21 @@
-import classNames from "classnames";
 import { useState } from "react";
+import classNames from "classnames";
+import { Icon } from "./Icon/Icon";
+import { ICON_NAMES } from "./Icon/IconNames";
+import Button from "./Button";
 
 interface Props {
   onImageChange: (file: File | null) => void;
-  placeholder?: string;
   className?: string;
+  variant?: "cover" | "profile"; // Choose between cover or profile
 }
 
-export default function ImageInput(props: Props) {
-  const classes = classNames("image-input", props.className);
+export default function ImageInput({ onImageChange, className, variant = "cover" }: Props) {
   const [preview, setPreview] = useState<string | null>(null);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
-    props.onImageChange(file);
+    onImageChange(file);
 
     if (file) {
       const reader = new FileReader();
@@ -26,21 +28,54 @@ export default function ImageInput(props: Props) {
     }
   };
 
+  const containerClasses = classNames(
+    "flex flex-col items-center gap-2", // Shared container styles
+    className
+  );
+
+  const previewClasses = classNames(
+    "flex justify-center items-center bg-gray-100 border border-dashed border-gray-300 overflow-hidden", // Common preview styles
+    {
+      "w-full h-48 rounded-md": variant === "cover", // Cover-specific
+      "w-20 h-20 rounded-full": variant === "profile", // Profile-specific
+    }
+  );
+
+  const imageClasses = classNames("object-cover", {
+    "w-full h-full": variant === "cover", // Cover-specific image
+    "w-full h-full rounded-full": variant === "profile", // Profile-specific image
+  });
+
   return (
-    <div className={classes}>
+    <div className={containerClasses}>
       <input
         type="file"
         accept="image/*"
         onChange={handleImageChange}
-        className="image-input__file"
+        className="hidden"
+        id={`file-input-${variant}`} // Unique ID for each variant
       />
-      <div className="image-input__preview">
+      <label htmlFor={`file-input-${variant}`} className={previewClasses}>
         {preview ? (
-          <img src={preview} alt="Selected preview" className="image-input__image" />
+          <img src={preview} alt="Selected preview" className={imageClasses} />
+        ) : variant === "cover" ? (
+          <Icon
+            name={ICON_NAMES.image_placeholder}
+            height={237}
+            width={441}
+            viewBox="0 0 441 237"
+          />
         ) : (
-          <span className="image-input__placeholder">{props.placeholder}</span>
+          <Icon name={ICON_NAMES.profile_placeholder} height={91} width={91} viewBox="0 0 91 91" />
         )}
-      </div>
+      </label>
+      <Button
+        buttonLabel={variant === "cover" ? "Upload coverbillede" : "Upload billede"}
+        buttonVariant="secondary"
+        buttonState="default"
+        iconPosition="none"
+        onClick={() => document.getElementById(`file-input-${variant}`)?.click()}
+      />
     </div>
   );
 }

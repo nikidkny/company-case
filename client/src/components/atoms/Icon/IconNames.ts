@@ -13,6 +13,7 @@ export enum ICON_NAMES {
   footer_music = "footer_music",
   help_icon = "help_icon",
   hero_image = "hero_image",
+  image_placeholder = "image_placeholder",
   instrument_icon = "instrument_icon",
   instruments = "instruments",
   location_pin = "location_pin",
