@@ -15,7 +15,7 @@ export class Ensemble {
   createdBy: string;
   @Prop({ required: true })
   description: string;
-  @Prop({ required: true })
+  @Prop()
   numberOfMembers: number;
   @Prop()
   location: string;
@@ -27,6 +27,8 @@ export class Ensemble {
   isPermanent: boolean;
   @Prop()
   image: string;
+  @Prop({ required: true })
+  activeMusicians: string;
   @Prop()
   webpage: string;
   @Prop()

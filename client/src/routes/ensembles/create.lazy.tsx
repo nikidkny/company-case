@@ -17,8 +17,9 @@ export const Route = createLazyFileRoute("/ensembles/create")({
   component: CreateEnsemblePage,
 });
 
+//need to add image
 function CreateEnsemblePage() {
-  const { name, setName, description, setDescription, webpage, setWebpage, location, setLocation, activeMusicians, setActiveMusicians, sessionFrequency, setSessionFrequency, ensembleType, setEnsembleType, genres, addGenre, removeGenre, resetForm } =
+  const { name, setName, description, setDescription, webpage, setWebpage, location, setLocation, activeMusicians, setActiveMusicians, sessionFrequency, setSessionFrequency, isPermanent, setEnsembleType, genres, addGenre, removeGenre, resetForm } =
     useStore();
 
   const handleTagChange = (tags: string[]) => {
@@ -45,8 +46,9 @@ function CreateEnsemblePage() {
       location,
       activeMusicians,
       sessionFrequency,
-      ensembleType,
+      isPermanent,
       genres,
+      //image
     });
     //this is how we can retrieve the form data
     const formData = new FormData(e.currentTarget);
@@ -64,6 +66,8 @@ function CreateEnsemblePage() {
         </TextHeadline>
         <form onSubmit={handleSubmit} className="flex flex-col justify-around gap-6">
           <TextInput inputType="text" value={name} onChange={(value) => setName(value)} placeholder={"Ensemble's name"} id="ensembleName" name="ensembleName" className="w-auto" />
+
+          {/* TO DO: ADD IMAGE  */}
           <div>image container here //might need to be a whole component</div>
           <ImageInput onImageChange={(file) => console.log(file)} />
 
@@ -108,12 +112,13 @@ function CreateEnsemblePage() {
           </div>
 
           {/* Type of ensemble */}
+          {/* if the ensemble is working Continuously, isPermanent is true and viceversa */}
           <div className="flex flex-col gap-4">
             <TextBody variant="strong" size="md" className="text-blue-500">
               The ensemble plays...
             </TextBody>
-            <Checkbox name="checkbox" label="Continuously" checked={ensembleType === "Continuously"} onChange={() => setEnsembleType("Continuously")} />
-            <Checkbox name="checkbox" label="On a project basis" checked={ensembleType === "Project"} onChange={() => setEnsembleType("Project")} />
+            <Checkbox name="checkbox" label="Continuously" checked={isPermanent === true} onChange={() => setEnsembleType(isPermanent === true ? null : true)} />
+            <Checkbox name="checkbox" label="On a project basis" checked={isPermanent === false} onChange={() => setEnsembleType(isPermanent === false ? null : false)} />
           </div>
 
           {/* music genre */}

@@ -1,6 +1,6 @@
 import { StateCreator } from "zustand";
 
-type EnsembleType = "Continuously" | "Project" | null;
+//type EnsembleType = "Continuously" | "Project" | null;
 
 export interface CreateEnsembleState {
   name: string;
@@ -12,7 +12,7 @@ export interface CreateEnsembleState {
   };
   activeMusicians: string | null;
   sessionFrequency: string | null;
-  ensembleType: EnsembleType;
+  isPermanent: boolean | null;
   genres: string[];
 
   // Actions
@@ -22,7 +22,7 @@ export interface CreateEnsembleState {
   setLocation: (postNumber: string, city: string) => void;
   setActiveMusicians: (number: string) => void;
   setSessionFrequency: (frequency: string) => void;
-  setEnsembleType: (type: EnsembleType) => void;
+  setEnsembleType: (type: boolean | null) => void;
   addGenre: (genre: string) => void;
   removeGenre: (genre: string) => void;
   resetForm: () => void;
@@ -39,7 +39,7 @@ export const createEnsembleSlice: StateCreator<CreateEnsembleState, [], [], Crea
   },
   activeMusicians: null,
   sessionFrequency: null,
-  ensembleType: null,
+  isPermanent: null,
   genres: [],
 
   // Actions
@@ -52,7 +52,7 @@ export const createEnsembleSlice: StateCreator<CreateEnsembleState, [], [], Crea
     })),
   setActiveMusicians: (number) => set(() => ({ activeMusicians: number })),
   setSessionFrequency: (frequency) => set(() => ({ sessionFrequency: frequency })),
-  setEnsembleType: (type) => set(() => ({ ensembleType: type })),
+  setEnsembleType: (type) => set(() => ({ isPermanent: type })),
   addGenre: (genre) =>
     set((state) => ({
       genres: [...state.genres, genre],
@@ -69,7 +69,7 @@ export const createEnsembleSlice: StateCreator<CreateEnsembleState, [], [], Crea
       location: { postNumber: "", city: "" },
       activeMusicians: null,
       sessionFrequency: null,
-      ensembleType: null,
+      isPermanent: null,
       genres: [],
     })),
 });

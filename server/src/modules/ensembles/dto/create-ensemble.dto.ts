@@ -12,7 +12,7 @@ export class CreateEnsembleDto {
   sessionFrequency: string;
   @IsNotEmpty()
   isPermanent: boolean;
-  numberOfMembers: number;
+  activeMusicians: string;
   genre: string[];
   webpage: string;
   image: string;
