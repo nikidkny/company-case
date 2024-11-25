@@ -15,16 +15,11 @@ export class AuthController {
     return this.authService.signup(createUserDto);
   }
   
-  //TODO: maybe check if the user is already logged in before loggin in again and issue new tokens
+  //TODO: maybe check if the user is already logged in before loggin in again and issue new tokens. TODO: test in postman if still works
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(@Body() body: { email: string, password: string }, @Res() res: Response) {
-    const { accessToken, refreshToken } = await this.authService.login(body.email, body.password);
-
-    // Set the access token and refresh token as HTTP-only cookies
-    res.cookie('accessToken', accessToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict'});
-    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict'});
-
+    await this.authService.login(body.email, body.password, res);
     return res.json({ message: 'Login successful' });
   }
 

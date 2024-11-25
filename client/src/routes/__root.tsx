@@ -1,3 +1,4 @@
+
 import { createRootRoute, Outlet, ScrollRestoration } from "@tanstack/react-router";
 import NavigationBar from "../components/molecules/NavigationBar";
 import Footer from "../components/molecules/Footer";

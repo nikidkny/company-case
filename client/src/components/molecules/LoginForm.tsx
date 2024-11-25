@@ -27,9 +27,11 @@ export default function LoginForm() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
+        credentials:'include'
       });
 
       if (response.ok) {
+        console.log("Cookies after login:", document.cookie);
         alert("Login successful!");
       } else {
         const error = await response.json();

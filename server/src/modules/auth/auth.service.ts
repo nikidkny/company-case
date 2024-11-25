@@ -1,12 +1,11 @@
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from '../users/user.entity';
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import * as bcrypt from "bcryptjs";
 import { JwtService } from '@nestjs/jwt';
-import { error } from 'console';
-import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -55,7 +54,7 @@ export class AuthService {
     }
   }
 
-  async login(email: string, password: string) {
+  async login(email: string, password: string, res: Response) {
     try {
       //Check if user exists
       const userFound = await this.userModel.findOne({ email });
@@ -85,11 +84,24 @@ export class AuthService {
         expiresIn: '1d'
       })
 
+      // Set cookies with HTTP-only, Secure (optional for HTTPS), and SameSite for better security
+      res.cookie('authCode', accessToken, {
+        maxAge: 60 * 60 * 1000, // 1 hour
+        httpOnly: false,          // Ensures the cookie is not accessible via JavaScript
+        secure: process.env.NODE_ENV === 'production' ? true : false, 
+        sameSite: 'strict',      // Prevents cross-site requests
+      });
+      
+      res.cookie('refreshCode', refreshToken, {
+        maxAge: 24 * 60 * 60 * 1000, // 1 day
+        httpOnly: false,              // Ensures the cookie is not accessible via JavaScript
+        secure: process.env.NODE_ENV === 'production' ? true : false, 
+        sameSite: 'strict',          // Prevents cross-site requests
+      });
+
       return {
         message: 'Login successful',
-        accessToken,
-        refreshToken
-      }
+      };
     } catch (error) {
       console.error('Error during login', error);
       if (error instanceof NotFoundException || error instanceof BadRequestException) {
