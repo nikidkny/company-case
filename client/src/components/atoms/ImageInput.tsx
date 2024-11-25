@@ -7,7 +7,7 @@ import Button from "./Button";
 interface Props {
   onImageChange: (file: File | null) => void;
   className?: string;
-  variant?: "cover" | "profile"; // Choose between cover or profile
+  variant?: "cover" | "profile";
 }
 
 export default function ImageInput({ onImageChange, className, variant = "cover" }: Props) {
@@ -28,22 +28,19 @@ export default function ImageInput({ onImageChange, className, variant = "cover"
     }
   };
 
-  const containerClasses = classNames(
-    "flex flex-col items-center gap-2", // Shared container styles
-    className
-  );
+  const containerClasses = classNames("flex flex-col items-center gap-2", className);
 
   const previewClasses = classNames(
     "flex justify-center items-center bg-gray-100 border border-dashed border-gray-300 overflow-hidden", // Common preview styles
     {
-      "w-full h-48 rounded-md": variant === "cover", // Cover-specific
-      "w-20 h-20 rounded-full": variant === "profile", // Profile-specific
+      "w-full h-48 rounded-md": variant === "cover",
+      "w-20 h-20 rounded-full": variant === "profile",
     }
   );
 
   const imageClasses = classNames("object-cover", {
-    "w-full h-full": variant === "cover", // Cover-specific image
-    "w-full h-full rounded-full": variant === "profile", // Profile-specific image
+    "w-full h-full": variant === "cover",
+    "w-full h-full rounded-full": variant === "profile",
   });
 
   return (
@@ -53,7 +50,7 @@ export default function ImageInput({ onImageChange, className, variant = "cover"
         accept="image/*"
         onChange={handleImageChange}
         className="hidden"
-        id={`file-input-${variant}`} // Unique ID for each variant
+        id={`file-input-${variant}`}
       />
       <label htmlFor={`file-input-${variant}`} className={previewClasses}>
         {preview ? (
@@ -70,7 +67,7 @@ export default function ImageInput({ onImageChange, className, variant = "cover"
         )}
       </label>
       <Button
-        buttonLabel={variant === "cover" ? "Upload coverbillede" : "Upload billede"}
+        buttonLabel={variant === "cover" ? "Upload cover image" : "Upload image"}
         buttonVariant="secondary"
         buttonState="default"
         iconPosition="none"
