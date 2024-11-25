@@ -8,8 +8,6 @@ import { useStore } from "../../store/useStore";
 
 export default function NavigationBar() {
   const setLoginStatus = useStore((state) => state.setLoginStatus);
-
-  //TODO: FIX LOGINSTATUS to check if user is loggedin or not
   
   //need to lift this state
   const { isMenuOpen, setIsMenuOpen, setPopUp, loginStatus } = useStore();
