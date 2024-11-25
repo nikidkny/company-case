@@ -11,7 +11,6 @@ function AccountsPage() {
   const searchParams = new URLSearchParams(location.search);
   const intent = searchParams.get("intent"); // Get the query parameter 'intent'
 
-  //TODO: front end auth with tanstack.
   return (
     <div>
       {intent === "register" && <SignupForm />}

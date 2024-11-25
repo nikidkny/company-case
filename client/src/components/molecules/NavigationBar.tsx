@@ -3,11 +3,24 @@ import TextBody from "../atoms/TextBody";
 import TextHeadline from "../atoms/TextHeadline";
 import Button from "../atoms/Button";
 import { ICON_NAMES } from "../atoms/Icon/IconNames";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 
 export default function NavigationBar() {
   //need to lift this state
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleLogout = async () => {
+    const cookies = document.cookie.split(';');
+
+    cookies.forEach(cookie => {
+      const cookieName = cookie.split('=')[0].trim();
+      // Set each cookie to expire in the past
+      document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+    });
+
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   return (
     <div className="border-0 border-b border-solid border-gray-300 relative">
@@ -96,6 +109,18 @@ export default function NavigationBar() {
                 }}
                 to="/accounts"
                 onClick={toggleMenu}
+                className="no-underline w-auto"
+              ></Button>
+            </li>
+            <li className="p-be-8">
+              <Button
+                size="mobile"
+                iconPosition="top"
+                buttonState="default"
+                buttonVariant="secondary"
+                buttonLabel="logout"
+                onClick={handleLogout}
+                to="/"
                 className="no-underline w-auto"
               ></Button>
             </li>

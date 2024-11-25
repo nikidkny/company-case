@@ -3,11 +3,10 @@ import { Navigate } from "@tanstack/react-router";
 // import jwt_decode from "jwt-decode"; // Optional: for decoding the JWT and checking expiration
 
 const AuthGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Check if the 'authCode' cookie is set
-  console.log(document.cookie);
   
   const isAuthenticated = document.cookie.includes("authCode");
 
+  //TODO: hit the refreshtoken endpoint
   // Optional: If you want to decode the JWT and check expiration
   // const checkTokenExpiration = (token: string) => {
   //   const decoded = jwt_decode(token);

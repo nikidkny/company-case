@@ -2,6 +2,7 @@ import { useState } from "react";
 import TextHeadline from "../atoms/TextHeadline";
 import TextInput from "../atoms/TextInput";
 import Button from "../atoms/Button";
+import { jwtDecode } from "jwt-decode";
 
 export default function LoginForm() {
   //TODO: empty after finishing testing
@@ -27,11 +28,17 @@ export default function LoginForm() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
-        credentials:'include'
+        credentials: 'include'
       });
 
       if (response.ok) {
-        console.log("Cookies after login:", document.cookie);
+        //TODO: example now how to extract user infor from token. Delete when not needed anymore
+        const cookies = document.cookie.split("; ");
+        const authCodeCookie = cookies.find(cookie => cookie.startsWith("authCode="));
+        if (authCodeCookie) {
+          const decodedToken = jwtDecode(authCodeCookie);
+          console.log(decodedToken);
+        }
         alert("Login successful!");
       } else {
         const error = await response.json();

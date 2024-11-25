@@ -1,8 +1,8 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Res, UseGuards } from "@nestjs/common";
+import { Body, Controller, HttpCode, HttpStatus, Post, Req, Res, UseGuards } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { CreateUserDto } from "../users/dto/create-user.dto";
 import { JwtAuthGuard } from "./jwt-auth.guard";
-import { Response } from 'express';
+import { Response, Request } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -14,16 +14,26 @@ export class AuthController {
   async signup(@Body() createUserDto: CreateUserDto) {
     return this.authService.signup(createUserDto);
   }
-  
-  //TODO: maybe check if the user is already logged in before loggin in again and issue new tokens. TODO: test in postman if still works
+
+  //TODO: maybe check if the user is already logged in before loggin in again and issue new tokens.
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Body() body: { email: string, password: string }, @Res() res: Response) {
+  async login(@Body() body: { email: string, password: string }, @Res() res: Response, @Req() req: Request) {
+    // Check if the user already has a refresh token (i.e., already logged in)
+    const refreshToken = req.cookies['refreshCode'];
+
+    if (refreshToken) {
+      console.log("Already loggedin");
+      
+      // If a refresh token exists, return a message and do nothing
+      return res.json({ message: 'User already logged in' });
+    }
+
     await this.authService.login(body.email, body.password, res);
     return res.json({ message: 'Login successful' });
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   async logout(@Res() res: Response) {
