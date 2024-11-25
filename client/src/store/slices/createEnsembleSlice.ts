@@ -1,7 +1,5 @@
 import { StateCreator } from "zustand";
 
-//type EnsembleType = "Continuously" | "Project" | null;
-
 export interface CreateEnsembleState {
   name: string;
   description: string;
@@ -20,9 +18,9 @@ export interface CreateEnsembleState {
   setDescription: (description: string) => void;
   setWebpage: (webpage: string) => void;
   setLocation: (postNumber: string, city: string) => void;
-  setActiveMusicians: (number: string) => void;
-  setSessionFrequency: (frequency: string) => void;
-  setEnsembleType: (type: boolean | null) => void;
+  setActiveMusicians: (activeMusicians: string) => void;
+  setSessionFrequency: (sessionFrequency: string) => void;
+  setEnsembleType: (isPermanent: boolean | null) => void;
   addGenre: (genre: string) => void;
   removeGenre: (genre: string) => void;
   resetForm: () => void;
@@ -50,9 +48,9 @@ export const createEnsembleSlice: StateCreator<CreateEnsembleState, [], [], Crea
     set(() => ({
       location: { postNumber, city },
     })),
-  setActiveMusicians: (number) => set(() => ({ activeMusicians: number })),
-  setSessionFrequency: (frequency) => set(() => ({ sessionFrequency: frequency })),
-  setEnsembleType: (type) => set(() => ({ isPermanent: type })),
+  setActiveMusicians: (activeMusicians) => set(() => ({ activeMusicians })),
+  setSessionFrequency: (sessionFrequency) => set(() => ({ sessionFrequency })),
+  setEnsembleType: (isPermanent) => set(() => ({ isPermanent })),
   addGenre: (genre) =>
     set((state) => ({
       genres: [...state.genres, genre],

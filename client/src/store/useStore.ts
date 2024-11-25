@@ -4,13 +4,14 @@ import { createToggleMenuSlice, MenuState } from "./slices/toggleMenuSlice";
 import { createLoginStatusSlice, LoginStatusState } from "./slices/logInStatusSlice";
 
 import { createEnsembleSlice, CreateEnsembleState } from "./slices/createEnsembleSlice";
+import { createFetchDataSlice, FetchDataState } from "./slices/fetchDataSlice";
 
 interface BearState {
   bears: number;
   increase: (by: number) => void;
 }
 // Combined store type, add other types for the additional slices
-interface Store extends BearState, MenuState, LoginStatusState, CreateEnsembleState, PopUpState {}
+interface Store extends BearState, MenuState, LoginStatusState, CreateEnsembleState, FetchDataState, PopUpState {}
 
 export const useStore = create<Store>((set, ...args) => ({
   bears: 0,
@@ -19,4 +20,5 @@ export const useStore = create<Store>((set, ...args) => ({
   ...createToggleMenuSlice(set),
   ...createLoginStatusSlice(set),
   ...createEnsembleSlice(set, ...args),
+  ...createFetchDataSlice(set, ...args),
 }));
