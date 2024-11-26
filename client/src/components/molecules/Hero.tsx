@@ -76,6 +76,7 @@ export default function Hero() {
                   buttonVariant="primary"
                   className="no-underline w-auto inline"
                   to="/accounts"
+                  onClick={handleClick}
                   customData={{
                     intent: "register",
                   }}

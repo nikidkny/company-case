@@ -5,7 +5,7 @@ import Button from "../atoms/Button";
 import { jwtDecode } from "jwt-decode";
 import { useStore } from "../../store/useStore";
 
-
+//TODO: change useStore to useState so you can move the logic in the actual page. Example: createEnsable. In the slice create AuthSlice
 export default function LoginForm() {
   const setLoginStatus = useStore((state) => state.setLoginStatus);
   //TODO: empty after finishing testing
@@ -38,9 +38,9 @@ export default function LoginForm() {
         setLoginStatus(true);
         //TODO: example now how to extract user infor from token. Delete when not needed anymore
         const cookies = document.cookie.split("; ");
-        const authCodeCookie = cookies.find(cookie => cookie.startsWith("authCode="));
-        if (authCodeCookie) {
-          const decodedToken = jwtDecode(authCodeCookie);
+        const accessTokenCookie = cookies.find(cookie => cookie.startsWith("accessToken="));
+        if (accessTokenCookie) {
+          const decodedToken = jwtDecode(accessTokenCookie);
           console.log(decodedToken);
         }
         alert("Login successful!");

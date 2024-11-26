@@ -25,7 +25,7 @@ export default function NavigationBar() {
     setIsMenuOpen();
   };
 
-  const isAuthenticated = document.cookie.includes("authCode");;
+  const isAuthenticated = document.cookie.includes("accessToken");;
 
   const displayPopUp = (arg: boolean) => {
     setPopUp(arg);

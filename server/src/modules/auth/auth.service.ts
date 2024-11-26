@@ -85,7 +85,7 @@ export class AuthService {
       })
 
       // Set cookies with HTTP-only, Secure (optional for HTTPS), and SameSite for better security
-      res.cookie('authCode', accessToken, {
+      res.cookie('accessToken', accessToken, {
         maxAge: 60 * 60 * 1000, // 1 hour
         httpOnly: false,          // Ensures the cookie is not accessible via JavaScript
         secure: process.env.NODE_ENV === 'production' ? true : false, 

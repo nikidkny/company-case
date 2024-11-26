@@ -3,9 +3,10 @@ import { Navigate } from "@tanstack/react-router";
 import { useStore } from "../store/useStore";
 
 const AuthGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  //TODO: save cookie
   const setLoginStatus = useStore((state) => state.setLoginStatus);
 
-  const isAuthenticated = document.cookie.includes("authCode");
+  const isAuthenticated = document.cookie.includes("accessToken");
 
   if (!isAuthenticated) {
     setLoginStatus(false);
