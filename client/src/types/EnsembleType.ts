@@ -2,7 +2,9 @@ export type EnsembleType = {
   name: string;
   description: string;
   webpage: string;
-  location: string;
+  zip: string;
+  city: string;
+  image?: File | null;
   activeMusicians: string | null;
   sessionFrequency: string | null;
   isPermanent: boolean | null;

@@ -6,6 +6,7 @@ export interface CreateEnsembleState {
   webpage: string;
   zip: string;
   city: string;
+  image?: File | null;
   activeMusicians: string | null;
   sessionFrequency: string | null;
   isPermanent: boolean | null;
@@ -17,6 +18,7 @@ export interface CreateEnsembleState {
   setWebpage: (webpage: string) => void;
   setZip: (zip: string) => void;
   setCity: (city: string) => void;
+  setImage?: (image: File | null) => void;
   setActiveMusicians: (activeMusicians: string) => void;
   setSessionFrequency: (sessionFrequency: string) => void;
   setEnsembleType: (isPermanent: boolean | null) => void;
@@ -32,6 +34,7 @@ export const createEnsembleSlice: StateCreator<CreateEnsembleState, [], [], Crea
   webpage: "",
   zip: "",
   city: "",
+  image: null,
   activeMusicians: null,
   sessionFrequency: null,
   isPermanent: null,
@@ -48,6 +51,10 @@ export const createEnsembleSlice: StateCreator<CreateEnsembleState, [], [], Crea
   setCity: (city) =>
     set(() => ({
       city,
+    })),
+  setImage: (image) =>
+    set(() => ({
+      image,
     })),
   setActiveMusicians: (activeMusicians) => set(() => ({ activeMusicians })),
   setSessionFrequency: (sessionFrequency) => set(() => ({ sessionFrequency })),
@@ -67,6 +74,7 @@ export const createEnsembleSlice: StateCreator<CreateEnsembleState, [], [], Crea
       webpage: "",
       zip: "",
       city: "",
+      image: null,
       activeMusicians: null,
       sessionFrequency: null,
       isPermanent: null,

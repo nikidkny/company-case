@@ -7,7 +7,9 @@ export class CreateEnsembleDto {
   @IsNotEmpty()
   description: string;
   @IsNotEmpty()
-  location: string;
+  zip: string;
+  @IsNotEmpty()
+  city: string;
   @IsNotEmpty()
   sessionFrequency: string;
   @IsNotEmpty()

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 type HTTP_Methods = "GET" | "POST" | "DELETE" | "PUT";
 
@@ -13,6 +13,8 @@ export function useFetch<T>(initialValue: T, subPath: string | null, method: HTT
   const triggerFetch = () => {
     setShouldFetch(true);
   };
+  const memoizedHeaders = useMemo(() => headers, [headers]);
+  const memoizedBody = useMemo(() => body, [body]);
 
   useEffect(() => {
     if (!shouldFetch || !subPath) return;
@@ -23,8 +25,8 @@ export function useFetch<T>(initialValue: T, subPath: string | null, method: HTT
       try {
         const response = await fetch(serverBaseURL + subPath, {
           method,
-          headers,
-          body: shouldFetch ? JSON.stringify(body) : null,
+          headers: memoizedHeaders,
+          body: shouldFetch ? JSON.stringify(memoizedBody) : null,
         });
         if (!response.ok) {
           throw new Error(`Error ${response.status}: ${response.statusText}`);
@@ -36,12 +38,11 @@ export function useFetch<T>(initialValue: T, subPath: string | null, method: HTT
         setError(error instanceof Error ? error.message : "An unknown error occurred");
       } finally {
         setLoading(false);
-        setShouldFetch(false);
       }
     };
-
+    setShouldFetch(false);
     getData();
-  }, [subPath, method, headers, body, shouldFetch]);
+  }, [subPath, method, memoizedHeaders, memoizedBody, shouldFetch]);
 
   return { data, loading, error, triggerFetch };
 }

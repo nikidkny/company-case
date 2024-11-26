@@ -22,7 +22,9 @@ export class Ensemble {
   @Prop()
   numberOfMembers: number;
   @Prop()
-  location: string;
+  zip: string;
+  @Prop()
+  city: string;
   @Prop({ required: true })
   sessionFrequency: string;
   @Prop()
