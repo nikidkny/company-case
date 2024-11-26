@@ -1,63 +1,35 @@
+// SignupForm.tsx
 import { useState } from "react";
 import TextInput from "../atoms/TextInput"; // Assuming you've already imported TextInput
 import Button from "../atoms/Button"; // Assuming you've already imported Button
 
-export default function SignupForm() {
-    //TODO: empty after finishing testing
-  const [formData, setFormData] = useState({
-    firstName: "Andrea",
-    lastName: "Di Claudio",
-    email: "andrea@gmail.com",
-    password: "password",
-    confirmPassword: "password",
-    birthdate: "",
-    isAvailable: true,
-  });
-
-  const handleChange = (name: string, value: string | boolean) => {
-    if (name === "birthdate" && typeof value === "string") {
-      const isValidDate = /^\d{4}-\d{2}-\d{2}$/.test(value);
-      if (isValidDate) {
-        setFormData((prevData) => ({
-          ...prevData,
-          [name]: value,
-        }));
-      }
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
-    }
+// Update the interface to include formData
+interface SignupFormProps {
+  formData: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    birthdate: string;
+    isAvailable: boolean;
   };
+  onChange: (name: string, value: string | boolean) => void;
+  onSubmit: (formData: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    birthdate: string;
+    isAvailable: boolean;
+  }) => void;
+}
 
-  const handleSubmit = async (e: React.FormEvent) => {
+export default function SignupForm({ formData, onChange, onSubmit }: SignupFormProps) {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match");
-      return;
-    }
-
-    try {
-      const response = await fetch("http://localhost:3000/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-        credentials: 'include'
-      });
-
-      if (response.ok) {
-        alert("Signup successful!");
-      } else {
-        const error = await response.json();
-        alert(`Signup failed: ${error.message}`);
-      }
-    } catch (err) {
-      console.error("Error during signup", err);
-    }
+    onSubmit(formData); // Pass formData to parent component's handler
   };
 
   return (
@@ -69,42 +41,42 @@ export default function SignupForm() {
         <TextInput
           inputType="text"
           value={formData.firstName}
-          onChange={(value) => handleChange("firstName", value)}
+          onChange={(value) => onChange("firstName", value)}
           placeholder="First Name"
         />
 
         <TextInput
           inputType="text"
           value={formData.lastName}
-          onChange={(value) => handleChange("lastName", value)}
+          onChange={(value) => onChange("lastName", value)}
           placeholder="Last Name"
         />
 
         <TextInput
           inputType="email"
           value={formData.email}
-          onChange={(value) => handleChange("email", value)}
+          onChange={(value) => onChange("email", value)}
           placeholder="Email"
         />
 
         <TextInput
           inputType="password"
           value={formData.password}
-          onChange={(value) => handleChange("password", value)}
+          onChange={(value) => onChange("password", value)}
           placeholder="Password"
         />
 
         <TextInput
           inputType="password"
           value={formData.confirmPassword}
-          onChange={(value) => handleChange("confirmPassword", value)}
+          onChange={(value) => onChange("confirmPassword", value)}
           placeholder="Confirm Password"
         />
 
         <TextInput
           inputType="date"
           value={formData.birthdate}
-          onChange={(value) => handleChange("birthdate", value)}
+          onChange={(value) => onChange("birthdate", value)}
           placeholder="Birthdate"
         />
 
@@ -113,7 +85,7 @@ export default function SignupForm() {
             type="checkbox"
             name="isAvailable"
             checked={formData.isAvailable}
-            onChange={(e) => handleChange("isAvailable", e.target.checked)}
+            onChange={(e) => onChange("isAvailable", e.target.checked)}
             className="h-5 w-5"
           />
           <label htmlFor="isAvailable" className="text-gray-700">

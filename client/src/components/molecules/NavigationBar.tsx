@@ -13,16 +13,17 @@ export default function NavigationBar() {
   const { isMenuOpen, setIsMenuOpen, setPopUp, loginStatus } = useStore();
 
   const handleLogout = async () => {
-    const cookies = document.cookie.split(';');
-
-    cookies.forEach(cookie => {
-      const cookieName = cookie.split('=')[0].trim();
+    const cookies = document.cookie.split(";");
+  
+    cookies.forEach((cookie) => {
+      const cookieName = cookie.split("=")[0].trim();
       // Set each cookie to expire in the past
-      document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+      document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;`;
     });
-
+  
     setLoginStatus(false);
     setIsMenuOpen();
+    window.location.reload(); // Force reload the page to update the UI and clear cookies
   };
 
   const isAuthenticated = document.cookie.includes("accessToken");;
