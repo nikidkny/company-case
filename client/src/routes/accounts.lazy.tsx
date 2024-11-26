@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { createLazyFileRoute, useLocation } from "@tanstack/react-router";
 import { jwtDecode } from "jwt-decode";
 import { useStore } from "../store/useStore";
@@ -16,7 +16,7 @@ function AccountsPage() {
 
   // Access the updated Auth state from the store
   const setAccessToken = useStore((state) => state.setAccessToken);
-  const accessTokenSlice = useStore((state) => state.accessTokenSlice); // Track the current accessToken
+  // const accessTokenSlice = useStore((state) => state.accessTokenSlice); // Track the current accessToken
   const setUser = useStore((state) => state.setUser);
   const setLoginStatus = useStore((state) => state.setLoginStatus);
 
@@ -64,9 +64,7 @@ function AccountsPage() {
 
       if (response.ok) {
         const cookies = document.cookie.split("; ");
-        const accessTokenCookie = cookies.find((cookie) =>
-          cookie.startsWith("accessToken=")
-        );
+        const accessTokenCookie = cookies.find((cookie) => cookie.startsWith("accessToken="));
 
         if (accessTokenCookie) {
           const accessToken = accessTokenCookie.split("=")[1];
@@ -111,12 +109,8 @@ function AccountsPage() {
 
   return (
     <div>
-      {intent === "register" && (
-        <SignupForm formData={signupData} onChange={handleChange} onSubmit={handleSignupSubmit} />
-      )}
-      {intent === "login" && (
-        <LoginForm formData={formData} onChange={handleChange} onSubmit={handleLoginSubmit} />
-      )}
+      {intent === "register" && <SignupForm formData={signupData} onChange={handleChange} onSubmit={handleSignupSubmit} />}
+      {intent === "login" && <LoginForm formData={formData} onChange={handleChange} onSubmit={handleLoginSubmit} />}
       {!intent && <p>Please select login or register from the navigation.</p>}
     </div>
   );

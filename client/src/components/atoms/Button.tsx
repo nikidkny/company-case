@@ -51,7 +51,7 @@ export default function Button({
     { [`icon-btn-${iconPosition}`]: iconPosition },
     className,
   ]);
-  const queryParams = customData ? `?${new URLSearchParams(customData).toString()}` : "";
+  const queryParams = customData ? `${to}?${new URLSearchParams(customData).toString()}` : "";
 
   return (
     <>
