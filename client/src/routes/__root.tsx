@@ -14,14 +14,27 @@ export const Route = createRootRoute({
         </Link> */}
       {/* //testing out going to a route with specific id */}
       {/* <Link
-          to="/ensembles/$ensembleId"
-          params={{
-            ensembleId: "82",
-          }}
-          className="[&.active]:font-bold"
-        >
-          Profile
-        </Link> */}
+        to="/ensembles/$ensemblesId"
+        params={{
+          ensemblesId: "82",
+        }}
+        className="[&.active]:font-bold"
+      >
+        Profile
+      </Link> */}
+      {/* <Button
+        iconPosition="none"
+        buttonState="default"
+        buttonLabel="Register by email"
+        size="mobile"
+        buttonVariant="primary"
+        className="no-underline w-auto inline"
+        to="/ensembles/$ensemblesId/edit"
+        params={{
+          ensemblesId: "83",
+        }}
+      /> */}
+
       {/* </div> */}
       <NavigationBar />
       {/* //the outlet component is the content extracted from the respective route. */}
