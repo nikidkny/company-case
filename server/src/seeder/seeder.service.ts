@@ -1,4 +1,4 @@
-import { Model } from 'mongoose';
+
 import { Ensemble } from 'src/modules/ensembles/ensemble.entity';
 import { Post } from 'src/modules/posts/post.entity';
 import { User } from 'src/modules/users/user.entity';
@@ -7,6 +7,7 @@ import mockPosts from './mockPosts';
 import mockUsers from './mockUsers';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class SeederService {

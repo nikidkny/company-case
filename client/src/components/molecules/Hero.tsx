@@ -7,10 +7,14 @@ import DividerWithText from "../atoms/DividerWithText";
 import { useStore } from "../../store/useStore";
 
 export default function Hero() {
-  const { popUp, setPopUp, loginStatus } = useStore();
+  const { popUp, setPopUp, loginStatus, setIsMenuOpen } = useStore();
   const displayPopUp = (arg: boolean) => {
     setPopUp(arg);
   };
+
+  const handleClick = () => {
+    setIsMenuOpen();
+  }
   return (
     //hero container
     <>
@@ -72,6 +76,7 @@ export default function Hero() {
                   buttonVariant="primary"
                   className="no-underline w-auto inline"
                   to="/accounts"
+                  onClick={handleClick}
                   customData={{
                     intent: "register",
                   }}
@@ -84,6 +89,7 @@ export default function Hero() {
                   iconPosition="none"
                   size="mobile"
                   to="/accounts"
+                  onClick={handleClick}
                   customData={{
                     intent: "login",
                   }}

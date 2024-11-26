@@ -2,12 +2,31 @@ import TextBody from "../atoms/TextBody";
 import TextHeadline from "../atoms/TextHeadline";
 import Button from "../atoms/Button";
 import { ICON_NAMES } from "../atoms/Icon/IconNames";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useStore } from "../../store/useStore";
 
+
 export default function NavigationBar() {
+  const setLoginStatus = useStore((state) => state.setLoginStatus);
+  
   //need to lift this state
   const { isMenuOpen, setIsMenuOpen, setPopUp, loginStatus } = useStore();
+
+  const handleLogout = async () => {
+    const cookies = document.cookie.split(";");
+  
+    cookies.forEach((cookie) => {
+      const cookieName = cookie.split("=")[0].trim();
+      // Set each cookie to expire in the past
+      document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;`;
+    });
+  
+    setLoginStatus(false);
+    setIsMenuOpen();
+    window.location.reload(); // Force reload the page to update the UI and clear cookies
+  };
+
+  const isAuthenticated = document.cookie.includes("accessToken");;
 
   const displayPopUp = (arg: boolean) => {
     setPopUp(arg);
@@ -73,36 +92,54 @@ export default function NavigationBar() {
                 Profile
               </Link>
             </li>
-            <li className="">
-              <Button
-                size="mobile"
-                iconPosition="top"
-                buttonState="default"
-                buttonVariant="primary"
-                buttonLabel="Create profile"
-                to="/accounts"
-                customData={{
-                  intent: "register",
-                }}
-                onClick={toggleMenu}
-                className="no-underline w-auto"
-              ></Button>
-            </li>
-            <li className="p-be-8">
-              <Button
-                size="mobile"
-                iconPosition="top"
-                buttonState="default"
-                buttonVariant="secondary"
-                buttonLabel="Log in"
-                customData={{
-                  intent: "login",
-                }}
-                to="/accounts"
-                onClick={toggleMenu}
-                className="no-underline w-auto"
-              ></Button>
-            </li>
+            {!isAuthenticated && (
+              <>
+                <li className="">
+                  <Button
+                    size="mobile"
+                    iconPosition="top"
+                    buttonState="default"
+                    buttonVariant="primary"
+                    buttonLabel="Create profile"
+                    to="/accounts"
+                    customData={{
+                      intent: "register",
+                    }}
+                    onClick={toggleMenu}
+                    className="no-underline w-auto"
+                  ></Button>
+                </li>
+                <li className="p-be-8">
+                  <Button
+                    size="mobile"
+                    iconPosition="top"
+                    buttonState="default"
+                    buttonVariant="secondary"
+                    buttonLabel="Log in"
+                    customData={{
+                      intent: "login",
+                    }}
+                    to="/accounts"
+                    onClick={toggleMenu}
+                    className="no-underline w-auto"
+                  ></Button>
+                </li>
+              </>
+            )}
+            {isAuthenticated && (
+              <li className="p-be-8">
+                <Button
+                  size="mobile"
+                  iconPosition="top"
+                  buttonState="default"
+                  buttonVariant="secondary"
+                  buttonLabel="Logout"
+                  onClick={handleLogout}
+                  to="/"
+                  className="no-underline w-auto"
+                ></Button>
+              </li>
+            )}
           </ul>
         </div>
       )}
