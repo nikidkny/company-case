@@ -1,8 +1,9 @@
 import { StateCreator } from "zustand";
+import { User } from "../../types/UserType";
 
 export interface AuthState {
   accessTokenSlice: string | null;
-  user: Record<string, any> | null; //TODO: add type for user
+  user: User | null;
   setAccessToken: (accessTokenSlice: string | null) => void; 
   setUser: (user: Record<string, any> | null) => void;
 }
