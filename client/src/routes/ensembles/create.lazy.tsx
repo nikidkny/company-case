@@ -12,6 +12,9 @@ import { activeMusiciansNumberOptions } from "../../utilities/activeMusiciansNum
 import { musicSessionsFrequencyOptions } from "../../utilities/musicSessionsFrequencyOptions";
 import { musicGenresOptions } from "../../utilities/musicGenresOptions";
 import { DropdownWithTags } from "../../components/molecules/DropdownWithTags";
+import { EnsembleType } from "../../types/EnsembleType";
+import { useFetch } from "../../hooks/use-fetch";
+import { useEffect } from "react";
 
 export const Route = createLazyFileRoute("/ensembles/create")({
   component: CreateEnsemblePage,
@@ -19,8 +22,73 @@ export const Route = createLazyFileRoute("/ensembles/create")({
 
 //need to add image
 function CreateEnsemblePage() {
-  const { name, setName, description, setDescription, webpage, setWebpage, location, setLocation, activeMusicians, setActiveMusicians, sessionFrequency, setSessionFrequency, isPermanent, setEnsembleType, genres, addGenre, removeGenre, resetForm } =
-    useStore();
+  const {
+    name,
+    setName,
+    description,
+    setDescription,
+    webpage,
+    setWebpage,
+    location,
+    setLocation,
+    activeMusicians,
+    setActiveMusicians,
+    sessionFrequency,
+    setSessionFrequency,
+    isPermanent,
+    setEnsembleType,
+    genres,
+    addGenre,
+    removeGenre,
+    resetForm,
+    setObjectData,
+    objectData,
+  } = useStore();
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const ensembleData = {
+      name,
+      description,
+      webpage,
+      location,
+      activeMusicians,
+      sessionFrequency,
+      isPermanent,
+      genres,
+    };
+    setObjectData(ensembleData);
+    triggerFetch();
+    // console.log(formDataToSend.get("name"));
+    resetForm();
+  };
+
+  const {
+    data: ensembles,
+    error,
+    loading,
+    triggerFetch,
+  } = useFetch<EnsembleType[]>(
+    [],
+    "/ensembles",
+    "POST",
+    {
+      "Content-Type": "application/json",
+    },
+    objectData
+  );
+
+  useEffect(() => {
+    if (ensembles.length >= 1) {
+      console.log("Ensemble created:", ensembles);
+    }
+  }, [ensembles]);
+
+  useEffect(() => {
+    if (error) {
+      console.error("Error creating ensemble:", error);
+    }
+  }, [error]);
 
   const handleTagChange = (tags: string[]) => {
     const currentTags = new Set(genres);
@@ -34,28 +102,6 @@ function CreateEnsemblePage() {
         removeGenre(tag); // Remove deselected tags
       }
     });
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("submitted");
-    console.log({
-      name,
-      description,
-      webpage,
-      location,
-      activeMusicians,
-      sessionFrequency,
-      isPermanent,
-      genres,
-      //image
-    });
-    //this is how we can retrieve the form data
-    const formData = new FormData(e.currentTarget);
-    console.log(formData.get("ensembleName"));
-    //or just like this - since they are saved in the store
-    console.log(name);
-    resetForm();
   };
 
   return (
@@ -91,8 +137,30 @@ function CreateEnsemblePage() {
               Location
             </TextBody>
             <div className="flex flex-row gap-3">
-              <TextInput inputType="text" value={location.postNumber} onChange={(value) => setLocation(value, location.city)} placeholder="Postnr." id="postNumber" name="postNumber" className="w-auto" />
-              <TextInput inputType="text" value={location.city} onChange={(value) => setLocation(location.postNumber, value)} placeholder="City" id="city" name="city" className="w-auto" />
+              <TextInput
+                inputType="text"
+                value={location.split(" ")[0] || ""}
+                onChange={(value) => {
+                  const city = location.split(" ")[1] || "";
+                  setLocation(value, city);
+                }}
+                placeholder="Postnr."
+                id="postNumber"
+                name="postNumber"
+                className="w-auto"
+              />
+              <TextInput
+                inputType="text"
+                value={location.split(" ")[1] || ""}
+                onChange={(value) => {
+                  const postNumber = location.split(" ")[0] || "";
+                  setLocation(postNumber, value);
+                }}
+                placeholder="City"
+                id="city"
+                name="city"
+                className="w-auto"
+              />
             </div>
           </div>
           {/* number of active musicians */}
@@ -134,8 +202,11 @@ function CreateEnsemblePage() {
               }}
             />
           </div>
+          {/* <Button buttonVariant="primary" buttonLabel="Create ensemble" buttonState={"default"} iconPosition="top" className="w-auto m-b-6" type="submit"></Button> */}
 
-          <Button buttonVariant="primary" buttonLabel="Create ensemble" buttonState="default" iconPosition="top" className="w-auto m-b-6" type="submit" />
+          <Button buttonVariant="primary" buttonLabel="Create ensemble" buttonState={(loading && "disabled") || "default"} iconPosition="top" className="w-auto m-b-6" type="submit">
+            {loading ? "Creating..." : "Create Ensemble"}
+          </Button>
         </form>
       </div>
     </>

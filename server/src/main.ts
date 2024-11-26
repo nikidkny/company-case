@@ -11,6 +11,10 @@ async function bootstrap() {
     //validation goes here if we want to include field with the error and a message
     //if the guard is needed for the entire application, it should be specified here
   );
+  app.enableCors({
+    origin: 'http://localhost:5173', // Frontend URL
+    credentials: true, // Allow cookies if needed
+  });
 
   const seederService = app.get(SeederService);
   const seederInstruments = app.get(InstrumentsService);

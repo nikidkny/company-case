@@ -4,10 +4,7 @@ export interface CreateEnsembleState {
   name: string;
   description: string;
   webpage: string;
-  location: {
-    postNumber: string;
-    city: string;
-  };
+  location: string;
   activeMusicians: string | null;
   sessionFrequency: string | null;
   isPermanent: boolean | null;
@@ -31,10 +28,7 @@ export const createEnsembleSlice: StateCreator<CreateEnsembleState, [], [], Crea
   name: "",
   description: "",
   webpage: "",
-  location: {
-    postNumber: "",
-    city: "",
-  },
+  location: "",
   activeMusicians: null,
   sessionFrequency: null,
   isPermanent: null,
@@ -46,7 +40,7 @@ export const createEnsembleSlice: StateCreator<CreateEnsembleState, [], [], Crea
   setWebpage: (webpage) => set(() => ({ webpage })),
   setLocation: (postNumber, city) =>
     set(() => ({
-      location: { postNumber, city },
+      location: `${postNumber} ${city}`, // Combine post number and city into a single string
     })),
   setActiveMusicians: (activeMusicians) => set(() => ({ activeMusicians })),
   setSessionFrequency: (sessionFrequency) => set(() => ({ sessionFrequency })),
@@ -61,10 +55,10 @@ export const createEnsembleSlice: StateCreator<CreateEnsembleState, [], [], Crea
     })),
   resetForm: () =>
     set(() => ({
-      ensembleName: "",
+      name: "",
       description: "",
       webpage: "",
-      location: { postNumber: "", city: "" },
+      location: "",
       activeMusicians: null,
       sessionFrequency: null,
       isPermanent: null,

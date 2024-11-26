@@ -1,24 +1,24 @@
 import { StateCreator } from "zustand";
 
 export interface FetchDataState<T = unknown> {
-  data: T;
+  objectData: T;
   loading: boolean;
   error: string;
 
   // Actions
-  setData: (data: T) => void;
+  setObjectData: (data: T) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string) => void;
 }
 
 export const createFetchDataSlice: StateCreator<FetchDataState, [], [], FetchDataState> = (set) => ({
   // Initial states
-  data: null,
+  objectData: null,
   loading: false,
   error: "",
 
   // Actions
-  setData: (data) => set(() => ({ data })),
+  setObjectData: (objectData) => set(() => ({ objectData })),
   setLoading: (loading) => set(() => ({ loading: loading })),
   setError: (error) => set(() => ({ error })),
 });

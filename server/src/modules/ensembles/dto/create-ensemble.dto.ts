@@ -13,7 +13,7 @@ export class CreateEnsembleDto {
   @IsNotEmpty()
   isPermanent: boolean;
   activeMusicians: string;
-  genre: string[];
-  webpage: string;
+  genres: string[];
+  webpage?: string;
   image: string;
 }
