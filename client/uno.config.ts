@@ -128,7 +128,7 @@ export default defineConfig({
       "border-1px border-solid border-gray-400 rounded-input p-4 text--body-lg shadow-input hover:border-gray-500 focus:border-gray-500 focus-visible:border-gray-500",
     //text input
     "input-container":
-      "w-full flex items-center rounded-md p4 gap-2 border-1px border-solid transition-colors  border-gray-400 hover:border-gray-500 focus-within:border-gray-500",
+      "flex items-center rounded-md p4 gap-2 border-1px border-solid transition-colors  border-gray-400 hover:border-gray-500 focus-within:border-gray-500",
     "input-text": "w-full outline-none border-none bg-transparent text-gray-800",
     // dropdown item
     "dropdown-item": "px-4 py-2 hover:bg-gray-200 cursor-pointer",

@@ -56,6 +56,7 @@ export default function ProfilePage() {
     (ensemble) => ensemble.memberList.includes(user._id) || ensemble.createdBy.equals(user._id)
   );
   const posts = mockPosts.filter((post) => post.createdBy.equals(user._id));
+  const fullName = `${user.firstName} ${user.lastName}`;
   return (
     <div className="flex flex-col gap-6">
       <div className="profile-base-wrapper p-4 border-y-solid border-y-gray-400 border-y-1px">
@@ -65,7 +66,7 @@ export default function ProfilePage() {
           <div className="flex flex-col">
             <div className="flex flex-row gap-4 items-center">
               <TextHeadline variant="h1" size="sm">
-                {user.firstName} {user.lastName}
+                {fullName}
               </TextHeadline>
               {user.isAvailable && (
                 <ProfileBadge ProfileBageLabel="Seeking" ProfileBadgeSize="sm" />
@@ -78,7 +79,7 @@ export default function ProfilePage() {
         <div className="flex flex-row gap-4">
           <Button
             buttonVariant="secondary"
-            onClick={() => console.log("Edit profile")}
+            onClick={() => (window.location.href = "/profile/edit")}
             iconPosition="none"
           >
             Edit profile
@@ -107,7 +108,11 @@ export default function ProfilePage() {
             </Button>
           </div>
         </div>
-        <TextBody size="lg">{user.description}</TextBody>
+        {user.description ? (
+          <TextBody size="lg">{user.description}</TextBody>
+        ) : (
+          <TextBody size="lg">No description available</TextBody>
+        )}
       </div>
       <div className="profile-instruments-wrapper flex flex-col p-4 border-y-solid border-y-gray-400 border-y-1px gap-6">
         <div className="flex flex-row gap-6 justify-between">
@@ -117,7 +122,7 @@ export default function ProfilePage() {
           <div>
             <Button
               buttonVariant="secondary"
-              onClick={() => console.log("Edit instruments")}
+              onClick={() => (window.location.href = "/profile/$profileId/instruments/edit")}
               iconPosition="none"
             >
               Add
@@ -141,7 +146,7 @@ export default function ProfilePage() {
           <div>
             <Button
               buttonVariant="secondary"
-              onClick={() => console.log("Create ensembles")}
+              onClick={() => (window.location.href = "/ensembles/create")}
               iconPosition="none"
             >
               Create
