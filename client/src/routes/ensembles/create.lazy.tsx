@@ -29,8 +29,10 @@ function CreateEnsemblePage() {
     setDescription,
     webpage,
     setWebpage,
-    location,
-    setLocation,
+    zip,
+    city,
+    setZip,
+    setCity,
     activeMusicians,
     setActiveMusicians,
     sessionFrequency,
@@ -114,8 +116,7 @@ function CreateEnsemblePage() {
           <TextInput inputType="text" value={name} onChange={(value) => setName(value)} placeholder={"Ensemble's name"} id="ensembleName" name="ensembleName" className="w-auto" />
 
           {/* TO DO: ADD IMAGE  */}
-          <div>image container here //might need to be a whole component</div>
-          <ImageInput onImageChange={(file) => console.log(file)} />
+          <ImageInput variant="cover" onImageChange={(file) => console.log("Cover image selected:", file)} />
 
           {/* description */}
           <div className="flex flex-col gap-3">
@@ -139,22 +140,20 @@ function CreateEnsemblePage() {
             <div className="flex flex-row gap-3">
               <TextInput
                 inputType="text"
-                value={location.split(" ")[0] || ""}
+                value={zip}
                 onChange={(value) => {
-                  const city = location.split(" ")[1] || "";
-                  setLocation(value, city);
+                  setZip(value);
                 }}
-                placeholder="Postnr."
-                id="postNumber"
-                name="postNumber"
+                placeholder="Zip code"
+                id="zip"
+                name="zip"
                 className="w-auto"
               />
               <TextInput
                 inputType="text"
-                value={location.split(" ")[1] || ""}
+                value={city}
                 onChange={(value) => {
-                  const postNumber = location.split(" ")[0] || "";
-                  setLocation(postNumber, value);
+                  setCity(value);
                 }}
                 placeholder="City"
                 id="city"

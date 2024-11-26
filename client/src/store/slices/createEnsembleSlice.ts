@@ -4,7 +4,8 @@ export interface CreateEnsembleState {
   name: string;
   description: string;
   webpage: string;
-  location: string;
+  zip: string;
+  city: string;
   activeMusicians: string | null;
   sessionFrequency: string | null;
   isPermanent: boolean | null;
@@ -14,7 +15,8 @@ export interface CreateEnsembleState {
   setName: (name: string) => void;
   setDescription: (description: string) => void;
   setWebpage: (webpage: string) => void;
-  setLocation: (postNumber: string, city: string) => void;
+  setZip: (zip: string) => void;
+  setCity: (city: string) => void;
   setActiveMusicians: (activeMusicians: string) => void;
   setSessionFrequency: (sessionFrequency: string) => void;
   setEnsembleType: (isPermanent: boolean | null) => void;
@@ -28,7 +30,8 @@ export const createEnsembleSlice: StateCreator<CreateEnsembleState, [], [], Crea
   name: "",
   description: "",
   webpage: "",
-  location: "",
+  zip: "",
+  city: "",
   activeMusicians: null,
   sessionFrequency: null,
   isPermanent: null,
@@ -38,9 +41,13 @@ export const createEnsembleSlice: StateCreator<CreateEnsembleState, [], [], Crea
   setName: (name) => set(() => ({ name })),
   setDescription: (description) => set(() => ({ description })),
   setWebpage: (webpage) => set(() => ({ webpage })),
-  setLocation: (postNumber, city) =>
+  setZip: (zip) =>
     set(() => ({
-      location: `${postNumber} ${city}`, // Combine post number and city into a single string
+      zip,
+    })),
+  setCity: (city) =>
+    set(() => ({
+      city,
     })),
   setActiveMusicians: (activeMusicians) => set(() => ({ activeMusicians })),
   setSessionFrequency: (sessionFrequency) => set(() => ({ sessionFrequency })),
@@ -58,7 +65,8 @@ export const createEnsembleSlice: StateCreator<CreateEnsembleState, [], [], Crea
       name: "",
       description: "",
       webpage: "",
-      location: "",
+      zip: "",
+      city: "",
       activeMusicians: null,
       sessionFrequency: null,
       isPermanent: null,
