@@ -62,7 +62,11 @@ export default function ProfilePage() {
       <div className="profile-base-wrapper p-4 border-y-solid border-y-gray-400 border-y-1px">
         <div className="flex flex-row">
           {/*TO DO: have to add that the user image is the src if there is */}
-          <ImageInput onImageChange={(file) => console.log(file)} className="w-33%" />
+          <ImageInput
+            variant="profile"
+            onImageChange={(file) => console.log(file)}
+            className="w-33%"
+          />
           <div className="flex flex-col">
             <div className="flex flex-row gap-4 items-center">
               <TextHeadline variant="h1" size="sm">

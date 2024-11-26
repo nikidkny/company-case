@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { InstrumentsController } from './instruments.controller';
 import { InstrumentsService } from './instruments.service';
+import { MongooseModule } from '@nestjs/mongoose';
+import { Instrument, InstrumentSchema } from './instrument.entity';
 
 describe('InstrumentsController', () => {
   let controller: InstrumentsController;

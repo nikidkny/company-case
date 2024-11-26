@@ -4,6 +4,10 @@ import { HydratedDocument, Types } from 'mongoose';
 
 export type EnsembleDocument = HydratedDocument<Ensemble>;
 
+// export type LocationType = {
+//   postNumber: string;
+//   city: string;
+// };
 @Schema()
 export class Ensemble {
   _id: Types.ObjectId;
@@ -15,18 +19,22 @@ export class Ensemble {
   createdBy: string;
   @Prop({ required: true })
   description: string;
-  @Prop({ required: true })
+  @Prop()
   numberOfMembers: number;
   @Prop()
-  location: string;
+  zip: string;
+  @Prop()
+  city: string;
   @Prop({ required: true })
   sessionFrequency: string;
   @Prop()
-  genre: string[];
+  genres: string[];
   @Prop({ required: true })
   isPermanent: boolean;
   @Prop()
   image: string;
+  @Prop({ required: true })
+  activeMusicians: string;
   @Prop()
   webpage: string;
   @Prop()

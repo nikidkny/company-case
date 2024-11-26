@@ -51,7 +51,7 @@ describe('EnsemblesService', () => {
       sessionFrequency: 'Once a week',
       isPermanent: true,
       webpage: 'Webpage link',
-      numberOfMembers: 15,
+      activeMusicians: '1-4',
       genre: ['Classical', 'Symphonic'],
       image: 'Image url',
     };

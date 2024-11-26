@@ -9,9 +9,10 @@ interface Ensemble {
   createdBy: Types.ObjectId | string;
   description: string;
   numberOfMembers: number | string;
-  location: string;
+  zip: string;
+  city: string;
   sessionFrequency: string;
-  genre: string[];
+  genres: string[];
   isPermanent: boolean;
   image: string;
   webpage: string;

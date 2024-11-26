@@ -54,6 +54,8 @@ export default function EditProfilePage() {
         <div className="flex flex-row">
           <TextInput
             inputType="text"
+            id="firstName"
+            name="firstName"
             placeholder="First Name"
             value={firstName}
             onChange={setFirstName}
@@ -61,6 +63,8 @@ export default function EditProfilePage() {
           <TextInput
             inputType="text"
             placeholder="Last Name"
+            id="lastName"
+            name="lastName"
             value={lastName}
             onChange={setLastName}
           />
@@ -79,6 +83,8 @@ export default function EditProfilePage() {
         <TextInput
           inputType="text"
           placeholder="Description"
+          id="description"
+          name="description"
           value={description}
           onChange={setDescription}
         />
@@ -87,8 +93,22 @@ export default function EditProfilePage() {
         <TextHeadline variant="h3" size="sm">
           Address
         </TextHeadline>
-        <TextInput inputType="text" placeholder="ZIP" value={zip} onChange={setZip} />
-        <TextInput inputType="text" placeholder="City" value={city} onChange={setCity} />
+        <TextInput
+          inputType="text"
+          placeholder="ZIP"
+          id="zip"
+          name="zip"
+          value={zip}
+          onChange={setZip}
+        />
+        <TextInput
+          inputType="text"
+          placeholder="City"
+          id="city"
+          name="city"
+          value={city}
+          onChange={setCity}
+        />
       </div>
       <div className="edit-contact-wrapper">
         <TextHeadline variant="h3" size="sm">
@@ -98,10 +118,19 @@ export default function EditProfilePage() {
           Your email address and mobile number are only visible to others if you have marked on your
           profile that you are looking for someone to play with or if you have an active posting.
         </TextBody>
-        <TextInput inputType="text" placeholder="Email" value={email} onChange={setEmail} />
+        <TextInput
+          inputType="text"
+          placeholder="Email"
+          id="email"
+          name="email"
+          value={email}
+          onChange={setEmail}
+        />
         <TextInput
           inputType="text"
           placeholder="Phone number"
+          id="phoneNumber"
+          name="phoneNumber"
           value={phoneNumber}
           onChange={setPhoneNumber}
         />

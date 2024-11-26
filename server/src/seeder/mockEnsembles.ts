@@ -1,90 +1,99 @@
-import { Types } from 'mongoose';
 import mockUsers from './mockUsers'; // Assuming this imports the mockUsers you provided.
 
 const mockEnsembles = [
   {
-    _id: new Types.ObjectId('651a1e9f8f1b2c001d3b0a10'),
+    _id: '651a1e9f8f1b2c001d3b0a10',
     name: 'The Rocking Stars',
     memberList: [
-      new Types.ObjectId(mockUsers[0]._id), // Linked to user at index 0 (John Doe)
-      new Types.ObjectId(mockUsers[3]._id), // Linked to user at index 3 (Emma F.)
+      mockUsers[0]._id, // John Doe
+      mockUsers[3]._id, // Emma F.
     ],
-    createdBy: new Types.ObjectId(mockUsers[0]._id), // Linked to John Doe (userId)
+    createdBy: mockUsers[0]._id, // John Doe
     description: 'A rock band looking for more members to join.',
     numberOfMembers: '4',
-    location: 'Odense, Denmark',
+    zip: '5000',
+    city: 'Odense',
     sessionFrequency: 'Weekly',
-    genre: ['Rock', 'Alternative'],
+    genres: ['Rock', 'Alternative'], // Updated to match schema
     isPermanent: true,
     image: 'rockingstars_imageurl',
+    activeMusicians: 'John Doe, Emma F.',
     webpage: 'https://rockingstarsWEB.com',
     createdAt: new Date('2024-10-01T09:00:00Z'),
   },
   {
-    _id: new Types.ObjectId('651a1e9f8f1b2c001d3b0a13'),
+    _id: '651a1e9f8f1b2c001d3b0a13',
     name: 'Jazz Collective',
     memberList: [
-      new Types.ObjectId(mockUsers[2]._id), // Linked to user at index 2 (Katherine S.)
+      mockUsers[2]._id, // Katherine S.
     ],
-    createdBy: new Types.ObjectId(mockUsers[2]._id), // Linked to Katherine S. (userId)
+    createdBy: mockUsers[2]._id, // Katherine S.
     description: 'A jazz band looking for musicians to jam with.',
     numberOfMembers: '3',
-    location: 'Copenhagen, Denmark',
+    zip: '1000',
+    city: 'Copenhagen',
     sessionFrequency: 'Monthly',
-    genre: ['Jazz', 'Blues'],
+    genres: ['Jazz', 'Blues'], // Updated to match schema
     isPermanent: false,
     image: 'jazzcollective_imageurl',
+    activeMusicians: 'Katherine S.',
     webpage: 'https://jazzcollectiveWEB.com',
     createdAt: new Date('2024-09-15T12:00:00Z'),
   },
   {
-    _id: new Types.ObjectId('651a1e9f8f0b2c001d3b0a1b'),
+    _id: '651a1e9f8f0b2c001d3b0a1b',
     name: 'Indie Vibes',
     memberList: [
-      new Types.ObjectId(mockUsers[1]._id), // Linked to user at index 1 (Emil D.)
+      mockUsers[1]._id, // Emil D.
     ],
-    createdBy: new Types.ObjectId(mockUsers[1]._id), // Linked to Emil D. (userId)
+    createdBy: mockUsers[1]._id, // Emil D.
     description: 'Indie band with a relaxed vibe. We need a lead guitarist.',
     numberOfMembers: '4',
-    location: 'Copenhagen, Denmark',
+    zip: '1000',
+    city: 'Copenhagen',
     sessionFrequency: 'Weekly',
-    genre: ['Indie', 'Pop'],
+    genres: ['Indie', 'Pop'], // Updated to match schema
     isPermanent: true,
     image: 'indievibes_imageurl',
+    activeMusicians: 'Emil D.',
     webpage: 'https://indievibesbandWEB.com',
     createdAt: new Date('2024-08-20T14:30:00Z'),
   },
   {
-    _id: new Types.ObjectId('651a1e9f9f1b2c001d3b0a1b'),
+    _id: '651a1e9f9f1b2c001d3b0a1b',
     name: 'Classical Strings',
     memberList: [
-      new Types.ObjectId(mockUsers[3]._id), // Linked to user at index 3 (Emma F.)
+      mockUsers[3]._id, // Emma F.
     ],
-    createdBy: new Types.ObjectId(mockUsers[3]._id), // Linked to Emma F. (userId)
+    createdBy: mockUsers[3]._id, // Emma F.
     description: 'Classical music group. Looking for violinists.',
     numberOfMembers: '5',
-    location: 'Aarhus, Denmark',
+    zip: '8000',
+    city: 'Aarhus',
     sessionFrequency: 'Bi-Weekly',
-    genre: ['Classical'],
+    genres: ['Classical'], // Updated to match schema
     isPermanent: true,
     image: 'classicalstrings_imageurl',
+    activeMusicians: 'Emma F.',
     webpage: 'https://classicalstringsWEB.com',
     createdAt: new Date('2024-07-10T11:00:00Z'),
   },
   {
-    _id: new Types.ObjectId('451a1e9f8f1b2c001d3b0a1b'),
+    _id: '451a1e9f8f1b2c001d3b0a1b',
     name: 'Electronic Pulse',
     memberList: [
-      new Types.ObjectId(mockUsers[4]._id), // Linked to user at index 4 (Anders T.)
+      mockUsers[4]._id, // Anders T.
     ],
-    createdBy: new Types.ObjectId(mockUsers[4]._id), // Linked to Anders T. (userId)
+    createdBy: mockUsers[4]._id, // Anders T.
     description: 'Electronic music duo. Looking for a vocalist.',
     numberOfMembers: '2',
-    location: 'Copenhagen, Denmark',
+    zip: '1000',
+    city: 'Copenhagen',
     sessionFrequency: 'Monthly',
-    genre: ['Electronic', 'Synthwave'],
+    genres: ['Electronic', 'Synthwave'], // Updated to match schema
     isPermanent: false,
     image: 'electronicpulse_imageurl',
+    activeMusicians: 'Anders T.',
     webpage: 'https://electronicpulseWEB.com',
     createdAt: new Date('2024-06-18T13:00:00Z'),
   },

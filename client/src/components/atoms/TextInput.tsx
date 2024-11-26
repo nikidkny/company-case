@@ -6,14 +6,14 @@ interface Props {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
-  inputType: "text" | "password" | "email" | "search";
+  inputType: "text" | "password" | "email" | "search" | "date";
   icon?: ICON_NAMES;
   isValid?: boolean;
   validityMsg?: string;
   disabled?: boolean;
   className?: string;
-  id?: string;
-  name?: string;
+  id: string;
+  name: string;
 }
 
 export default function TextInput({
@@ -49,8 +49,6 @@ export default function TextInput({
       {icon && <Icon name={icon} />}
       <input
         type={inputType}
-        id={id}
-        name={name}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
@@ -58,6 +56,8 @@ export default function TextInput({
         aria-invalid={!isValid}
         aria-disabled={disabled}
         disabled={disabled}
+        id={id}
+        name={name}
       />
       {isValid === false && validityMsg && (
         <span className="text-red-500 text-sm mt-1">{validityMsg}</span>

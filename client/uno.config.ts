@@ -96,8 +96,8 @@ export default defineConfig({
     "icon-btn-top": "flex flex-col items-center gap-2",
     "icon-btn-bottom": "flex flex-col items-center gap-2",
     //checkbox
-    checkbox: "w-4 h-4 border-1px border-gray-400 bg-gray-400 rounded-1px",
-    "checkbox-label": "text-black font-montserrat text-body-md leading-1.29",
+    checkbox: "w-4 h-4 border-1px border-gray-400 bg-gray-400 rounded-1px font-montserrat",
+    "checkbox-label": "text-blue-500 font-montserrat text-body-md leading-1.29",
     //filter tag
     "filter-tag":
       "w-fit h-fit text-blue-500 bg-gray-400 px-4.5 py-2.5 rounded-4.5 text-body-sm font-bold cursor-pointer transition-colors border-none focus:outline-none ",
@@ -125,16 +125,20 @@ export default defineConfig({
     tag: "rounded-base bg-blue-500 text-white font-montserrat font-bold text-body-md leading-1.29 py-1.75 px-3 w-fit",
     //textarea
     textarea:
-      "border-1px border-solid border-gray-400 rounded-input p-4 text--body-lg shadow-input hover:border-gray-500 focus:border-gray-500 focus-visible:border-gray-500",
+      "border-1px border-solid border-gray-400 rounded-input p-4 text--body-md font-montserrat shadow-input hover:border-gray-500 focus:border-gray-500 focus-visible:border-gray-500",
     //text input
     "input-container":
       "flex items-center rounded-md p4 gap-2 border-1px border-solid transition-colors  border-gray-400 hover:border-gray-500 focus-within:border-gray-500",
-    "input-text": "w-full outline-none border-none bg-transparent text-gray-800",
+    "input-text": "w-full outline-none border-none bg-transparent text-gray-800 font-montserrat",
     // dropdown item
-    "dropdown-item": "px-4 py-2 hover:bg-gray-200 cursor-pointer",
+    "dropdown-item":
+      "px-4 py-4 hover:bg-gray-200 hover:rounded-md cursor-pointer font-montserrat text--body-md",
     // dropdown input
     "dropdown-input":
-      "flex items-center justify-between px-4 py-2 border-1px border-solid border-gray-300 rounded-md shadow-sm text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 cursor-pointer",
+      "flex items-center justify-between px-4 py-4 border-1px border-solid border-gray-300 rounded-md shadow-sm text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 cursor-pointer font-montserrat text--body-md bg-white",
+    //option tag
+    "option-tag":
+      "inline-flex items-center justify-between gap-3 p-2 rounded-sm border cursor-pointer bg-blue-500 text-white font-montserrat hover:bg-blue-400 text-body-sm font-bold w-fit",
   },
   safelist: [
     "text--h1-lg",
@@ -180,5 +184,6 @@ export default defineConfig({
     "input-text",
     "dropdown-item",
     "dropdown-input",
+    "option-tag",
   ],
 });

@@ -7,7 +7,7 @@ interface Props {
   className?: string;
 }
 
-export default function SelectionTag(props: Props) {
+export default function FilterTag(props: Props) {
   const [selected, setSelected] = useState(false);
 
   const handleClick = () => {

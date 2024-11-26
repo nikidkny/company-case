@@ -7,13 +7,15 @@ export class CreateEnsembleDto {
   @IsNotEmpty()
   description: string;
   @IsNotEmpty()
-  location: string;
+  zip: string;
+  @IsNotEmpty()
+  city: string;
   @IsNotEmpty()
   sessionFrequency: string;
   @IsNotEmpty()
   isPermanent: boolean;
-  numberOfMembers: number;
-  genre: string[];
-  webpage: string;
+  activeMusicians: string;
+  genres: string[];
+  webpage?: string;
   image: string;
 }
