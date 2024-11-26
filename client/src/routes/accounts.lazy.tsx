@@ -14,9 +14,6 @@ function AccountsPage() {
   const searchParams = new URLSearchParams(location.search);
   const intent = searchParams.get("intent"); // Get the query parameter 'intent'
 
-  // Access the updated Auth state from the store
-  const setAccessToken = useStore((state) => state.setAccessToken);
-  // const accessTokenSlice = useStore((state) => state.accessTokenSlice); // Track the current accessToken
   const setUser = useStore((state) => state.setUser);
   const setLoginStatus = useStore((state) => state.setLoginStatus);
 
@@ -68,10 +65,8 @@ function AccountsPage() {
 
         if (accessTokenCookie) {
           const accessToken = accessTokenCookie.split("=")[1];
-
-          setAccessToken(accessToken); // Update state
-
           const decodedToken = jwtDecode(accessToken);
+
           setUser(decodedToken); // Update user data in state
           setLoginStatus(true); // Set login status to true
         }
