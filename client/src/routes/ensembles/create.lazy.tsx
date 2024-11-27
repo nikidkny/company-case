@@ -1,5 +1,5 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { CreateEnsemblePage } from "../../components/pages/CreateEnsemblePage";
+import { CreateEnsemblePage } from "../../pages/CreateEnsemblePage";
 import AuthGuard from "../../guard/RouteGuard";
 
 export const Route = createLazyFileRoute("/ensembles/create")({
