@@ -8,15 +8,17 @@ import {
   Req,
   NotFoundException,
   ConflictException,
+  UseGuards,
 } from "@nestjs/common";
 import { UserEnsembleService } from "./user-ensemble.service";
 import { Response, Request } from "express";
+import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 
 @Controller('userEnsemble') 
 export class UserEnsembleController {
   constructor(private readonly userEnsembleService: UserEnsembleService) {}
 
-  //TODO: implement guard
+  @UseGuards(JwtAuthGuard)
   @Post()
   @HttpCode(HttpStatus.OK)
   async addUserToEnsemble(
