@@ -21,6 +21,7 @@ import TextHeadline from "./components/atoms/TextHeadline";
 import { Dropdown } from "./components/molecules/Dropdown";
 import { useStore } from "./store/useStore";
 import OptionTag from "./components/atoms/OptionTag";
+import RegisterInEnsembleButton from "./components/molecules/RegisterInAssemble";
 
 function App() {
   const [rangeValue, setRangeValue] = useState(50);
@@ -44,6 +45,7 @@ function App() {
   const { bears } = useStore();
   return (
     <div className="flex flex-col">
+      <RegisterInEnsembleButton></RegisterInEnsembleButton>
       <PostBadge PostBadgeType="offer" PostBadgeSize="small" />
       <PostBadge PostBadgeType="wanted" PostBadgeSize="large" />
       <ProfileBadge ProfileBadgeSize="small" ProfileBadgeType="seeking" />

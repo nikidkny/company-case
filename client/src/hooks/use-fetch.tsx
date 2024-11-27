@@ -27,9 +27,12 @@ export function useFetch<T>(initialValue: T, subPath: string | null, method: HTT
           method,
           headers: memoizedHeaders,
           body: shouldFetch ? JSON.stringify(memoizedBody) : null,
+          credentials: 'include',
         });
         if (!response.ok) {
-          throw new Error(`Error ${response.status}: ${response.statusText}`);
+          const { message } = await response.json();
+          console.error(`Error ${response.status}: ${response.statusText}${message ? `; ${message}` : ''}`);
+          throw new Error(`Error ${response.status}: ${response.statusText}${message ? `; ${message}` : ''}`);
         }
         const responseBody = await response.json();
 
