@@ -83,7 +83,7 @@ const ProfileProfileIdLazyRoute = ProfileProfileIdLazyImport.update({
   path: '/profile/$profileId',
   getParentRoute: () => rootRoute,
 } as any).lazy(() =>
-  import('./routes/profile.$profileId.lazy').then((d) => d.Route),
+  import('./routes/profile/$profileId.lazy').then((d) => d.Route),
 )
 
 const PostsCreateLazyRoute = PostsCreateLazyImport.update({
@@ -121,7 +121,7 @@ const ProfileInstrumentsEditLazyRoute = ProfileInstrumentsEditLazyImport.update(
     getParentRoute: () => rootRoute,
   } as any,
 ).lazy(() =>
-  import('./routes/profile.instruments.edit.lazy').then((d) => d.Route),
+  import('./routes/profile/instruments.edit.lazy').then((d) => d.Route),
 )
 
 const ProfileProfileIdEditLazyRoute = ProfileProfileIdEditLazyImport.update({
@@ -129,7 +129,7 @@ const ProfileProfileIdEditLazyRoute = ProfileProfileIdEditLazyImport.update({
   path: '/edit',
   getParentRoute: () => ProfileProfileIdLazyRoute,
 } as any).lazy(() =>
-  import('./routes/profile.$profileId.edit.lazy').then((d) => d.Route),
+  import('./routes/profile/$profileId.edit.lazy').then((d) => d.Route),
 )
 
 // Populate the FileRoutesByPath interface
@@ -427,7 +427,7 @@ export const routeTree = rootRoute
       "filePath": "posts/create.lazy.tsx"
     },
     "/profile/$profileId": {
-      "filePath": "profile.$profileId.lazy.tsx",
+      "filePath": "profile/$profileId.lazy.tsx",
       "children": [
         "/profile/$profileId/edit"
       ]
@@ -443,11 +443,11 @@ export const routeTree = rootRoute
       "filePath": "posts/index.lazy.tsx"
     },
     "/profile/$profileId/edit": {
-      "filePath": "profile.$profileId.edit.lazy.tsx",
+      "filePath": "profile/$profileId.edit.lazy.tsx",
       "parent": "/profile/$profileId"
     },
     "/profile/instruments/edit": {
-      "filePath": "profile.instruments.edit.lazy.tsx"
+      "filePath": "profile/instruments.edit.lazy.tsx"
     }
   }
 }
