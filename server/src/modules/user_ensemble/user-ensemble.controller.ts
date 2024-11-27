@@ -13,6 +13,7 @@ import {
 import { UserEnsembleService } from "./user-ensemble.service";
 import { Response, Request } from "express";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
+import { JwtUser } from "../auth/jwtPayload.interface";
 
 @Controller('userEnsemble') 
 export class UserEnsembleController {
@@ -26,8 +27,11 @@ export class UserEnsembleController {
     @Res() res: Response,
     @Req() req: Request
   ) {
-    const { userId, ensembleId } = body;
 
+    //Extract the userId from cookies
+    const userId = (req.user as JwtUser)?.userId;
+
+    const { ensembleId } = body;
     // Check if both userId and ensembleId are provided
     if (!userId || !ensembleId) {
       console.log("Bad request: Missing userId or ensembleId");

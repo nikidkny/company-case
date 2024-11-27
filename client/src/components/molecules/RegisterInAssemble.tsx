@@ -1,13 +1,9 @@
-// src/components/EnsembleButton.tsx
-import React, { useState } from 'react';
 import { useFetch } from '../../hooks/use-fetch';
 import Button from '../atoms/Button';
 
 const RegisterInEnsembleButton = () => {
     //TODO:
-    // - Mock reading pathParam
-    // - Mock UserId Extraction from cookies or decode cookie in the backend
-    const userId = "651a1e9f8f1b2c001d3b0a1b";
+    // - implement actual reading ensemble_id from path.
     const ensembleId = "651a1e9f8f1b2c001d3b0a10";
 
     const { data, loading, error, triggerFetch } = useFetch(
@@ -17,7 +13,7 @@ const RegisterInEnsembleButton = () => {
         {
             'Content-Type': 'application/json', 
         },
-        { userId, ensembleId } 
+        { ensembleId }  //sending only ensembleid because userId is extracted in the backend from cookies
     );
 
     const handleAddUserToEnsemble = () => {
