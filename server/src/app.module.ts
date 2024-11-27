@@ -10,6 +10,8 @@ import { InstrumentsModule } from './seeder/instruments/instruments.module';
 import { User_InstrumentsModule } from './modules/user_Instruments/user_Instruments.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { User_EnsembleModule } from './modules/user_ensemble/user-ensemble.module';
+
 
 @Module({
   imports: [
@@ -19,6 +21,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     SeederModule,
     InstrumentsModule,
     User_InstrumentsModule,
+    User_EnsembleModule,
     AuthModule,
     MongooseModule.forRootAsync(
       {
