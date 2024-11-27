@@ -1,12 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Navigate } from "@tanstack/react-router";
 import { useStore } from "../store/useStore";
 import { jwtDecode } from "jwt-decode";
 
 const AuthGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const setAccessToken = useStore((state) => state.setAccessToken);
   const setUser = useStore((state) => state.setUser);
   const setLoginStatus = useStore((state) => state.setLoginStatus);
+
+  const [isLoading, setIsLoading] = useState(true); // Prevent redirect until check is complete
 
   useEffect(() => {
     const cookies = document.cookie.split("; ");
@@ -16,26 +17,29 @@ const AuthGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
     if (accessTokenCookie) {
       const accessToken = accessTokenCookie.split("=")[1];
-      setAccessToken(accessToken);
 
       try {
         const decodedToken = jwtDecode(accessToken) as Record<string, any>;
-        setUser(decodedToken); // Optional: set user details if needed
+        setUser(decodedToken);
         setLoginStatus(true);
       } catch (error) {
         console.error("Invalid token:", error);
-        setAccessToken(null);
         setUser(null);
         setLoginStatus(false);
       }
     } else {
-      setAccessToken(null);
       setUser(null);
       setLoginStatus(false);
     }
-  }, [setAccessToken, setUser, setLoginStatus]);
 
-  const isAuthenticated = !!useStore((state) => state.accessTokenSlice);
+    setIsLoading(false); // Authentication check is complete
+  }, [setUser, setLoginStatus]);
+
+  const isAuthenticated = useStore((state) => state.loginStatus);
+
+  if (isLoading) {
+    return <div>Loading...</div>; // Optional: A spinner or loading state
+  }
 
   if (!isAuthenticated) {
     return (
