@@ -46,8 +46,8 @@ function App() {
     <div className="flex flex-col">
       <PostBadge PostBadgeType="offer" PostBadgeSize="sm" />
       <PostBadge PostBadgeType="wanted" PostBadgeSize="lg" />
-      <ProfileBadge ProfileBadgeSize="sm" ProfileBageLabel="Seeking" />
-      <ProfileBadge ProfileBadgeSize="lg" ProfileBageLabel="not-seeking" />
+      <ProfileBadge ProfileBadgeSize="sm" ProfileBadgeLabel="Seeking" />
+      <ProfileBadge ProfileBadgeSize="lg" ProfileBadgeLabel="not-seeking" />
 
       <Button
         iconPosition="none"

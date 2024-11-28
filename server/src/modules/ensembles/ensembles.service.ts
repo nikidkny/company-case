@@ -18,4 +18,7 @@ export class EnsemblesService {
   }
   update(id: string) {}
   remove(id: string) {}
+  async findAllByUser(userId: string): Promise<Ensemble[]> {
+    return this.ensembleModel.find({ members: userId }).exec();
+  }
 }
