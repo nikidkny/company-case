@@ -30,4 +30,9 @@ export class InstrumentsService {
 
     await this.instrumentModel.insertMany(instruments);
   }
+
+  // Method to retrieve all instruments
+  async getAllInstruments(): Promise<Instrument[]> {
+    return this.instrumentModel.find().exec();
+  }
 }

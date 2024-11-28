@@ -20,20 +20,17 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     InstrumentsModule,
     User_InstrumentsModule,
     AuthModule,
-    MongooseModule.forRootAsync(
-      {
-        useFactory: async (configService: ConfigService) => ({
-          uri: configService.get<string>('MONGODB_URI'),
-        }),
-        inject: [ConfigService],
-      }
-    ),
+    MongooseModule.forRootAsync({
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get<string>('MONGODB_URI'),
+      }),
+      inject: [ConfigService],
+    }),
     ConfigModule.forRoot({
-      isGlobal: true
-    })
+      isGlobal: true,
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-
-export class AppModule { }
+export class AppModule {}

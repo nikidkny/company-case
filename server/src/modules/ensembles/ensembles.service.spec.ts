@@ -47,12 +47,13 @@ describe('EnsemblesService', () => {
     const createEnsembleDto: CreateEnsembleDto = {
       name: 'Ensemble name',
       description: 'Ensemble description',
-      location: 'Copenhagen',
+      city: 'Copenhagen',
+      zip: '2200',
       sessionFrequency: 'Once a week',
       isPermanent: true,
       webpage: 'Webpage link',
       activeMusicians: '1-4',
-      genre: ['Classical', 'Symphonic'],
+      genres: ['Classical', 'Symphonic'],
       image: 'Image url',
     };
 

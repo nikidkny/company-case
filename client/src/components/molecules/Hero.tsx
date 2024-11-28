@@ -20,10 +20,24 @@ export default function Hero() {
     <>
       <div className="flex flex-col items-center">
         <div className="w-full max-w-sm xs:max-w-xs">
-          {(!loginStatus && <Icon name={ICON_NAMES.hero_image} viewBox={"0 0 470 325.475"} className="w-full h-auto" />) || <Icon name={ICON_NAMES.profile_welcome} viewBox={"0 0 153.993 159.24"} className="w-full h-auto" />}
+          {(!loginStatus && (
+            <Icon
+              name={ICON_NAMES.hero_image}
+              viewBox={"0 0 470 325.475"}
+              className="w-full h-auto"
+            />
+          )) || (
+            <Icon
+              name={ICON_NAMES.profile_welcome}
+              viewBox={"0 0 153.993 159.24"}
+              className="w-full h-auto"
+            />
+          )}
         </div>
         <TextHeadline size="sm" variant="h1" className="pt-6 pb-8">
-          {(!loginStatus && "A place where musicians find other musicians and play music together") || `Welcome back '${"user.name"}'!`}
+          {(!loginStatus &&
+            "A place where musicians find other musicians and play music together") ||
+            `Welcome back '${"user.name"}'!`}
         </TextHeadline>
         <div className="flex flex-row items-center justify-between gap-3 w-full items-stretch text-blue-500">
           <Button
@@ -55,7 +69,10 @@ export default function Hero() {
         </div>
 
         {popUp && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => displayPopUp(false)}>
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+            onClick={() => displayPopUp(false)}
+          >
             <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-md relative mx-2 flex flex-col items-center gap-6">
               {/* Modal content */}
               <div className="border-0 border-b border-solid border-gray-300 pb-3">
@@ -66,13 +83,20 @@ export default function Hero() {
               </div>
               <div className="flex flex-col items-center gap-3 w-full items-stretch">
                 <a href="https://facebook.com" target="_blank">
-                  <Button buttonState="default" buttonLabel="Log in with Facebook" buttonVariant="primary" iconPosition="none" size="mobile" className="no-underline bg-blue-900 inline w-full"></Button>
+                  <Button
+                    buttonState="default"
+                    buttonLabel="Log in with Facebook"
+                    buttonVariant="primary"
+                    iconPosition="none"
+                    size="sm"
+                    className="no-underline bg-blue-900 inline w-full"
+                  ></Button>
                 </a>
                 <Button
                   iconPosition="none"
                   buttonState="default"
                   buttonLabel="Register by email"
-                  size="mobile"
+                  size="sm"
                   buttonVariant="primary"
                   className="no-underline w-auto inline"
                   to="/accounts"
@@ -87,7 +111,7 @@ export default function Hero() {
                   buttonLabel="Log in"
                   buttonVariant="secondary"
                   iconPosition="none"
-                  size="mobile"
+                  size="sm"
                   to="/accounts"
                   onClick={handleClick}
                   customData={{

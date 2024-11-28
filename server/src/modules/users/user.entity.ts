@@ -20,7 +20,9 @@ export class User {
   @Prop()
   birthdate: Date;
   @Prop()
-  address: string;
+  city: string;
+  @Prop()
+  zip: string;
   @Prop()
   phoneNumber: string;
   @Prop()
