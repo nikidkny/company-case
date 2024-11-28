@@ -1,6 +1,7 @@
 import React from "react";
 import Button from "../atoms/Button";
 import { RegisterInEnsembleButtonProps } from "../../types/EnsembleType";
+import TextBody from "../atoms/TextBody";
 
 const RegisterInEnsembleButton: React.FC<RegisterInEnsembleButtonProps> = ({ registrationLoading, registrationError, registrationData, handleAddUserToEnsemble }) => {
   return (
@@ -9,9 +10,9 @@ const RegisterInEnsembleButton: React.FC<RegisterInEnsembleButtonProps> = ({ reg
         {registrationLoading ? "Adding..." : "Join the ensemble"}
       </Button>
 
-      {registrationError && <div className="text-red-500 mt-2">Error: {registrationError}</div>}
+      {registrationError && <TextBody className="text-red-500 mt-4">Looks like you're already part of this ensemble!</TextBody>}
 
-      {registrationData?.message && <div className="text-green-500 mt-2">{registrationData.message}</div>}
+      {registrationData?.message && <TextBody className="text-green-500 mt-4">{registrationData.message}</TextBody>}
     </div>
   );
 };
