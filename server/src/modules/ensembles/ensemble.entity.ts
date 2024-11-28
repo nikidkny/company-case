@@ -38,7 +38,7 @@ export class Ensemble {
   @Prop()
   webpage: string;
   @Prop()
-  createdAt: Date;
+  createdAt: string;
 }
 
 export const EnsembleSchema = SchemaFactory.createForClass(Ensemble);

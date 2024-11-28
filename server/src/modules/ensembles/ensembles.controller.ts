@@ -14,13 +14,13 @@ import { CreateEnsembleDto } from './dto/create-ensemble.dto';
 export class EnsemblesController {
   constructor(private readonly ensembleService: EnsemblesService) {}
   @Get()
-  findAll() {
-    // Empty endpoint to get all ensembles
+  async findAll() {
+    return await this.ensembleService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    // Empty endpoint to get a single ensemble
+  async findOne(@Param('id') id: string) {
+    return await this.ensembleService.findOne(id);
   }
 
   @Post()

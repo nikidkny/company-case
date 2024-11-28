@@ -47,5 +47,5 @@ export function useFetch<T>(initialValue: T, subPath: string | null, method: HTT
     getData();
   }, [subPath, method, memoizedHeaders, memoizedBody, shouldFetch]);
 
-  return { data, loading, error, triggerFetch };
+  return { data, loading, error, triggerFetch, shouldFetch };
 }

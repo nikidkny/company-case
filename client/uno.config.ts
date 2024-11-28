@@ -81,13 +81,10 @@ export default defineConfig({
     // link
     link: "text-blue-500 font-montserrat text-body-md leading-1.19 font-bold no-underline",
     //button
-    "btn-sm":
-      "flex gap-2 items-center justify-center rounded-base p-1.5 text-center cursor-pointer font-bold font-montserrat text-3.5 text-blue-500 shadow-base leading-1.29 w-100%",
-    "btn-lg":
-      "flex gap-2 items-center justify-center rounded-base p-4 text-center cursor-pointer font-bold font-montserrat text-button shadow-base leading-1.19 w-100%",
+    "btn-sm": "flex gap-2 items-center justify-center rounded-base p-1.5 text-center cursor-pointer font-bold font-montserrat text-3.5 text-blue-500 shadow-base leading-1.29 w-100%",
+    "btn-lg": "flex gap-2 items-center justify-center rounded-base p-4 text-center cursor-pointer font-bold font-montserrat text-button shadow-base leading-1.19 w-100%",
     "btn-primary": "bg-blue-500 text-white border-none hover:bg-blue-400",
-    "btn-secondary":
-      "bg-white text-blue-500 border-solid border-1px border-gray-400 hover:bg-gray-200 border-1px border-solid border-gray-400",
+    "btn-secondary": "bg-white text-blue-500 border-solid border-1px border-gray-400 hover:bg-gray-200 border-1px border-solid border-gray-400",
     "btn-tertiary": "bg-red-500 text-white hover:bg-red-400",
     "btn-borderless": "bg-transparent border-none shadow-none",
     "btn-disabled": "opacity-50 cursor-not-allowed",
@@ -99,21 +96,16 @@ export default defineConfig({
     checkbox: "w-4 h-4 border-1px border-gray-400 bg-gray-400 rounded-1px font-montserrat",
     "checkbox-label": "text-blue-500 font-montserrat text-body-md leading-1.29",
     //filter tag
-    "filter-tag":
-      "w-fit h-fit text-blue-500 bg-gray-400 px-4.5 py-2.5 rounded-4.5 text-body-sm font-bold cursor-pointer transition-colors border-none focus:outline-none ",
+    "filter-tag": "w-fit h-fit text-blue-500 bg-gray-400 px-4.5 py-2.5 rounded-4.5 text-body-sm font-bold cursor-pointer transition-colors border-none focus:outline-none ",
     "filter-tag-selected": "bg-blue-500 text-white border-none",
     //post badge
-    "post-badge--lg":
-      "font-montserrat font-bold text-body-md leading-1.5 p-2 rounded-PostBadge w-fit",
-    "post-badge--sm":
-      "font-montserrat font-bold text-body-sm leading-1.5 p-2 rounded-PostBadge w-fit",
+    "post-badge--lg": "font-montserrat font-bold text-body-md leading-1.5 p-2 rounded-PostBadge w-fit",
+    "post-badge--sm": "font-montserrat font-bold text-body-sm leading-1.5 p-2 rounded-PostBadge w-fit",
     "post-badge--offer": "bg-green-100 text-green-500",
     "post-badge--wanted": "bg-blue-100 text-blue-300",
     //profile badge
-    "profile-badge--lg":
-      "bg-blue-200 text-blue-500 font-montserrat font-bold text-body-lg leading-1.625 p-2 rounded-ProfileBadge w-fit",
-    "profile-badge--sm":
-      "bg-blue-200 text-blue-500 font-montserrat font-bold text-body-md font-montserrat font-bold leading-1.29 p-2 rounded-ProfileBadge w-fit",
+    "profile-badge--lg": "bg-blue-200 text-blue-500 font-montserrat font-bold text-body-lg leading-1.625 p-2 rounded-ProfileBadge w-fit",
+    "profile-badge--sm": "bg-blue-200 text-blue-500 font-montserrat font-bold text-body-md font-montserrat font-bold leading-1.29 p-2 rounded-ProfileBadge w-fit",
     // progress bar
     "progress-bar": "bg-gray-400 h-2 rounded-1px",
     "progress-bar__fill": "bg-blue-500 h-2 rounded-1px",
@@ -124,21 +116,17 @@ export default defineConfig({
     //tag
     tag: "rounded-base bg-blue-500 text-white font-montserrat font-bold text-body-md leading-1.29 py-1.75 px-3 w-fit",
     //textarea
-    textarea:
-      "border-1px border-solid border-gray-400 rounded-input p-4 text--body-md font-montserrat shadow-input hover:border-gray-500 focus:border-gray-500 focus-visible:border-gray-500",
+    textarea: "border-1px border-solid border-gray-400 rounded-input p-4 text--body-md font-montserrat shadow-input hover:border-gray-500 focus:border-gray-500 focus-visible:border-gray-500",
     //text input
-    "input-container":
-      "flex items-center rounded-md p4 gap-2 border-1px border-solid transition-colors  border-gray-400 hover:border-gray-500 focus-within:border-gray-500",
-    "input-text": "w-full outline-none border-none bg-transparent text-gray-800 font-montserrat",
+    "input-container": "flex items-center rounded-md p4 gap-2 border-1px border-solid transition-colors  border-gray-400 hover:border-gray-500 focus-within:border-gray-500 bg-white",
+    "input-text": "w-full outline-none border-none bg-transparent text-gray-800 font-montserrat bg-white",
     // dropdown item
-    "dropdown-item":
-      "px-4 py-4 hover:bg-gray-200 hover:rounded-md cursor-pointer font-montserrat text--body-md",
+    "dropdown-item": "px-4 py-4 hover:bg-gray-200 hover:rounded-md cursor-pointer font-montserrat text--body-md",
     // dropdown input
     "dropdown-input":
       "flex items-center justify-between px-4 py-4 border-1px border-solid border-gray-300 rounded-md shadow-sm text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 cursor-pointer font-montserrat text--body-md bg-white",
     //option tag
-    "option-tag":
-      "inline-flex items-center justify-between gap-3 p-2 rounded-sm border cursor-pointer bg-blue-500 text-white font-montserrat hover:bg-blue-400 text-body-sm font-bold w-fit",
+    "option-tag": "inline-flex items-center justify-between gap-3 p-2 rounded-sm border cursor-pointer bg-blue-500 text-white font-montserrat hover:bg-blue-400 text-body-sm font-bold w-fit",
   },
   safelist: [
     "text--h1-lg",
@@ -172,8 +160,6 @@ export default defineConfig({
     "post-badge--wanted",
     "profile-badge--lg",
     "profile-badge--sm",
-    "profile-badge--seeking",
-    "profile-badge--not-seeking",
     "progress-bar",
     "progress-bar__fill",
     "radio-btn",

@@ -10,6 +10,7 @@ import { InstrumentsModule } from './seeder/instruments/instruments.module';
 import { User_InstrumentsModule } from './modules/user_Instruments/user_Instruments.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { User_EnsembleModule } from './modules/user_ensembles/user-ensemble.module';
 
 @Module({
   imports: [
@@ -20,12 +21,15 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     InstrumentsModule,
     User_InstrumentsModule,
     AuthModule,
+
+    User_EnsembleModule,
     MongooseModule.forRootAsync({
       useFactory: async (configService: ConfigService) => ({
         uri: configService.get<string>('MONGODB_URI'),
       }),
       inject: [ConfigService],
     }),
+
     ConfigModule.forRoot({
       isGlobal: true,
     }),
