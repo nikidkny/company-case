@@ -52,34 +52,59 @@ export default function Button({
     className,
   ]);
   const queryParams = customData ? `${to}?${new URLSearchParams(customData).toString()}` : "";
-
+  const isExternal = to && (to.startsWith("http://") || to.startsWith("https://"));
   return (
     <>
-      {(to && (
-        <Link href={queryParams} params={params} to={to} className={classes} onClick={buttonState !== "disabled" ? onClick : undefined} disabled={buttonState === "disabled"}>
-          {icon && iconPosition === "leading" && (
-            <span className="icon-left">
-              <Icon name={icon} width={iconWidth} height={iconHeight} viewBox={iconViewbox} />
-            </span>
-          )}
-          {icon && iconPosition === "top" && (
-            <span className="icon-top">
-              <Icon name={icon} width={iconWidth} height={iconHeight} viewBox={iconViewbox} />
-            </span>
-          )}
-          {children || buttonLabel}
-          {icon && iconPosition === "bottom" && (
-            <span className="icon-bottom">
-              <Icon name={icon} width={iconWidth} height={iconHeight} viewBox={iconViewbox} />
-            </span>
-          )}
-          {icon && iconPosition === "trailing" && (
-            <span className="icon-right">
-              <Icon name={icon} width={iconWidth} height={iconHeight} viewBox={iconViewbox} />
-            </span>
-          )}
-        </Link>
-      )) || (
+      {(to &&
+        ((isExternal && (
+          <a href={to} className={classes} target="_blank" rel="noopener noreferrer" onClick={buttonState !== "disabled" ? onClick : undefined}>
+            {icon && iconPosition === "leading" && (
+              <span className="icon-left">
+                <Icon name={icon} width={iconWidth} height={iconHeight} viewBox={iconViewbox} />
+              </span>
+            )}
+            {icon && iconPosition === "top" && (
+              <span className="icon-top">
+                <Icon name={icon} width={iconWidth} height={iconHeight} viewBox={iconViewbox} />
+              </span>
+            )}
+            {children || buttonLabel}
+            {icon && iconPosition === "bottom" && (
+              <span className="icon-bottom">
+                <Icon name={icon} width={iconWidth} height={iconHeight} viewBox={iconViewbox} />
+              </span>
+            )}
+            {icon && iconPosition === "trailing" && (
+              <span className="icon-right">
+                <Icon name={icon} width={iconWidth} height={iconHeight} viewBox={iconViewbox} />
+              </span>
+            )}
+          </a>
+        )) || (
+          <Link href={queryParams} params={params} to={to} className={classes} onClick={buttonState !== "disabled" ? onClick : undefined} disabled={buttonState === "disabled"}>
+            {icon && iconPosition === "leading" && (
+              <span className="icon-left">
+                <Icon name={icon} width={iconWidth} height={iconHeight} viewBox={iconViewbox} />
+              </span>
+            )}
+            {icon && iconPosition === "top" && (
+              <span className="icon-top">
+                <Icon name={icon} width={iconWidth} height={iconHeight} viewBox={iconViewbox} />
+              </span>
+            )}
+            {children || buttonLabel}
+            {icon && iconPosition === "bottom" && (
+              <span className="icon-bottom">
+                <Icon name={icon} width={iconWidth} height={iconHeight} viewBox={iconViewbox} />
+              </span>
+            )}
+            {icon && iconPosition === "trailing" && (
+              <span className="icon-right">
+                <Icon name={icon} width={iconWidth} height={iconHeight} viewBox={iconViewbox} />
+              </span>
+            )}
+          </Link>
+        ))) || (
         <button className={classes} onClick={buttonState !== "disabled" ? onClick : undefined} disabled={buttonState === "disabled"} type={type}>
           {icon && iconPosition === "leading" && (
             <span className="icon-left">

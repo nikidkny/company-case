@@ -9,8 +9,13 @@ export class EnsemblesService {
   constructor(
     @InjectModel(Ensemble.name) private ensembleModel: Model<Ensemble>,
   ) {}
-  findAll() {}
-  findOne(id: string) {}
+
+  async findAll(): Promise<Ensemble[]> {
+    return this.ensembleModel.find().exec();
+  }
+  async findOne(id: string): Promise<Ensemble> {
+    return this.ensembleModel.findById(id);
+  }
 
   async create(createEnsembleDto: CreateEnsembleDto): Promise<Ensemble> {
     const createdEnsemble = new this.ensembleModel(createEnsembleDto);

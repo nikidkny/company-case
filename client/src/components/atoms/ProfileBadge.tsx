@@ -1,19 +1,14 @@
 import classNames from "classnames";
 
 interface Props {
-  ProfileBadgeType: "seeking" | "not-seeking";
-  ProfileBadgeSize: "small" | "large";
+  ProfileBadgeLabel: string;
+  ProfileBadgeSize: "sm" | "lg";
   className?: string;
 }
 
-export default function ProfileBadge({ ProfileBadgeType, ProfileBadgeSize, className }: Props) {
-  const badgeLabel =
-    ProfileBadgeType.charAt(0).toUpperCase() + ProfileBadgeType.slice(1).replace("-", " ");
+export default function ProfileBadge({ ProfileBadgeLabel, ProfileBadgeSize, className }: Props) {
+  const classes = classNames([` profile-badge--${ProfileBadgeSize}`, className]);
 
-  const classes = classNames([
-    `profile-badge--${ProfileBadgeType} profile-badge--${ProfileBadgeSize}`,
-    className,
-  ]);
-
-  return <span className={classes}>{badgeLabel}</span>;
+  const formattedLabel = ProfileBadgeLabel ? ProfileBadgeLabel.charAt(0).toUpperCase() + ProfileBadgeLabel.slice(1).toLowerCase() : "";
+  return <span className={classes}>{formattedLabel}</span>;
 }
