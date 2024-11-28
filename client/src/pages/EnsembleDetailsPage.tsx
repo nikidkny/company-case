@@ -7,8 +7,10 @@ import { useFetch } from "../hooks/use-fetch";
 import { EnsembleType } from "../types/EnsembleType";
 //import { User } from "../types/UserType";
 import Image from "./../components/atoms/Image";
+import RegisterInEnsembleButton from "../components/molecules/RegisterInEnsembleButton";
 
 export default function EnsembleDetailsPage() {
+  
   const {
     data: ensemble,
     triggerFetch,
@@ -34,9 +36,29 @@ export default function EnsembleDetailsPage() {
     "GET"
   );
 
+  const {
+    data: registrationData,
+    loading: registrationLoading,
+    error: registrationError,
+    triggerFetch: triggerRegisterFetch,
+  } = useFetch(
+    { message: "" },
+    "/userEnsemble",
+    "POST",
+    {
+      "Content-Type": "application/json",
+    },
+    { ensembleId: "651a1e9f8f1b2c001d3b0a10" }
+  );
+
+  const handleAddUserToEnsemble = () => {
+    triggerRegisterFetch();
+  };
+
+
   useEffect(() => {
     triggerFetch();
-    console.log("ensembles", ensemble);
+    // console.log("ensembles", ensemble);
   }, [ensemble, shouldFetch]);
 
   // const { data: ensembleOwner } = useFetch<User>(
@@ -58,7 +80,12 @@ export default function EnsembleDetailsPage() {
       <TextBody variant="p" size="md">
         {ensemble.zip} {ensemble.city}
       </TextBody>
-      {/*BUTTON TO JOIN ENSEMBLE HERE */}
+      <RegisterInEnsembleButton
+        registrationLoading={registrationLoading}
+        registrationError={registrationError}
+        registrationData={registrationData}
+        handleAddUserToEnsemble={handleAddUserToEnsemble}
+      />
       <div>
         <TextBody variant="strong" size="lg" className="text-blue-500">
           Description
@@ -74,6 +101,23 @@ export default function EnsembleDetailsPage() {
         <TextBody variant="p" size="md">
           {ensemble.activeMusicians || "There are no active musicians at the moment"}
         </TextBody>
+        {/*Added extra html element to see how many id are inside an ensemble */}
+        <TextBody variant="strong" size="lg" className="text-blue-500">
+          Members
+        </TextBody>
+        <div>
+          {ensemble.memberList.length > 0 ? (
+            ensemble.memberList.map((member, index) => (
+              <TextBody key={index} variant="p" size="md">
+                {member}
+              </TextBody>
+            ))
+          ) : (
+            <TextBody variant="p" size="md">
+              There are no active musicians at the moment
+            </TextBody>
+          )}
+        </div>
       </div>
       <div>
         <TextBody variant="strong" size="lg" className="text-blue-500">

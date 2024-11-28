@@ -14,3 +14,10 @@ export type EnsembleType = {
   createdBy: string;
   createdAt: string;
 };
+
+export type RegisterInEnsembleButtonProps = {
+  registrationLoading: boolean;
+  registrationError: string | null;
+  registrationData: { message?: string } | null;
+  handleAddUserToEnsemble: () => void;
+}
