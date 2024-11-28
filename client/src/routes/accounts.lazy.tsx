@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { createLazyFileRoute, useLocation } from "@tanstack/react-router";
+import { createLazyFileRoute, useLocation, useNavigate } from "@tanstack/react-router";
 import { jwtDecode } from "jwt-decode";
 import { useStore } from "../store/useStore";
 import LoginForm from "../components/molecules/LoginForm";
@@ -14,6 +14,7 @@ function AccountsPage() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const intent = searchParams.get("intent"); // Get the query parameter 'intent'
+  const navigate = useNavigate(); // To handle navigation
 
   const setUser = useStore((state) => state.setUser);
   const setLoginStatus = useStore((state) => state.setLoginStatus);
@@ -64,6 +65,7 @@ function AccountsPage() {
     signupFetch.triggerFetch();
   };
 
+  //TODO: check if the user already has an access token
   useEffect(() => {
     if (loginFetch.data) {
       const cookies = document.cookie.split("; ");
@@ -78,23 +80,32 @@ function AccountsPage() {
         setUser(decodedToken); // Update user data in state
         setLoginStatus(true); // Set login status to true
       }
-      alert("Login successful!");
+
+      alert("Login successful! You will be riderected to the home page :)");
+      navigate({ to: "/" });
     }
 
     if (loginFetch.error) {
       alert(`Login failed: ${loginFetch.error}`);
     }
-  }, [loginFetch.data, loginFetch.error]);
+  }, [loginFetch.data, loginFetch.error, navigate, setUser, setLoginStatus]);
+
 
   useEffect(() => {
-    if (signupFetch.data) {
-      alert("Signup successful!");
+    if (signupFetch.error) {
+      if (signupFetch.error.includes("User already exists")) {
+        alert(`User Already Exists. You will be riderected to the login page :) `);
+        navigate({ to: "/accounts", search: { intent: "login" } });
+      } else {
+        alert(`Signup failed: ${signupFetch.error}`);
+      }
+    } else if (signupFetch.data) {
+      alert("Signup successful!  You will be riderected to the login page :)");
+      navigate({ to: "/accounts", search: { intent: "login" } });
     }
 
-    if (signupFetch.error) {
-      alert(`Signup failed: ${signupFetch.error}`);
-    }
   }, [signupFetch.data, signupFetch.error]);
+
 
   return (
     <div>
