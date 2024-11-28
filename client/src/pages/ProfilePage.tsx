@@ -39,13 +39,26 @@ export default function ProfilePage() {
     if (fetchedUser) {
       setUser({
         id: userId,
-        firstName: fetchedUser.firstName || "",
-        lastName: fetchedUser.lastName || "",
+        firstName: fetchedUser.firstName
+          ? fetchedUser.firstName.charAt(0).toUpperCase() +
+            fetchedUser.firstName.slice(1).toLowerCase()
+          : "",
+        lastName: fetchedUser.lastName
+          ? fetchedUser.lastName.charAt(0).toUpperCase() +
+            fetchedUser.lastName.slice(1).toLowerCase()
+          : "",
         email: fetchedUser.email || "",
-        description: fetchedUser.description || "Add a description",
+        // first letter uppercase, rest lowercase
+        description: fetchedUser.description
+          ? fetchedUser.description.charAt(0).toUpperCase() +
+            fetchedUser.description.slice(1).toLowerCase()
+          : "Add a description",
         birthdate: fetchedUser.birthdate ? new Date(fetchedUser.birthdate) : undefined,
         isAvailable: fetchedUser.isAvailable || false,
-        city: fetchedUser.city || "",
+        // first letter uppercase, rest lowercase
+        city: fetchedUser.city
+          ? fetchedUser.city.charAt(0).toUpperCase() + fetchedUser.city.slice(1).toLowerCase()
+          : "",
         zip: fetchedUser.zip || "",
         phoneNumber: fetchedUser.phoneNumber || "",
         image: fetchedUser.image || "",
@@ -129,9 +142,8 @@ export default function ProfilePage() {
             buttonVariant="secondary"
             onClick={() => console.log("Settings")}
             iconPosition="none"
-          >
-            Settings
-          </Button>
+            buttonLabel="Settings"
+          ></Button>
         </div>
       </div>
       <div className="profile-description-wrapper flex flex-col p-4 border-y-solid border-y-gray-400 border-y-1px gap-6">
@@ -144,9 +156,8 @@ export default function ProfilePage() {
               buttonVariant="secondary"
               onClick={() => console.log("Edit description")}
               iconPosition="none"
-            >
-              Edit
-            </Button>
+              buttonLabel="Edit"
+            ></Button>
           </div>
         </div>
         <TextBody size="lg">{user?.description}</TextBody>
@@ -161,9 +172,8 @@ export default function ProfilePage() {
               buttonVariant="secondary"
               onClick={() => (window.location.href = "/profile/$profileId/instruments/edit")}
               iconPosition="none"
-            >
-              Add
-            </Button>
+              buttonLabel="Edit"
+            ></Button>
           </div>
         </div>
         {/* TO DO: map through logged in user's instruments for now it is static insturment */}
@@ -203,9 +213,8 @@ export default function ProfilePage() {
               buttonVariant="secondary"
               onClick={() => console.log("Create Post")}
               iconPosition="none"
-            >
-              Edit
-            </Button>
+              buttonLabel="Create"
+            ></Button>
           </div>
         </div>
         {/* TO DO: map through logged in user's posts for now it is static posts */}
