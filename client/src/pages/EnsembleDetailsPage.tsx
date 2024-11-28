@@ -8,9 +8,14 @@ import { EnsembleType } from "../types/EnsembleType";
 //import { User } from "../types/UserType";
 import Image from "./../components/atoms/Image";
 import RegisterInEnsembleButton from "../components/molecules/RegisterInEnsembleButton";
+import { useParams } from "@tanstack/react-router";
+
 
 export default function EnsembleDetailsPage() {
-  
+
+  // Get the ensembleId from the URL
+  const { ensemblesId } = useParams({ strict: false })
+
   const {
     data: ensemble,
     triggerFetch,
@@ -32,10 +37,11 @@ export default function EnsembleDetailsPage() {
       webpage: "",
       createdAt: "",
     },
-    `/ensembles/651a1e9f8f1b2c001d3b0a10`,
+    `/ensembles/${ensemblesId}`,
     "GET"
   );
 
+  //Join the ensemble
   const {
     data: registrationData,
     loading: registrationLoading,
@@ -48,9 +54,8 @@ export default function EnsembleDetailsPage() {
     {
       "Content-Type": "application/json",
     },
-    { ensembleId: "651a1e9f8f1b2c001d3b0a10" }
+    { ensembleId: ensemblesId }
   );
-
   const handleAddUserToEnsemble = () => {
     triggerRegisterFetch();
   };
