@@ -23,7 +23,7 @@ export default function ProfilePage() {
     ? jwtDecode(authCodeCookie.split("=")[1])
     : null;
 
-  const userId = decodedToken?.sub || null;
+  const userId = decodedToken?.id || null;
   const { data: fetchedUser, triggerFetch: userFetchTrigger } = useFetch<Partial<User> | null>(
     null,
     userId ? `/users/${userId}` : null,
@@ -48,14 +48,12 @@ export default function ProfilePage() {
             fetchedUser.lastName.slice(1).toLowerCase()
           : "",
         email: fetchedUser.email || "",
-        // first letter uppercase, rest lowercase
         description: fetchedUser.description
           ? fetchedUser.description.charAt(0).toUpperCase() +
             fetchedUser.description.slice(1).toLowerCase()
           : "Add a description",
         birthdate: fetchedUser.birthdate ? new Date(fetchedUser.birthdate) : undefined,
         isAvailable: fetchedUser.isAvailable || false,
-        // first letter uppercase, rest lowercase
         city: fetchedUser.city
           ? fetchedUser.city.charAt(0).toUpperCase() + fetchedUser.city.slice(1).toLowerCase()
           : "",

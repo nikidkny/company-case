@@ -1,4 +1,5 @@
 export type EnsembleType = {
+  id: string;
   name: string;
   description: string;
   webpage: string;
