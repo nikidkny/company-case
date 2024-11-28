@@ -118,8 +118,8 @@ export default defineConfig({
     //textarea
     textarea: "border-1px border-solid border-gray-400 rounded-input p-4 text--body-md font-montserrat shadow-input hover:border-gray-500 focus:border-gray-500 focus-visible:border-gray-500",
     //text input
-    "input-container": "flex items-center rounded-md p4 gap-2 border-1px border-solid transition-colors  border-gray-400 hover:border-gray-500 focus-within:border-gray-500",
-    "input-text": "w-full outline-none border-none bg-transparent text-gray-800 font-montserrat",
+    "input-container": "flex items-center rounded-md p4 gap-2 border-1px border-solid transition-colors  border-gray-400 hover:border-gray-500 focus-within:border-gray-500 bg-white",
+    "input-text": "w-full outline-none border-none bg-transparent text-gray-800 font-montserrat bg-white",
     // dropdown item
     "dropdown-item": "px-4 py-4 hover:bg-gray-200 hover:rounded-md cursor-pointer font-montserrat text--body-md",
     // dropdown input

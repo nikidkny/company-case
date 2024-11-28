@@ -25,7 +25,6 @@ export function CreateEnsemblePage() {
     setWebpage,
     zip,
     // memberList,
-    //createdBy,
     //numberOfMembers,
     //createdAt,
     // image,
@@ -45,26 +44,29 @@ export function CreateEnsemblePage() {
     resetForm,
     setObjectData,
     objectData,
+    user,
   } = useStore();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     const ensembleData = {
       name,
       description,
       webpage,
       zip,
       city,
-      // memberList =[user.user_id],
-      //createdBy = user.user_id,
-      //numberOfMembers = memberList.lenght,
-      //createdAt = new Date().toLocaleString(),
+      memberList: [user?.id ?? "1"],
+      createdBy: user?.id,
+      //createdAt : new Date().toLocaleString(),
       // image,
       activeMusicians,
       sessionFrequency,
       isPermanent,
       genres,
     };
+    // const numberOfMembers = ensembleData.memberList?.length;
+    // ensembleData.numberOfMembers = numberOfMembers;
     setObjectData(ensembleData);
     triggerFetch();
     // console.log(formDataToSend.get("name"));

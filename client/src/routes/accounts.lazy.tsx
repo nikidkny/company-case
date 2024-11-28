@@ -15,7 +15,7 @@ function AccountsPage() {
   const searchParams = new URLSearchParams(location.search);
   const intent = searchParams.get("intent"); // Get the query parameter 'intent'
   const navigate = useNavigate(); // To handle navigation
-
+  // const currentUser = useStore((state) => state.user);
   const setUser = useStore((state) => state.setUser);
   const setLoginStatus = useStore((state) => state.setLoginStatus);
 
@@ -34,13 +34,25 @@ function AccountsPage() {
     isAvailable: true,
   });
 
-  const loginFetch = useFetch(null, "/auth/login", "POST", {
-    "Content-Type": "application/json",
-  }, formData);
+  const loginFetch = useFetch(
+    null,
+    "/auth/login",
+    "POST",
+    {
+      "Content-Type": "application/json",
+    },
+    formData
+  );
 
-  const signupFetch = useFetch(null, "/auth/signup", "POST", {
-    "Content-Type": "application/json",
-  }, signupData);
+  const signupFetch = useFetch(
+    null,
+    "/auth/signup",
+    "POST",
+    {
+      "Content-Type": "application/json",
+    },
+    signupData
+  );
 
   const handleChange = (name: string, value: string | boolean) => {
     if (intent === "register") {
@@ -69,9 +81,7 @@ function AccountsPage() {
   useEffect(() => {
     if (loginFetch.data) {
       const cookies = document.cookie.split("; ");
-      const accessTokenCookie = cookies.find((cookie) =>
-        cookie.startsWith("accessToken=")
-      );
+      const accessTokenCookie = cookies.find((cookie) => cookie.startsWith("accessToken="));
 
       if (accessTokenCookie) {
         const accessToken = accessTokenCookie.split("=")[1];
@@ -90,7 +100,6 @@ function AccountsPage() {
     }
   }, [loginFetch.data, loginFetch.error, navigate, setUser, setLoginStatus]);
 
-
   useEffect(() => {
     if (signupFetch.error) {
       if (signupFetch.error.includes("User already exists")) {
@@ -103,26 +112,12 @@ function AccountsPage() {
       alert("Signup successful!  You will be riderected to the login page :)");
       navigate({ to: "/accounts", search: { intent: "login" } });
     }
-
   }, [signupFetch.data, signupFetch.error]);
-
 
   return (
     <div>
-      {intent === "register" && (
-        <SignupForm
-          formData={signupData}
-          onChange={handleChange}
-          onSubmit={handleSignupSubmit}
-        />
-      )}
-      {intent === "login" && (
-        <LoginForm
-          formData={formData}
-          onChange={handleChange}
-          onSubmit={handleLoginSubmit}
-        />
-      )}
+      {intent === "register" && <SignupForm formData={signupData} onChange={handleChange} onSubmit={handleSignupSubmit} />}
+      {intent === "login" && <LoginForm formData={formData} onChange={handleChange} onSubmit={handleLoginSubmit} />}
       {!intent && <p>Please select login or register from the navigation.</p>}
     </div>
   );

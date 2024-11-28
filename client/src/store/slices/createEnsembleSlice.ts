@@ -11,6 +11,7 @@ export interface CreateEnsembleState {
   sessionFrequency: string | null;
   isPermanent: boolean | null;
   genres: string[];
+  createdBy: string;
 
   // Actions
   setName: (name: string) => void;
@@ -24,6 +25,7 @@ export interface CreateEnsembleState {
   setEnsembleType: (isPermanent: boolean | null) => void;
   addGenre: (genre: string) => void;
   removeGenre: (genre: string) => void;
+  setCreatedBy: (createdBy: string) => void;
   resetForm: () => void;
 }
 
@@ -39,6 +41,7 @@ export const createEnsembleSlice: StateCreator<CreateEnsembleState, [], [], Crea
   sessionFrequency: null,
   isPermanent: null,
   genres: [],
+  createdBy: "",
 
   // Actions
   setName: (name) => set(() => ({ name })),
@@ -66,6 +69,10 @@ export const createEnsembleSlice: StateCreator<CreateEnsembleState, [], [], Crea
   removeGenre: (genre) =>
     set((state) => ({
       genres: state.genres.filter((g) => g !== genre),
+    })),
+  setCreatedBy: (createdBy) =>
+    set(() => ({
+      createdBy,
     })),
   resetForm: () =>
     set(() => ({
