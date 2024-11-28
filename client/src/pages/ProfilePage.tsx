@@ -10,6 +10,8 @@ import { useFetch } from "../hooks/use-fetch";
 import Image from "../components/atoms/Image";
 import { ICON_NAMES } from "../components/atoms/Icon/IconNames";
 import { Icon } from "../components/atoms/Icon/Icon";
+import EnsembleCard from "../components/molecules/EnsembleCard";
+import { EnsembleType } from "../types/EnsembleType";
 
 export default function ProfilePage() {
   const user = useStore((state) => state.user);
@@ -22,7 +24,7 @@ export default function ProfilePage() {
     : null;
 
   const userId = decodedToken?.sub || null;
-  const { data: fetchedUser, triggerFetch } = useFetch<Partial<User> | null>(
+  const { data: fetchedUser, triggerFetch: userFetchTrigger } = useFetch<Partial<User> | null>(
     null,
     userId ? `/users/${userId}` : null,
     "GET"
@@ -30,10 +32,9 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (userId) {
-      triggerFetch();
+      userFetchTrigger();
     }
-  }, [userId, triggerFetch]);
-
+  }, [userId, userFetchTrigger]);
   useEffect(() => {
     if (fetchedUser) {
       setUser({
@@ -57,52 +58,34 @@ export default function ProfilePage() {
     }
   }, [userId, fetchedUser, setUser]);
   console.log(user);
+  // const { data: userInstrument, triggerFetch: userInstrumentsTrigger } =
+  //   useFetch<Partial<Instrument> | null>(null, userId ? `/instruments/${userId}` : null, "GET");
+
+  // useEffect(() => {
+  //   if (userInstrument) {
+  //     userInstrumentsTrigger();
+  //   }
+  // }, [userInstrument, userInstrumentsTrigger]);
+
+  // console.log("userInstruments", userInstrument);
+
+  const { data: userEnsembles, triggerFetch: fetchUserEnsembles } = useFetch<EnsembleType[] | null>(
+    null,
+    userId ? `/ensembles/user/${userId}` : null,
+    "GET"
+  );
+  useEffect(() => {
+    if (userId) {
+      fetchUserEnsembles();
+    }
+  }, [userId, fetchUserEnsembles]);
+
+  console.log("userEnsembles", userEnsembles);
+
   const fullName = `${user?.firstName || ""} ${user?.lastName || ""}`;
-  // const instruments = {
-  //   [0]: {
-  //     name: "Guitar",
-  //     level: "3",
-  //     genres: [
-  //       "Rock",
-  //       "Pop",
-  //       "Jazz",
-  //       "Blues",
-  //       "Metal",
-  //       "Funk",
-  //       "Country",
-  //       "Reggae",
-  //       "R&B",
-  //       "Soul",
-  //       "Classical",
-  //       "Punk",
-  //       "Indie",
-  //       "Alternative",
-  //       "Hip-Hop",
-  //       "Electronic",
-  //       "Dance",
-  //       "Folk",
-  //       "Latin",
-  //       "World",
-  //       "Experimental",
-  //       "Grunge",
-  //     ],
-  //   },
-  //   [1]: {
-  //     name: "Drums",
-  //     level: "2",
-  //     genres: ["Rock", "Pop"],
-  //   },
-  //   [2]: {
-  //     name: "Piano",
-  //     level: "1",
-  //     genres: ["Rock", "Pop"],
-  //   },
-  // };
   // const ensembles = mockEnsembles.filter(
   //   (ensemble) =>
   //     ensemble.memberList.includes(user?.id) || ensemble.createdBy.equals(mockUser._id)
-  // );
-  // const fullName = `${mockUser.firstName} ${mockUser.lastName}`;
 
   return (
     <div className="flex flex-col gap-6">
@@ -137,11 +120,11 @@ export default function ProfilePage() {
         <div className="flex flex-row gap-4">
           <Button
             buttonVariant="secondary"
-            onClick={() => (window.location.href = "/profile/edit")}
+            to="/profile/$profileId/edit"
+            params={{ profileId: userId }}
             iconPosition="none"
-          >
-            Edit profile
-          </Button>
+            buttonLabel="Edit Profile"
+          ></Button>
           <Button
             buttonVariant="secondary"
             onClick={() => console.log("Settings")}
@@ -200,16 +183,15 @@ export default function ProfilePage() {
           <div>
             <Button
               buttonVariant="secondary"
-              onClick={() => (window.location.href = "/ensembles/create")}
+              // onClick={() => (window.location.href = "/ensembles/create")}
+              to="/ensembles/create"
               iconPosition="none"
-            >
-              Create
-            </Button>
+              buttonLabel="Create"
+              className="no-underline"
+            ></Button>
           </div>
         </div>
-        {/* {ensembles.map((ensemble, index) => (
-          <EnsembleCard key={index} ensemble={ensemble} />
-        ))} */}
+        {userEnsembles?.map((ensemble, index) => <EnsembleCard key={index} ensemble={ensemble} />)}
       </div>
       <div className="profile-posts-wrapper flex flex-col p-4 border-y-solid border-y-gray-400 border-y-1px gap-6">
         <div className="flex flex-row gap-6 justify-between">

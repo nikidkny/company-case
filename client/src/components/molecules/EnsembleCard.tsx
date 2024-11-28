@@ -1,32 +1,16 @@
-import { Types } from "mongoose";
+// import { Types } from "mongoose";
 import TextHeadline from "../atoms/TextHeadline";
 import Image from "../atoms/Image";
-
-interface Ensemble {
-  _id: Types.ObjectId | string;
-  name: string;
-  memberList: (Types.ObjectId | string)[];
-  createdBy: Types.ObjectId | string;
-  description: string;
-  numberOfMembers: number | string;
-  zip: string;
-  city: string;
-  sessionFrequency: string;
-  genres: string[];
-  isPermanent: boolean;
-  image: string;
-  webpage: string;
-  createdAt: Date;
-}
+import { EnsembleType } from "../../types/EnsembleType";
 
 interface Props {
-  ensemble: Ensemble;
+  ensemble: EnsembleType;
   key: number;
 }
 export default function EnsembleCard({ ensemble }: Props) {
   return (
     <div className="instrument-wrapper flex flex-col  border-solid border-1px border-gray-400 rounded-base shadow-base">
-      <Image src={ensemble.image} alt={ensemble.name} className="w-100%" />
+      {/* <Image src={ensemble.image} alt={ensemble.name} className="w-100%" /> */}
       <TextHeadline
         variant="h3"
         size="sm"

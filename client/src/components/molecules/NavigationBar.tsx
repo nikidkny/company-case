@@ -7,7 +7,13 @@ import { useStore } from "../../store/useStore";
 
 export default function NavigationBar() {
   const setLoginStatus = useStore((state) => state.setLoginStatus);
-
+  const userId = useStore((state) => state.user?.id);
+  // // MAKE SURE THAT EVERY SPACE IF IT HAS IS REPLACED WITH -
+  // const firstName = useStore((state) => state.user?.firstName?.replace(/\s/g, "-").toLowerCase());
+  // const lastName = useStore((state) => state.user?.lastName?.replace(/\s/g, "-").toLowerCase());
+  // const userName = firstName + "-" + lastName;
+  // // take the userName + the first 5 characters of the userId
+  // const userUrl = userName + "-" + userId;
   //need to lift this state
   const { isMenuOpen, setIsMenuOpen, setPopUp, loginStatus } = useStore();
 
@@ -95,7 +101,7 @@ export default function NavigationBar() {
                 to={(loginStatus && "/profile/$profileId") || "/"}
                 className="link text-base"
                 params={{
-                  profileId: "profileNameOrId",
+                  profileId: userId,
                 }}
               >
                 Profile
