@@ -2,7 +2,7 @@ import { createRootRoute, Outlet, ScrollRestoration } from "@tanstack/react-rout
 import NavigationBar from "../components/molecules/NavigationBar";
 import Footer from "../components/molecules/Footer";
 import "./../App.css";
-import Button from "../components/atoms/Button";
+// import Button from "../components/atoms/Button";
 //elements that apply to all pages can be put here fx navigation, footer
 export const Route = createRootRoute({
   component: () => (
@@ -22,7 +22,7 @@ export const Route = createRootRoute({
       >
         Profile
       </Link> */}
-      <Button
+      {/* <Button
         iconPosition="none"
         buttonState="default"
         buttonLabel="Register by email"
@@ -33,7 +33,7 @@ export const Route = createRootRoute({
         params={{
           ensemblesId: "651a1e9f8f1b2c001d3b0a10",
         }}
-      />
+      /> */}
 
       {/* </div> */}
       <NavigationBar />
