@@ -18,6 +18,8 @@ export class UsersService {
     const createdUser = new this.userModel(createUserDto);
     return createdUser.save();
   }
-  update(id: string) {}
+  update(id: string) {
+    return this.userModel.findByIdAndUpdate(id).exec();
+  }
   remove(id: string) {}
 }

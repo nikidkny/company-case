@@ -51,7 +51,7 @@ export default function ProfilePage() {
         description: fetchedUser.description
           ? fetchedUser.description.charAt(0).toUpperCase() +
             fetchedUser.description.slice(1).toLowerCase()
-          : "Add a description",
+          : "",
         birthdate: fetchedUser.birthdate ? new Date(fetchedUser.birthdate) : undefined,
         isAvailable: fetchedUser.isAvailable || false,
         city: fetchedUser.city
@@ -68,7 +68,7 @@ export default function ProfilePage() {
       });
     }
   }, [userId, fetchedUser, setUser]);
-  console.log(user);
+  // console.log(user);
   // const { data: userInstrument, triggerFetch: userInstrumentsTrigger } =
   //   useFetch<Partial<Instrument> | null>(null, userId ? `/instruments/${userId}` : null, "GET");
 
@@ -91,7 +91,7 @@ export default function ProfilePage() {
     }
   }, [userId, fetchUserEnsembles]);
 
-  console.log("userEnsembles", userEnsembles);
+  // console.log("userEnsembles", userEnsembles);
 
   const fullName = `${user?.firstName || ""} ${user?.lastName || ""}`;
   // const ensembles = mockEnsembles.filter(
@@ -135,6 +135,7 @@ export default function ProfilePage() {
             params={{ profileId: userId }}
             iconPosition="none"
             buttonLabel="Edit Profile"
+            className="no-underline"
           ></Button>
           <Button
             buttonVariant="secondary"

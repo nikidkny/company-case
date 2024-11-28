@@ -3,7 +3,7 @@ import {
   Body,
   Get,
   Post,
-  Patch,
+  Put,
   Delete,
   Param,
 } from '@nestjs/common';
@@ -29,7 +29,7 @@ export class UsersController {
     return await this.usersService.create(createUserDto);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id') id: string) {
     // Endpoint to update a logged in user
     return this.usersService.update(id);
