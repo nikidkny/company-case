@@ -1,16 +1,16 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { HttpStatus, INestApplication } from "@nestjs/common";
-import { MongooseModule } from "@nestjs/mongoose";
-import { User, UserSchema } from "../users/user.entity";
-import { AuthController } from "./auth.controller";
+import { Test, TestingModule } from '@nestjs/testing';
+import { HttpStatus, INestApplication } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+import { User, UserSchema } from '../users/user.entity';
+import { AuthController } from './auth.controller';
 import { Model } from 'mongoose';
 import { getModelToken } from '@nestjs/mongoose';
-import { AuthService } from "./auth.service";
-import { JwtModule, } from "@nestjs/jwt";
+import { AuthService } from './auth.service';
+import { JwtModule } from '@nestjs/jwt';
 import * as request from 'supertest';
-import { ConfigService } from "@nestjs/config";
-import { JwtAuthStrategy } from "./jwt.strategy";
-import { log } from "console";
+import { ConfigService } from '@nestjs/config';
+import { JwtAuthStrategy } from './jwt.strategy';
+import { log } from 'console';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
@@ -20,7 +20,7 @@ describe('AuthController (e2e)', () => {
 
   beforeAll(async () => {
     const mockConfigService = {
-      get: jest.fn().mockReturnValue('test-secret'),  // Mocking the return value for JWT_SECRET
+      get: jest.fn().mockReturnValue('test-secret'), // Mocking the return value for JWT_SECRET
     };
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -28,7 +28,7 @@ describe('AuthController (e2e)', () => {
         MongooseModule.forRoot('mongodb://localhost/test'),
         MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
         JwtModule.register({
-          secret: 'test-secret',  // Ensure this secret matches the one in JwtStrategy
+          secret: 'test-secret', // Ensure this secret matches the one in JwtStrategy
           signOptions: { expiresIn: '1s' }, // Short-lived access token for testing
         }),
       ],
@@ -72,26 +72,31 @@ describe('AuthController (e2e)', () => {
     expect(response.body.message).toBe('User registered successfully');
   });
 
-
   it('should login an existing user and return a JWT token', async () => {
     // Check if the user exists in the database
     //POST request. IMPORTANT: Keep same credentials as the test for signup
     const loginResponse = await request(app.getHttpServer())
-      .post("/auth/login")
+      .post('/auth/login')
       .send({
-        email: "john.doe@example.com",
-        password: "password123"
+        email: 'john.doe@example.com',
+        password: 'password123',
       })
       .expect(HttpStatus.OK);
 
     // Verify the response contains accessToken and refreshToken cookies
     const cookies = loginResponse.headers['set-cookie'] as unknown as string[];
     expect(cookies).toBeDefined();
-    expect(cookies.some(cookie => cookie.startsWith('accessToken='))).toBeTruthy();
-    expect(cookies.some(cookie => cookie.startsWith('refreshToken='))).toBeTruthy();
+    expect(
+      cookies.some((cookie) => cookie.startsWith('accessToken=')),
+    ).toBeTruthy();
+    expect(
+      cookies.some((cookie) => cookie.startsWith('refreshToken=')),
+    ).toBeTruthy();
 
     // Optionally, decode the JWT to verify its content (optional)
-    const accessTokenCookie = cookies.find(cookie => cookie.startsWith('accessToken='));
+    const accessTokenCookie = cookies.find((cookie) =>
+      cookie.startsWith('accessToken='),
+    );
     const accessToken = accessTokenCookie?.split(';')[0].split('=')[1];
 
     // Save the accessToken for later use in protected route test
@@ -101,7 +106,7 @@ describe('AuthController (e2e)', () => {
     const jwt = require('jsonwebtoken');
     const decodedToken = jwt.decode(accessToken);
 
-    expect(decodedToken).toHaveProperty('sub'); // The user ID should be in the token
+    expect(decodedToken).toHaveProperty('id'); // The user ID should be in the token
     expect(decodedToken).toHaveProperty('email', 'john.doe@example.com'); // Ensure email matches
   });
 

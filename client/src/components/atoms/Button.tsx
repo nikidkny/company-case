@@ -7,12 +7,12 @@ type type = "primary" | "secondary" | "tertiary" | "borderless";
 type state = "default" | "hover" | "disabled" | "active";
 
 interface Props {
-  buttonLabel?: string;
   buttonVariant: type;
-  buttonState: state;
-  size?: "desktop" | "mobile";
-  icon?: ICON_NAMES;
+  buttonState?: state;
+  buttonLabel?: string;
   iconPosition: "none" | "leading" | "trailing" | "top" | "bottom";
+  size?: "lg" | "sm";
+  icon?: ICON_NAMES;
   onClick?: () => void;
   iconWidth?: number;
   iconHeight?: number;
@@ -26,15 +26,16 @@ interface Props {
 }
 
 export default function Button({
-  buttonLabel = "",
   buttonVariant = "primary",
   buttonState = "default",
-  icon,
+  buttonLabel = "",
   iconPosition = "trailing",
+  size = "sm",
+  icon,
+  onClick,
   iconWidth = 24,
   iconHeight = 24,
   iconViewbox = "0 0 24 24",
-  onClick,
   className = "",
   to,
   params,
@@ -43,7 +44,7 @@ export default function Button({
   type,
 }: Props) {
   const classes = classNames([
-    "btn",
+    `btn-${size}`,
     `btn-${buttonVariant}`,
     {
       [`btn-${buttonState}`]: buttonState === "disabled",

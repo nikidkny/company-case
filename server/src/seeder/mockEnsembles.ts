@@ -1,4 +1,3 @@
-import { Types } from 'mongoose';
 import mockUsers from './mockUsers'; // Assuming this imports the mockUsers you provided.
 
 const mockEnsembles = [
@@ -11,7 +10,7 @@ const mockEnsembles = [
     ],
     createdBy: mockUsers[0]._id, // John Doe
     description: 'A rock band looking for more members to join.',
-    numberOfMembers: 4,
+    numberOfMembers: '4',
     zip: '5000',
     city: 'Odense',
     sessionFrequency: 'Weekly',
@@ -30,7 +29,7 @@ const mockEnsembles = [
     ],
     createdBy: mockUsers[2]._id, // Katherine S.
     description: 'A jazz band looking for musicians to jam with.',
-    numberOfMembers: 3,
+    numberOfMembers: '3',
     zip: '1000',
     city: 'Copenhagen',
     sessionFrequency: 'Monthly',
@@ -49,7 +48,7 @@ const mockEnsembles = [
     ],
     createdBy: mockUsers[1]._id, // Emil D.
     description: 'Indie band with a relaxed vibe. We need a lead guitarist.',
-    numberOfMembers: 4,
+    numberOfMembers: '4',
     zip: '1000',
     city: 'Copenhagen',
     sessionFrequency: 'Weekly',
@@ -68,7 +67,7 @@ const mockEnsembles = [
     ],
     createdBy: mockUsers[3]._id, // Emma F.
     description: 'Classical music group. Looking for violinists.',
-    numberOfMembers: 5,
+    numberOfMembers: '5',
     zip: '8000',
     city: 'Aarhus',
     sessionFrequency: 'Bi-Weekly',
@@ -87,7 +86,7 @@ const mockEnsembles = [
     ],
     createdBy: mockUsers[4]._id, // Anders T.
     description: 'Electronic music duo. Looking for a vocalist.',
-    numberOfMembers: 2,
+    numberOfMembers: '2',
     zip: '1000',
     city: 'Copenhagen',
     sessionFrequency: 'Monthly',

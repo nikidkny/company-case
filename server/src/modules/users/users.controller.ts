@@ -20,7 +20,8 @@ export class UsersController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    // Empty endpoint to get a single user
+    // Get a user by id
+    return this.usersService.findOne(id);
   }
 
   @Post()
@@ -30,7 +31,8 @@ export class UsersController {
 
   @Patch(':id')
   update(@Param('id') id: string) {
-    // Empty endpoint to update a user
+    // Endpoint to update a logged in user
+    return this.usersService.update(id);
   }
 
   @Delete(':id')

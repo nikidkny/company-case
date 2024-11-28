@@ -13,7 +13,7 @@ const mockPosts = [
     createdBy: new Types.ObjectId(mockEnsembles[1]._id), // Linked to 'The Rocking Stars' ensemble
     isReported: false,
     instrument: 'Guitar',
-    experienceRequired: 'At least 3 years of experience playing rock music.',
+    experienceRequired: '3+',
     webPage: 'https://therockersbandWEB.com',
     createdAt: new Date('2024-10-01T10:00:00Z'),
     deletedAt: null,
@@ -30,7 +30,7 @@ const mockPosts = [
     createdBy: new Types.ObjectId(mockUsers[4]._id), // Linked to Emil D. (userId)
     isReported: false,
     instrument: 'Piano',
-    experienceRequired: 'At least 2 years of performance experience.',
+    experienceRequired: '2+',
     webPage: 'https://weddingeventscoWEB.com',
     createdAt: new Date('2024-10-05T14:30:00Z'),
     deletedAt: null,
@@ -47,7 +47,7 @@ const mockPosts = [
     createdBy: new Types.ObjectId(mockEnsembles[0]._id), // Linked to 'Chicago Jazz Collective' ensemble
     isReported: false,
     instrument: 'Drums',
-    experienceRequired: 'Experience in jazz music preferred.',
+    experienceRequired: '1+',
     webPage: 'https://chicagojazzcollectiveWEB.com',
     createdAt: new Date('2024-09-20T12:15:00Z'),
     deletedAt: null,
@@ -64,7 +64,7 @@ const mockPosts = [
     createdBy: new Types.ObjectId(mockEnsembles[3]._id), // Linked to 'Indie Vibes' ensemble
     isReported: false,
     instrument: 'Bass',
-    experienceRequired: 'No minimum experience required, just passion.',
+    experienceRequired: '0',
     webPage: 'https://indiebeatsbandWEB.com',
     createdAt: new Date('2024-09-10T08:00:00Z'),
     deletedAt: null,
@@ -81,8 +81,7 @@ const mockPosts = [
     createdBy: new Types.ObjectId(mockUsers[0]._id), // Linked to John Doe (userId)
     isReported: false,
     instrument: 'Violin',
-    experienceRequired:
-      '5+ years of experience in classical and contemporary music.',
+    experienceRequired: '5+',
     webPage: 'https://janedoeviolinistWEB.com',
     createdAt: new Date('2024-08-15T10:00:00Z'),
     deletedAt: null,
@@ -99,8 +98,7 @@ const mockPosts = [
     createdBy: new Types.ObjectId(mockEnsembles[4]._id), // Linked to 'Pop Music Collective' ensemble
     isReported: false,
     instrument: 'Vocals',
-    experienceRequired:
-      '2+ years of singing experience, ability to harmonize a plus.',
+    experienceRequired: '2+',
     webPage: 'https://popmusiccollectiveWEB.com',
     createdAt: new Date('2024-07-30T16:30:00Z'),
     deletedAt: null,
@@ -117,7 +115,7 @@ const mockPosts = [
     createdBy: new Types.ObjectId(mockUsers[1]._id), // Linked to Emil D. (userId)
     isReported: false,
     instrument: 'Piano',
-    experienceRequired: '3+ years of performance experience.',
+    experienceRequired: '3+',
     webPage: 'https://carlosriverapianoWEB.com',
     createdAt: new Date('2024-06-25T11:00:00Z'),
     deletedAt: null,

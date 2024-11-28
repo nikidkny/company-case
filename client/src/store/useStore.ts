@@ -14,7 +14,15 @@ interface BearState {
 }
 
 // Combined store type, add other types for the additional slices
-interface Store extends BearState, MenuState, LoginStatusState, CreateEnsembleState, FetchDataState, EnsemblesState, PopUpState, AuthState {}
+interface Store
+  extends BearState,
+    MenuState,
+    LoginStatusState,
+    CreateEnsembleState,
+    FetchDataState,
+    EnsemblesState,
+    PopUpState,
+    AuthState {}
 
 export const useStore = create<Store>((set, ...args) => ({
   bears: 0,

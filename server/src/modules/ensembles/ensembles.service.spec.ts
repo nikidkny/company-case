@@ -47,8 +47,8 @@ describe('EnsemblesService', () => {
     const createEnsembleDto: CreateEnsembleDto = {
       name: 'Ensemble name',
       description: 'Ensemble description',
-      zip: '123',
       city: 'Copenhagen',
+      zip: '2200',
       sessionFrequency: 'Once a week',
       isPermanent: true,
       webpage: 'Webpage link',

@@ -9,7 +9,9 @@ export class UsersService {
   //injecting the user model based on the schema we made
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
   findAll() {}
-  findOne(id: string) {}
+  findOne(id: string) {
+    return this.userModel.findById(id).exec();
+  }
 
   //creates a new user in the db in the users collection
   async create(createUserDto: CreateUserDto): Promise<User> {

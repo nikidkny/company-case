@@ -1,7 +1,7 @@
-import { Injectable } from "@nestjs/common";
-import { PassportStrategy } from "@nestjs/passport";
-import { Strategy } from "passport-jwt";
-import { ConfigService } from "@nestjs/config";
+import { Injectable } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
+import { Strategy } from 'passport-jwt';
+import { ConfigService } from '@nestjs/config';
 
 // It handles the extraction and validation of JWT tokens from incoming requests.
 @Injectable()
@@ -9,10 +9,13 @@ export class JwtAuthStrategy extends PassportStrategy(Strategy) {
   constructor(private readonly configService: ConfigService) {
     super({
       jwtFromRequest: (req) => {
-        console.log('Request', req)
-        console.log('Request Cookies:', req.cookies)
+        console.log('Request', req);
+        console.log('Request Cookies:', req.cookies);
         if (req && req.cookies && req.cookies['accessToken']) {
-          console.log('Access Token found in cookies:', req.cookies['accessToken']);
+          console.log(
+            'Access Token found in cookies:',
+            req.cookies['accessToken'],
+          );
           return req.cookies['accessToken'];
         }
         console.log('No Access Token found in cookies');
@@ -24,6 +27,6 @@ export class JwtAuthStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: any) {
     console.log('Token Payload:', payload);
-    return { userId: payload.sub, email: payload.email };
+    return { userId: payload.id, email: payload.email };
   }
 }

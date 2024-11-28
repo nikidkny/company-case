@@ -37,4 +37,9 @@ export class EnsemblesController {
   remove(@Param('id') id: string) {
     // Empty endpoint to delete an ensemble
   }
+
+  @Get('user/:userId')
+  findAllByUser(@Param('userId') userId: string) {
+    return this.ensembleService.findAllByUser(userId);
+  }
 }

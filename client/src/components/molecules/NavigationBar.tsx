@@ -7,7 +7,8 @@ import { useStore } from "../../store/useStore";
 
 export default function NavigationBar() {
   const setLoginStatus = useStore((state) => state.setLoginStatus);
-
+  const userId = useStore((state) => state.user?.id);
+  console.log("userId", userId);
   //need to lift this state
   const { isMenuOpen, setIsMenuOpen, setPopUp, loginStatus } = useStore();
 
@@ -48,17 +49,19 @@ export default function NavigationBar() {
           </TextBody>
         </div>
         {/*this button is to change to burgerbutton */}
-        <Button
-          iconPosition="trailing"
-          buttonState="default"
-          buttonVariant="secondary"
-          icon={(!isMenuOpen && ICON_NAMES.burger_lines) || ICON_NAMES.burger_crossed}
-          iconHeight={14}
-          iconWidth={20}
-          iconViewbox={"0 0 20 14"}
-          onClick={toggleMenu}
-          className="border-none shadow-none"
-        />
+        <div>
+          <Button
+            iconPosition="trailing"
+            buttonState="default"
+            buttonVariant="secondary"
+            icon={(!isMenuOpen && ICON_NAMES.burger_lines) || ICON_NAMES.burger_crossed}
+            iconHeight={14}
+            iconWidth={20}
+            iconViewbox={"0 0 20 14"}
+            onClick={toggleMenu}
+            className="border-none shadow-none"
+          />
+        </div>
         {/* burgermenu when open */}
       </div>
       {isMenuOpen && (
@@ -70,12 +73,20 @@ export default function NavigationBar() {
               </Link>
             </li>
             <li>
-              <Link onClick={() => (!loginStatus && displayPopUp(true)) || toggleMenu()} to={(loginStatus && "/posts") || "/"} className="link text-base">
+              <Link
+                onClick={() => (!loginStatus && displayPopUp(true)) || toggleMenu()}
+                to={(loginStatus && "/posts") || "/"}
+                className="link text-base"
+              >
                 See posts
               </Link>
             </li>
             <li>
-              <Link onClick={() => (!loginStatus && displayPopUp(true)) || toggleMenu()} to={(loginStatus && "/ensembles") || "/"} className="link text-base">
+              <Link
+                onClick={() => (!loginStatus && displayPopUp(true)) || toggleMenu()}
+                to={(loginStatus && "/ensembles") || "/"}
+                className="link text-base"
+              >
                 Find ensemble
               </Link>
             </li>
@@ -85,7 +96,7 @@ export default function NavigationBar() {
                 to={(loginStatus && "/profile/$profileId") || "/"}
                 className="link text-base"
                 params={{
-                  profileId: "profileNameOrId",
+                  profileId: userId,
                 }}
               >
                 Profile
@@ -95,7 +106,7 @@ export default function NavigationBar() {
               <>
                 <li className="">
                   <Button
-                    size="mobile"
+                    size="sm"
                     iconPosition="top"
                     buttonState="default"
                     buttonVariant="primary"
@@ -110,7 +121,7 @@ export default function NavigationBar() {
                 </li>
                 <li className="p-be-8">
                   <Button
-                    size="mobile"
+                    size="sm"
                     iconPosition="top"
                     buttonState="default"
                     buttonVariant="secondary"
@@ -127,14 +138,25 @@ export default function NavigationBar() {
             )}
             {isAuthenticated && (
               <li className="p-be-8">
-                <Button size="mobile" iconPosition="top" buttonState="default" buttonVariant="secondary" buttonLabel="Logout" onClick={handleLogout} to="/" className="no-underline w-auto"></Button>
+                <Button
+                  size="sm"
+                  iconPosition="top"
+                  buttonState="default"
+                  buttonVariant="secondary"
+                  buttonLabel="Logout"
+                  onClick={handleLogout}
+                  to="/"
+                  className="no-underline w-auto"
+                ></Button>
               </li>
             )}
           </ul>
         </div>
       )}
 
-      {isMenuOpen && <div className="fixed inset-0 bg-black bg-opacity-50 z-10" onClick={toggleMenu}></div>}
+      {isMenuOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-10" onClick={toggleMenu}></div>
+      )}
     </div>
   );
 }
