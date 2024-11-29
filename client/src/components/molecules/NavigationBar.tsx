@@ -8,11 +8,7 @@ import { useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 
 export default function NavigationBar() {
-  const setLoginStatus = useStore((state) => state.setLoginStatus);
-  const setUser = useStore((state) => state.setUser);
-  const loginStatus = useStore((state) => state.loginStatus);
-  const user = useStore((state) => state.user); // Fetch the user object from the store
-  const { isMenuOpen, setIsMenuOpen, setPopUp } = useStore();
+  const { isMenuOpen, setIsMenuOpen, setPopUp, setLoginStatus, setUser, loginStatus, user } = useStore();
 
   useEffect(() => {
     const cookies = document.cookie.split("; ");
@@ -39,7 +35,7 @@ export default function NavigationBar() {
     }
   }, [setUser, setLoginStatus]);
 
-  console.log('userID:',user?.id); //Why printed 4 times?
+  console.log('userID:',user?.id); //Why printed 6 times?
 
   const handleLogout = async () => {
     const cookies = document.cookie.split(";");
