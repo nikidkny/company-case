@@ -20,18 +20,18 @@ function AccountsPage() {
   const setLoginStatus = useStore((state) => state.setLoginStatus);
 
   const [formData, setFormData] = useState({
-    email: "andrea@gmail.com", // TODO: Empty this before production
-    password: "password",
+    email: "",
+    password: "",
   });
 
   const [signupData, setSignupData] = useState({
-    firstName: "Andrea",
-    lastName: "Di Claudio",
-    email: "andrea@gmail.com",
-    password: "password",
-    confirmPassword: "password",
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
     birthdate: "",
-    isAvailable: true,
+    isAvailable: false,
   });
 
   const loginFetch = useFetch(
@@ -103,7 +103,7 @@ function AccountsPage() {
   useEffect(() => {
     if (signupFetch.error) {
       if (signupFetch.error.includes("User already exists")) {
-        alert(`User Already Exists. You will be riderected to the login page :) `);
+        alert(`Email already in use. Try to log in instead.`);
         navigate({ to: "/accounts", search: { intent: "login" } });
       } else {
         alert(`Signup failed: ${signupFetch.error}`);
@@ -116,8 +116,12 @@ function AccountsPage() {
 
   return (
     <div>
-      {intent === "register" && <SignupForm formData={signupData} onChange={handleChange} onSubmit={handleSignupSubmit} />}
-      {intent === "login" && <LoginForm formData={formData} onChange={handleChange} onSubmit={handleLoginSubmit} />}
+      {intent === "register" && (
+        <SignupForm formData={signupData} onChange={handleChange} onSubmit={handleSignupSubmit} />
+      )}
+      {intent === "login" && (
+        <LoginForm formData={formData} onChange={handleChange} onSubmit={handleLoginSubmit} />
+      )}
       {!intent && <p>Please select login or register from the navigation.</p>}
     </div>
   );
