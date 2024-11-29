@@ -20,7 +20,7 @@ export default function EnsembleDetailsPage() {
     shouldFetch,
   } = useFetch<EnsembleType>(
     {
-      id: "",
+      _id: "",
       name: "",
       memberList: [],
       createdBy: "",
@@ -78,7 +78,12 @@ export default function EnsembleDetailsPage() {
   return (
     <div>
       {/* image */}
-      <Image src="https://picsum.photos/600" alt="Placeholder" height={"200"} className="w-full object-cover" />
+      <Image
+        src="https://picsum.photos/600"
+        alt="Placeholder"
+        height={"200"}
+        className="w-full object-cover"
+      />
 
       {/* name, zip city and button */}
       <div className="flex flex-col gap-6 p-6 items-center">
@@ -88,7 +93,12 @@ export default function EnsembleDetailsPage() {
         <TextBody variant="p" size="md">
           {ensemble.zip} {ensemble.city}
         </TextBody>
-        <RegisterInEnsembleButton registrationLoading={registrationLoading} registrationError={registrationError} registrationData={registrationData} handleAddUserToEnsemble={handleAddUserToEnsemble} />
+        <RegisterInEnsembleButton
+          registrationLoading={registrationLoading}
+          registrationError={registrationError}
+          registrationData={registrationData}
+          handleAddUserToEnsemble={handleAddUserToEnsemble}
+        />
       </div>
       <div className="h-[30px] bg-gray-300 border-solid border-1 border-gray-400"></div>
 
@@ -154,7 +164,13 @@ export default function EnsembleDetailsPage() {
             Genres
           </TextBody>
 
-          <div className="flex flex-wrap gap-2">{ensemble.genres ? ensemble.genres.map((genre, index) => <ProfileBadge key={index} ProfileBadgeLabel={genre} ProfileBadgeSize="sm" />) : "No information about genres has been provided"}</div>
+          <div className="flex flex-wrap gap-2">
+            {ensemble.genres
+              ? ensemble.genres.map((genre, index) => (
+                  <ProfileBadge key={index} ProfileBadgeLabel={genre} ProfileBadgeSize="sm" />
+                ))
+              : "No information about genres has been provided"}
+          </div>
         </div>
 
         <div className="flex flex-col gap-2">
@@ -169,7 +185,15 @@ export default function EnsembleDetailsPage() {
         </div>
       </div>
 
-      <Button buttonVariant="secondary" buttonState="default" buttonLabel="Visit the webpage" className="no-underline w-auto m-6" size="lg" iconPosition="none" to={ensemble.webpage || "https://google.com"}></Button>
+      <Button
+        buttonVariant="secondary"
+        buttonState="default"
+        buttonLabel="Visit the webpage"
+        className="no-underline w-auto m-6"
+        size="lg"
+        iconPosition="none"
+        to={ensemble.webpage || "https://google.com"}
+      ></Button>
     </div>
   );
 }
