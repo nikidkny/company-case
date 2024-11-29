@@ -4,13 +4,42 @@ import Button from "../atoms/Button";
 import { ICON_NAMES } from "../atoms/Icon/IconNames";
 import { Link } from "@tanstack/react-router";
 import { useStore } from "../../store/useStore";
+import { useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
 
 export default function NavigationBar() {
   const setLoginStatus = useStore((state) => state.setLoginStatus);
-  const userId = useStore((state) => state.user?.id);
-  console.log("userId", userId);
-  //need to lift this state
-  const { isMenuOpen, setIsMenuOpen, setPopUp, loginStatus } = useStore();
+  const setUser = useStore((state) => state.setUser);
+  const loginStatus = useStore((state) => state.loginStatus);
+  const user = useStore((state) => state.user); // Fetch the user object from the store
+  const { isMenuOpen, setIsMenuOpen, setPopUp } = useStore();
+
+  useEffect(() => {
+    const cookies = document.cookie.split("; ");
+    const accessTokenCookie = cookies.find((cookie) =>
+      cookie.startsWith("accessToken=")
+    );
+
+    if (accessTokenCookie) {
+      const accessToken = accessTokenCookie.split("=")[1];
+
+      try {
+        const decodedToken = jwtDecode(accessToken) as Record<string, any>;
+        setUser(decodedToken);
+        setLoginStatus(true);
+      } catch (error) {
+        console.error("Invalid token:", error);
+        setUser(null);
+        setLoginStatus(false);
+      }
+      
+    } else {
+      setUser(null);
+      setLoginStatus(false);
+    }
+  }, [setUser, setLoginStatus]);
+
+  console.log('userID:',user?.id); //Why printed 4 times?
 
   const handleLogout = async () => {
     const cookies = document.cookie.split(";");
@@ -22,6 +51,7 @@ export default function NavigationBar() {
     });
 
     setLoginStatus(false);
+    setUser(null);
     setIsMenuOpen();
     window.location.reload(); // Force reload the page to update the UI and clear cookies
   };
@@ -96,7 +126,7 @@ export default function NavigationBar() {
                 to={(loginStatus && "/profile/$profileId") || "/"}
                 className="link text-base"
                 params={{
-                  profileId: userId,
+                  profileId: user?.id,
                 }}
               >
                 Profile
