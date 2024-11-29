@@ -35,7 +35,7 @@ export default function NavigationBar() {
     }
   }, [setUser, setLoginStatus]);
 
-  console.log('userID:',user?.id); //Why printed 6 times?
+  // console.log('userID:',user?.id);
 
   const handleLogout = async () => {
     const cookies = document.cookie.split(";");
