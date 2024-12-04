@@ -3,10 +3,19 @@ import { EnsembleType } from "../../types/EnsembleType";
 
 export interface EnsemblesState {
   ensembles: EnsembleType[];
-  setEnsembles: (ensemble: EnsembleType) => void;
+  setEnsembles: (ensembles: EnsembleType | EnsembleType[]) => void; // Accept both a single ensemble and an array
 }
 
 export const ensemblesSlice: StateCreator<EnsemblesState, [], [], EnsemblesState> = (set) => ({
   ensembles: [],
-  setEnsembles: (ensemble: EnsembleType) => set((state) => ({ ensembles: [...state.ensembles, ensemble] })),
+  setEnsembles: (ensembles: EnsembleType | EnsembleType[]) =>
+    set((state) => {
+      if (Array.isArray(ensembles)) {
+        // If it's an array, append it to the current ensemble list
+        return { ensembles: [...state.ensembles, ...ensembles] };
+      } else {
+        // If it's a single ensemble, append it to the list
+        return { ensembles: [...state.ensembles, ensembles] };
+      }
+    }),
 });
