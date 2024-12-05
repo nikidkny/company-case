@@ -1,6 +1,7 @@
 import TextInput from "../atoms/TextInput"; // Assuming you've already imported TextInput
 import Button from "../atoms/Button"; // Assuming you've already imported Button
 import { getFieldErrorMessage } from "../../utilities/errorUtils";
+import Checkbox from "../atoms/Checkbox";
 
 // Update the interface to include formData
 interface SignupFormProps {
@@ -94,7 +95,7 @@ export default function SignupForm({
           id="confirmPassword"
           name="confirmPassword"
           isValid={!getFieldErrorMessage(errorMessages, 'Confirm')}
-          validityMsg={getFieldErrorMessage(errorMessages, 'match') || getFieldErrorMessage(errorMessages,'Confirm') || undefined}
+          validityMsg={getFieldErrorMessage(errorMessages, 'match') || getFieldErrorMessage(errorMessages, 'Confirm') || undefined}
         />
 
         <TextInput
@@ -104,16 +105,20 @@ export default function SignupForm({
           placeholder="Birthdate"
           id="birthdate"
           name="birthdate"
-          isValid={!getFieldErrorMessage(errorMessages,'Birthdate')}
-          validityMsg={getFieldErrorMessage(errorMessages,'Birthdate') || undefined}
+          isValid={!getFieldErrorMessage(errorMessages, 'Birthdate')}
+          validityMsg={getFieldErrorMessage(errorMessages, 'Birthdate') || undefined}
         />
 
-        <div className="w-80 flex items-center space-x-2">
-          <input type="checkbox" name="isAvailable" checked={formData.isAvailable} onChange={(e) => onChange("isAvailable", e.target.checked)} className="h-5 w-5" />
-          <label htmlFor="isAvailable" className="text-gray-700">
-            Available for contact
-          </label>
-        </div>
+        <Checkbox
+          name="isAvailable"
+          label="Available for contact"
+          checked={formData.isAvailable}
+          onChange={(checked) => onChange("isAvailable", checked)}
+          className="h-5 w-5"
+          required={false} 
+          shouldValidate={false}
+        />
+
 
         <Button buttonState="default" buttonVariant="primary" buttonLabel="Sign Up" iconPosition="none" />
       </form>

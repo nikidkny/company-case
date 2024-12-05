@@ -73,7 +73,7 @@ function AccountsPage() {
     loginFetch.triggerFetch();
   };
 
-  const handleSignupSubmit = async (formData: typeof signupData) => {
+  const handleSignupSubmit = async () => {
     signupFetch.triggerFetch();
   };
 
