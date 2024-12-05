@@ -73,11 +73,10 @@ function AccountsPage() {
     loginFetch.triggerFetch();
   };
 
-  const handleSignupSubmit = async (formData: typeof signupData) => {
+  const handleSignupSubmit = async () => {
     signupFetch.triggerFetch();
   };
 
-  //TODO: check if the user already has an access token
   useEffect(() => {
     if (loginFetch.data) {
       const cookies = document.cookie.split("; ");
@@ -91,12 +90,11 @@ function AccountsPage() {
         setLoginStatus(true); // Set login status to true
       }
 
-      alert("Login successful! You will be riderected to the home page :)");
+      alert("Login successful! You will be redirected to the home page :)");
       navigate({ to: "/" });
-    }
-
-    if (loginFetch.error) {
-      alert(`Login failed: ${loginFetch.error}`);
+    } else if (loginFetch.error) {
+      console.log("Errror", loginFetch.error);
+      
     }
   }, [loginFetch.data, loginFetch.error, navigate, setUser, setLoginStatus]);
 
@@ -105,11 +103,20 @@ function AccountsPage() {
       if (signupFetch.error.includes("User already exists")) {
         alert(`Email already in use. Try to log in instead.`);
         navigate({ to: "/accounts", search: { intent: "login" } });
-      } else {
-        alert(`Signup failed: ${signupFetch.error}`);
       }
     } else if (signupFetch.data) {
       alert("Signup successful!  You will be riderected to the login page :)");
+      // Reset signup form data and error messages
+      setSignupData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        birthdate: "",
+        isAvailable: false,
+      });
+
       navigate({ to: "/accounts", search: { intent: "login" } });
     }
   }, [signupFetch.data, signupFetch.error]);
@@ -117,10 +124,20 @@ function AccountsPage() {
   return (
     <div>
       {intent === "register" && (
-        <SignupForm formData={signupData} onChange={handleChange} onSubmit={handleSignupSubmit} />
+        <SignupForm
+          formData={signupData}
+          onChange={handleChange}
+          onSubmit={handleSignupSubmit}
+          errorMessages={signupFetch.error}
+        />
       )}
       {intent === "login" && (
-        <LoginForm formData={formData} onChange={handleChange} onSubmit={handleLoginSubmit} />
+        <LoginForm
+          formData={formData}
+          onChange={handleChange}
+          onSubmit={handleLoginSubmit}
+          errorMessages={loginFetch.error}
+        />
       )}
       {!intent && <p>Please select login or register from the navigation.</p>}
     </div>
