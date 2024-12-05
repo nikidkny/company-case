@@ -105,8 +105,6 @@ function AccountsPage() {
       if (signupFetch.error.includes("User already exists")) {
         alert(`Email already in use. Try to log in instead.`);
         navigate({ to: "/accounts", search: { intent: "login" } });
-      } else {
-        alert(`Signup failed: ${signupFetch.error}`);
       }
     } else if (signupFetch.data) {
       alert("Signup successful!  You will be riderected to the login page :)");
@@ -117,7 +115,12 @@ function AccountsPage() {
   return (
     <div>
       {intent === "register" && (
-        <SignupForm formData={signupData} onChange={handleChange} onSubmit={handleSignupSubmit} />
+        <SignupForm 
+        formData={signupData} 
+        onChange={handleChange} 
+        onSubmit={handleSignupSubmit} 
+        errorMessages={signupFetch.error}
+        />
       )}
       {intent === "login" && (
         <LoginForm formData={formData} onChange={handleChange} onSubmit={handleLoginSubmit} />
