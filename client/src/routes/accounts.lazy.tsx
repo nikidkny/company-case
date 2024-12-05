@@ -10,6 +10,10 @@ export const Route = createLazyFileRoute("/accounts")({
   component: AccountsPage,
 });
 
+//TODO:
+// - singup compare password valdiation in backend or front
+// -login validaiton messages
+// - create assembly validation messages
 function AccountsPage() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -108,6 +112,17 @@ function AccountsPage() {
       }
     } else if (signupFetch.data) {
       alert("Signup successful!  You will be riderected to the login page :)");
+      // Reset signup form data and error messages
+      setSignupData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        birthdate: "",
+        isAvailable: false,
+      });
+
       navigate({ to: "/accounts", search: { intent: "login" } });
     }
   }, [signupFetch.data, signupFetch.error]);
@@ -115,11 +130,11 @@ function AccountsPage() {
   return (
     <div>
       {intent === "register" && (
-        <SignupForm 
-        formData={signupData} 
-        onChange={handleChange} 
-        onSubmit={handleSignupSubmit} 
-        errorMessages={signupFetch.error}
+        <SignupForm
+          formData={signupData}
+          onChange={handleChange}
+          onSubmit={handleSignupSubmit}
+          errorMessages={signupFetch.error}
         />
       )}
       {intent === "login" && (

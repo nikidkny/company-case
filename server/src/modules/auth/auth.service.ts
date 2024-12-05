@@ -18,13 +18,18 @@ export class AuthService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   async signup(createUserDto: CreateUserDto): Promise<{ message: string }> {
-    const { firstName, lastName, email, password, birthdate, isAvailable } =
+    const { firstName, lastName, email, password, confirmPassword, birthdate, isAvailable } =
       createUserDto;
 
     try {
+      // Check if passwords match
+      if (password !== confirmPassword) {
+        throw new BadRequestException('Passwords do not match');
+      }
+
       const userFound = await this.userModel.findOne({ email });
 
       // Check if a user already exists with the provided email
@@ -52,7 +57,7 @@ export class AuthService {
       // Log the error in more detail
       console.error('Error during singup', error);
       if (error instanceof BadRequestException) {
-        throw error; // Re-throw the existing BadRequestException
+        throw error;
       }
 
       // If it's an unexpected error, throw an internal server error

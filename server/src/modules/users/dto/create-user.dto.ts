@@ -2,7 +2,7 @@ import { Type } from 'class-transformer';
 import { IsNotEmpty, IsEmail, IsDate, IsBoolean, IsString, MinLength } from 'class-validator';
 
 
-//this is what the data the user will need to fill in when creating their profile. Very basic validation for now
+//this is what the data the user will need to fill in when creating their profile.
 export class CreateUserDto {
   @IsNotEmpty({ message: 'First name should not be empty' })
   @IsString({ message: 'First name must be a string' })
@@ -13,9 +13,13 @@ export class CreateUserDto {
   @IsNotEmpty({ message: 'Email should not be empty' })
   @IsEmail({}, { message: 'Email must be a valid email address' })
   email: string;
+
   @IsNotEmpty({ message: 'Password should not be empty' })
   @MinLength(6, { message: 'Password must be at least 6 characters long' })
   password: string;
+
+  @IsNotEmpty({ message: 'Confirm password should not be empty' })
+  confirmPassword: string;
 
   @IsNotEmpty({ message: 'Birthdate should not be empty' })
   @Type(() => Date)

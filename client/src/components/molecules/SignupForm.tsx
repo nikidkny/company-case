@@ -1,6 +1,7 @@
 // SignupForm.tsx
 import TextInput from "../atoms/TextInput"; // Assuming you've already imported TextInput
 import Button from "../atoms/Button"; // Assuming you've already imported Button
+import { getFieldErrorMessage } from "../../utilities/errorUtils";
 
 // Update the interface to include formData
 interface SignupFormProps {
@@ -37,19 +38,6 @@ export default function SignupForm({
     onSubmit(formData); // Pass formData to parent component's handler
   };
 
-  // Helper function to get the error message for each field
-  const getFieldErrorMessage = (fieldName: string): string | null => {
-    if (!errorMessages) return null;
-
-    // Loop through error messages to find the one corresponding to the field
-    for (const msg of errorMessages) {
-      // Check if the error message contains the field name (case-insensitive)
-      if (msg.toLowerCase().includes(fieldName.toLowerCase())) {
-        return msg; // Return the first matching error message
-      }
-    }
-    return null; // Return null if no matching error message is found
-  };
 
   return (
     <div className="flex flex-col">
@@ -61,8 +49,8 @@ export default function SignupForm({
           placeholder="First Name"
           id="firstName"
           name="firstName"
-          isValid={!getFieldErrorMessage('First name')}
-          validityMsg={getFieldErrorMessage('First name') || undefined}
+          isValid={!getFieldErrorMessage(errorMessages, 'First name')}
+          validityMsg={getFieldErrorMessage(errorMessages, 'First name') || undefined}
         />
 
         <TextInput
@@ -72,8 +60,8 @@ export default function SignupForm({
           placeholder="Last Name"
           id="lastName"
           name="lastName"
-          isValid={!getFieldErrorMessage('Last name')}
-          validityMsg={getFieldErrorMessage('Last name') || undefined}
+          isValid={!getFieldErrorMessage(errorMessages, 'Last name')}
+          validityMsg={getFieldErrorMessage(errorMessages, 'Last name') || undefined}
         />
 
         <TextInput
@@ -84,8 +72,8 @@ export default function SignupForm({
           placeholder="Email"
           id="email"
           name="email"
-          isValid={!getFieldErrorMessage('Email')}
-          validityMsg={getFieldErrorMessage('Email') || undefined}
+          isValid={!getFieldErrorMessage(errorMessages, 'Email')}
+          validityMsg={getFieldErrorMessage(errorMessages, 'Email') || undefined}
         />
 
         <TextInput
@@ -95,28 +83,30 @@ export default function SignupForm({
           placeholder="Password"
           id="password"
           name="password"
-          isValid={!getFieldErrorMessage('Password')}
-          validityMsg={getFieldErrorMessage('Password') || undefined}
-          />
-
-        <TextInput 
-        inputType="password" 
-        value={formData.confirmPassword} 
-        onChange={(value) => onChange("confirmPassword", value)} 
-        placeholder="Confirm Password" 
-        id="confirmPassword" 
-        name="confirmPassword" 
+          isValid={!getFieldErrorMessage(errorMessages, 'Password')}
+          validityMsg={getFieldErrorMessage(errorMessages, 'Password') || undefined}
         />
 
-        <TextInput 
-        inputType="date" 
-        value={formData.birthdate} 
-        onChange={(value) => onChange("birthdate", value)} 
-        placeholder="Birthdate" 
-        id="birthdate" 
-        name="birthdate" 
-        isValid={!getFieldErrorMessage('Birthdate')}
-        validityMsg={getFieldErrorMessage('Birthdate') || undefined}
+        <TextInput
+          inputType="password"
+          value={formData.confirmPassword}
+          onChange={(value) => onChange("confirmPassword", value)}
+          placeholder="Confirm Password"
+          id="confirmPassword"
+          name="confirmPassword"
+          isValid={!getFieldErrorMessage(errorMessages, 'Confirm')}
+          validityMsg={getFieldErrorMessage(errorMessages, 'match') || getFieldErrorMessage(errorMessages,'Confirm') || undefined}
+        />
+
+        <TextInput
+          inputType="date"
+          value={formData.birthdate}
+          onChange={(value) => onChange("birthdate", value)}
+          placeholder="Birthdate"
+          id="birthdate"
+          name="birthdate"
+          isValid={!getFieldErrorMessage(errorMessages,'Birthdate')}
+          validityMsg={getFieldErrorMessage(errorMessages,'Birthdate') || undefined}
         />
 
         <div className="w-80 flex items-center space-x-2">
