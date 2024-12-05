@@ -139,9 +139,11 @@ export default function ProfilePage() {
           ></Button>
           <Button
             buttonVariant="secondary"
-            onClick={() => console.log("Settings")}
+            to="/profile/$profileId/settings"
+            params={{ profileId: userId }}
             iconPosition="none"
             buttonLabel="Settings"
+            className="no-underline"
           ></Button>
         </div>
       </div>
