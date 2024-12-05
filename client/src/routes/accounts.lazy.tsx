@@ -10,10 +10,6 @@ export const Route = createLazyFileRoute("/accounts")({
   component: AccountsPage,
 });
 
-//TODO:
-// - singup compare password valdiation in backend or front
-// -login validaiton messages
-// - create assembly validation messages
 function AccountsPage() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
