@@ -27,7 +27,7 @@ export class AuthService {
     try {
       // Check if passwords match
       if (password !== confirmPassword) {
-        throw new BadRequestException('Passwords do not match');
+        throw new BadRequestException('Confirm Password do not match');
       }
 
       const userFound = await this.userModel.findOne({ email });
@@ -68,7 +68,19 @@ export class AuthService {
   }
 
   async login(email: string, password: string, res: Response) {
+
     try {
+      // Check if email and password are provided
+      if (!email && !password) {
+        throw new BadRequestException('Credentials must not be empty');
+      }
+      if (!email) {
+        throw new BadRequestException('Email must not be empty');
+      }
+      if (!password) {
+        throw new BadRequestException('Password must not be empty');
+      }
+
       //Check if user exists
       const userFound = await this.userModel.findOne({ email });
       if (!userFound) {
@@ -81,8 +93,6 @@ export class AuthService {
         userFound.password,
       );
       if (!isPasswordValid) {
-        console.log('NOT SAME PASSWORD');
-
         throw new BadRequestException('Invalid credentials');
       }
 
