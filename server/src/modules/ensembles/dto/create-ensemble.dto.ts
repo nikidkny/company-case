@@ -1,4 +1,10 @@
-import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 //this is what the data the user will need to fill in when creating the ensemble. Very basic validation for now
 export class CreateEnsembleDto {
@@ -14,6 +20,8 @@ export class CreateEnsembleDto {
   createdBy: string;
   @IsNotEmpty()
   city: string;
+  @IsNumber()
+  numberOfMembers: number;
   @IsNotEmpty()
   sessionFrequency: string;
   @IsNotEmpty()

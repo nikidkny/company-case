@@ -51,6 +51,7 @@ describe('EnsemblesService', () => {
       zip: '2200',
       sessionFrequency: 'Once a week',
       isPermanent: true,
+      numberOfMembers: 2,
       memberList: [''],
       createdBy: '',
       webpage: 'Webpage link',

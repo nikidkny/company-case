@@ -49,22 +49,23 @@ export function CreateEnsemblePage() {
   const navigate = useNavigate();
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    //this is just when the ensemble is first created. the only member is the creator itself.
+    const memberList = [userId];
     const ensembleData = {
       name,
       description,
       webpage,
       zip,
       city,
-      memberList: [userId],
+      memberList,
       createdBy: userId,
-      //createdAt : new Date().toLocaleString(),
+      numberOfMembers: memberList.length,
+      createdAt: new Date().toLocaleString(),
       image: "",
       activeMusicians,
       sessionFrequency,
       isPermanent,
       genres,
-      createdAt: "",
     };
     console.log("ensembleData", ensembleData);
     setObjectData(ensembleData);

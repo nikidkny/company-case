@@ -21,7 +21,7 @@ export class UsersService {
     const createdUser = new this.userModel(createUserDto);
     return createdUser.save();
   }
-  //takes an array of userIds and finds each user
+  //takes an array of userIds and finds each user + creator
   async getMembersDetails({
     membersIds,
     creatorId,
@@ -34,9 +34,8 @@ export class UsersService {
 
     const creator = await this.userModel.findById(creatorId).exec();
 
-    console.log('foundResults', foundMembers);
-
     const foundResults = { foundMembers, creator };
+    console.log('foundResults', foundResults);
     return foundResults;
   }
 
