@@ -5,18 +5,19 @@ import TextBody from "../components/atoms/TextBody";
 import TextHeadline from "../components/atoms/TextHeadline";
 import { useFetch } from "../hooks/use-fetch";
 import { EnsembleType } from "../types/EnsembleType";
-//import { User } from "../types/UserType";
 import Image from "./../components/atoms/Image";
 import RegisterInEnsembleButton from "../components/molecules/RegisterInEnsembleButton";
 import { useParams } from "@tanstack/react-router";
+import { User } from "../types/UserType";
 
 export default function EnsembleDetailsPage() {
   // Get the ensembleId from the URL
   const { ensemblesId } = useParams({ strict: false });
+  const userId = "6751e7b6ef87e8376bba326e";
 
   const {
     data: ensemble,
-    triggerFetch,
+    triggerFetch: triggerFetchEnsembleDetails,
     shouldFetch,
   } = useFetch<EnsembleType>(
     {
@@ -39,6 +40,25 @@ export default function EnsembleDetailsPage() {
     `/ensembles/${ensemblesId}`,
     "GET"
   );
+
+  // Get members' details (first name, last name) including the creator of the ensemble
+  const { data: membersDetails, triggerFetch: triggerFetchMembersDetails } = useFetch(
+    { foundMembers: [], creator: {} },
+    "/users/details",
+    "POST",
+    {
+      "Content-Type": "application/json",
+    },
+    { membersIds: ensemble.memberList, creatorId: ensemble.createdBy }
+  );
+
+  console.log("membersList", ensemble.memberList);
+  console.log("membersDetails", membersDetails);
+
+  const membersList: User[] = membersDetails.foundMembers;
+  const creator: User = membersDetails.creator;
+  const isUserMember = ensemble.memberList.includes(userId);
+
   //Join the ensemble
   const {
     data: registrationData,
@@ -54,7 +74,6 @@ export default function EnsembleDetailsPage() {
     },
     { ensembleId: ensemblesId }
   );
-  const isUserMember = ensemble.memberList.some((member) => member.id === userId);
 
   const handleAddUserToEnsemble = () => {
     triggerRegisterFetch();
@@ -62,13 +81,15 @@ export default function EnsembleDetailsPage() {
 
   useEffect(() => {
     if (registrationData && !registrationLoading) {
-      triggerFetch();
+      triggerFetchEnsembleDetails();
     }
     // console.log("ensembles", ensemble);
   }, [registrationData, registrationLoading]);
 
   useEffect(() => {
-    triggerFetch();
+    triggerFetchEnsembleDetails();
+    triggerFetchMembersDetails();
+    // triggerFetchCurrentUser();
   }, [ensemble, shouldFetch]);
 
   console.log("isUserMember", isUserMember);
@@ -119,10 +140,10 @@ export default function EnsembleDetailsPage() {
             Members
           </TextBody>
           <div>
-            {ensemble.memberList.length > 0 ? (
-              ensemble.memberList.map((member, index) => (
+            {membersList.length > 0 ? (
+              membersList.map((member: User, index) => (
                 <TextBody key={index} variant="p" size="md">
-                  {member.name}
+                  {member.firstName} {member.lastName}
                 </TextBody>
               ))
             ) : (
@@ -165,7 +186,7 @@ export default function EnsembleDetailsPage() {
           </TextBody>
           <TextBody variant="p" size="md">
             {/* when the ensemble is created we could store the user name and last name + user id here. for now there's only user id*/}
-            {ensemble.createdBy.name}
+            {creator.firstName} {creator.lastName}
           </TextBody>
           {/* button to see profile here to be added in the future */}
         </div>

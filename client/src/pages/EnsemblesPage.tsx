@@ -27,12 +27,15 @@ export default function EnsemblesPage() {
 
   // Trigger fetch only when ensembles are empty
   useEffect(() => {
-    if (ensembles.length === 0 || instrumentsFetch.data.length === 0) {
+    if (ensembles.length === 0 && !data.length) {
       triggerFetch();
-      instrumentsFetch.triggerFetch();
+
       // Only fetch if ensembles or instruments are not yet loaded
     }
-  }, [ensembles, triggerFetch, instrumentsFetch]);
+    if (!instrumentsFetch.data.length) {
+      instrumentsFetch.triggerFetch();
+    }
+  }, [ensembles, triggerFetch, data, instrumentsFetch]);
 
   // Set fetched data into the store
   useEffect(() => {
@@ -69,9 +72,13 @@ export default function EnsemblesPage() {
         </div>
       </div>
       <div className="p-6 flex flex-col justify-around gap-4 bg-gray-300">
-        {ensembles.map((ensemble, index) => (
-          <EnsembleCard key={index} ensemble={ensemble} />
-        ))}
+        {ensembles.length > 0 ? (
+          ensembles.map((ensemble, index) => <EnsembleCard key={index} ensemble={ensemble} />)
+        ) : (
+          <TextBody variant="p" size="md">
+            No ensembles available
+          </TextBody>
+        )}
       </div>
     </div>
   );

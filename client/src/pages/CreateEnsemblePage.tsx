@@ -13,6 +13,7 @@ import Checkbox from "../components/atoms/Checkbox";
 import { DropdownWithTags } from "../components/molecules/DropdownWithTags";
 import { musicGenresOptions } from "../utilities/musicGenresOptions";
 import Button from "../components/atoms/Button";
+import { useNavigate } from "@tanstack/react-router";
 // import ImageInput from "../atoms/ImageInput";
 
 export function CreateEnsemblePage() {
@@ -41,8 +42,11 @@ export function CreateEnsemblePage() {
     resetForm,
     setObjectData,
     objectData,
+    setEnsembles,
   } = useStore();
 
+  const userId = "6751e7b6ef87e8376bba326e";
+  const navigate = useNavigate();
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -52,25 +56,35 @@ export function CreateEnsemblePage() {
       webpage,
       zip,
       city,
-      memberList: [user?.id ?? "1"],
-      createdBy: user?.id,
+      memberList: [userId],
+      createdBy: userId,
       //createdAt : new Date().toLocaleString(),
-      // image,
+      image: "",
       activeMusicians,
       sessionFrequency,
       isPermanent,
       genres,
+      createdAt: "",
     };
-    // const numberOfMembers = ensembleData.memberList?.length;
-    // ensembleData.numberOfMembers = numberOfMembers;
+    console.log("ensembleData", ensembleData);
     setObjectData(ensembleData);
+    setLoading(true);
     triggerFetch();
-    // console.log(formDataToSend.get("name"));
+    setTimeout(() => {
+      alert("The ensemble has been created!");
+      navigate({
+        to: "/profile/$profileId",
+        params: { profileId: userId },
+      });
+    }, 2000);
     resetForm();
   };
+  useEffect(() => {
+    console.log("Updated objectData:", objectData);
+  }, [objectData]);
 
   const {
-    data: ensembles,
+    data: createdEnsemble,
     error,
     loading,
     setLoading,
@@ -86,11 +100,13 @@ export function CreateEnsemblePage() {
   );
 
   console.log(loading);
+
   useEffect(() => {
-    if (ensembles.length) {
-      console.log("Ensemble created:", ensembles);
+    if (createdEnsemble) {
+      console.log("Ensemble created:", createdEnsemble);
+      setEnsembles(createdEnsemble);
     }
-  }, [ensembles]);
+  }, [createdEnsemble, setEnsembles]);
 
   useEffect(() => {
     if (error) {

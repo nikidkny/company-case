@@ -51,6 +51,8 @@ describe('EnsemblesService', () => {
       zip: '2200',
       sessionFrequency: 'Once a week',
       isPermanent: true,
+      memberList: [''],
+      createdBy: '',
       webpage: 'Webpage link',
       activeMusicians: '1-4',
       genres: ['Classical', 'Symphonic'],
