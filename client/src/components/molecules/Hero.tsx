@@ -2,15 +2,16 @@ import Button from "../atoms/Button";
 import { Icon } from "../atoms/Icon/Icon";
 import { ICON_NAMES } from "../atoms/Icon/IconNames";
 import TextHeadline from "../atoms/TextHeadline";
-import TextBody from "../atoms/TextBody";
 import DividerWithText from "../atoms/DividerWithText";
 import { useStore } from "../../store/useStore";
+import PopUp from "./PopUp";
 
 export default function Hero() {
-  const { popUp, setPopUp, loginStatus, setIsMenuOpen } = useStore();
+  const { popUp, setPopUp, loginStatus, setIsMenuOpen, user } = useStore();
   const displayPopUp = (arg: boolean) => {
     setPopUp(arg);
   };
+  console.log("user", user);
 
   const handleClick = () => {
     setIsMenuOpen();
@@ -21,10 +22,10 @@ export default function Hero() {
     <>
       <div className="flex flex-col items-center">
         <div className="w-full max-w-sm xs:max-w-xs">
-          {(!loginStatus && <Icon name={ICON_NAMES.hero_image} viewBox={"0 0 470 325.475"} className="w-full h-auto" />) || <Icon name={ICON_NAMES.profile_welcome} viewBox={"0 0 153.993 159.24"} className="w-full h-auto" />}
+          {(!loginStatus && <Icon name={ICON_NAMES.hero_image} viewBox={"0 0 470 325.475"} className="w-full h-auto" />) || <Icon name={ICON_NAMES.profile_welcome} viewBox={"0 0 150.993 180.24"} className="w-full h-auto" />}
         </div>
-        <TextHeadline size="sm" variant="h1" className="pt-6 pb-8">
-          {(!loginStatus && "A place where musicians find other musicians and play music together") || `Welcome back '${"user.name"}'!`}
+        <TextHeadline size="lg" variant="h3" className="pt-6 pb-8">
+          {(!loginStatus && "A place where musicians find other musicians and play music together") || `Welcome back ${user?.firstName}!`}
         </TextHeadline>
         <div className="flex flex-row items-center justify-between gap-3 w-full items-stretch text-blue-500">
           <Button
@@ -56,49 +57,38 @@ export default function Hero() {
         </div>
 
         {popUp && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => displayPopUp(false)}>
-            <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-md relative mx-2 flex flex-col items-center gap-6">
-              {/* Modal content */}
-              <div className="border-0 border-b border-solid border-gray-300 pb-3">
-                <TextBody size="lg" variant="strong" className="text-blue-500">
-                  {" "}
-                  Log in to find musicians you can play with in all of Denmark
-                </TextBody>
-              </div>
-              <div className="flex flex-col items-center gap-3 w-full items-stretch">
-                <a href="https://facebook.com" target="_blank">
-                  <Button buttonState="default" buttonLabel="Log in with Facebook" buttonVariant="primary" iconPosition="none" size="sm" className="no-underline bg-blue-900 inline w-full"></Button>
-                </a>
-                <Button
-                  iconPosition="none"
-                  buttonState="default"
-                  buttonLabel="Register by email"
-                  size="sm"
-                  buttonVariant="primary"
-                  className="no-underline w-auto inline"
-                  to="/accounts"
-                  onClick={handleClick}
-                  customData={{
-                    intent: "register",
-                  }}
-                />
-                <DividerWithText text="or" className="" />
-                <Button
-                  buttonState="default"
-                  buttonLabel="Log in"
-                  buttonVariant="secondary"
-                  iconPosition="none"
-                  size="sm"
-                  to="/accounts"
-                  onClick={handleClick}
-                  customData={{
-                    intent: "login",
-                  }}
-                  className="no-underline w-auto inline"
-                />
-              </div>
-            </div>
-          </div>
+          <PopUp title={"Log in to find musicians you can play with in all of Denmark"}>
+            <a href="https://facebook.com" target="_blank">
+              <Button buttonState="default" buttonLabel="Log in with Facebook" buttonVariant="primary" iconPosition="none" size="sm" className="no-underline bg-blue-900 inline w-full"></Button>
+            </a>
+            <Button
+              iconPosition="none"
+              buttonState="default"
+              buttonLabel="Register by email"
+              size="sm"
+              buttonVariant="primary"
+              className="no-underline w-auto inline"
+              to="/accounts"
+              onClick={handleClick}
+              customData={{
+                intent: "register",
+              }}
+            />
+            <DividerWithText text="or" className="" />
+            <Button
+              buttonState="default"
+              buttonLabel="Log in"
+              buttonVariant="secondary"
+              iconPosition="none"
+              size="sm"
+              to="/accounts"
+              onClick={handleClick}
+              customData={{
+                intent: "login",
+              }}
+              className="no-underline w-auto inline"
+            />
+          </PopUp>
         )}
       </div>
     </>

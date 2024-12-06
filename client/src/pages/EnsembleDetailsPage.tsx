@@ -39,7 +39,6 @@ export default function EnsembleDetailsPage() {
     `/ensembles/${ensemblesId}`,
     "GET"
   );
-
   //Join the ensemble
   const {
     data: registrationData,
@@ -55,35 +54,30 @@ export default function EnsembleDetailsPage() {
     },
     { ensembleId: ensemblesId }
   );
+  const isUserMember = ensemble.memberList.some((member) => member.id === userId);
 
   const handleAddUserToEnsemble = () => {
     triggerRegisterFetch();
   };
 
   useEffect(() => {
-    triggerFetch();
+    if (registrationData && !registrationLoading) {
+      triggerFetch();
+    }
     // console.log("ensembles", ensemble);
+  }, [registrationData, registrationLoading]);
+
+  useEffect(() => {
+    triggerFetch();
   }, [ensemble, shouldFetch]);
 
-  // const { data: ensembleOwner } = useFetch<User>(
-  //   {
-  //     id: "",
-  //     email: "",
-  //   },
-  //   `/users/${ensemble.createdBy}`,
-  //   "GET"
-  // );
-  // console.log("ensembleOwner", ensembleOwner);
+  console.log("isUserMember", isUserMember);
+  console.log("ensemble", ensemble);
 
   return (
     <div>
       {/* image */}
-      <Image
-        src="https://picsum.photos/600"
-        alt="Placeholder"
-        height={"200"}
-        className="w-full object-cover"
-      />
+      <Image src="https://picsum.photos/600" alt="Placeholder" height={"200"} className="w-full object-cover" />
 
       {/* name, zip city and button */}
       <div className="flex flex-col gap-6 p-6 items-center">
@@ -93,12 +87,10 @@ export default function EnsembleDetailsPage() {
         <TextBody variant="p" size="md">
           {ensemble.zip} {ensemble.city}
         </TextBody>
-        <RegisterInEnsembleButton
-          registrationLoading={registrationLoading}
-          registrationError={registrationError}
-          registrationData={registrationData}
-          handleAddUserToEnsemble={handleAddUserToEnsemble}
-        />
+
+        {(!isUserMember && <RegisterInEnsembleButton registrationLoading={registrationLoading} registrationError={registrationError} registrationData={registrationData} handleAddUserToEnsemble={handleAddUserToEnsemble} />) || (
+          <ProfileBadge ProfileBadgeLabel="You're a member of this ensemble" ProfileBadgeSize="sm" />
+        )}
       </div>
       <div className="h-[30px] bg-gray-300 border-solid border-1 border-gray-400"></div>
 
@@ -130,7 +122,7 @@ export default function EnsembleDetailsPage() {
             {ensemble.memberList.length > 0 ? (
               ensemble.memberList.map((member, index) => (
                 <TextBody key={index} variant="p" size="md">
-                  {member}
+                  {member.name}
                 </TextBody>
               ))
             ) : (
@@ -164,13 +156,7 @@ export default function EnsembleDetailsPage() {
             Genres
           </TextBody>
 
-          <div className="flex flex-wrap gap-2">
-            {ensemble.genres
-              ? ensemble.genres.map((genre, index) => (
-                  <ProfileBadge key={index} ProfileBadgeLabel={genre} ProfileBadgeSize="sm" />
-                ))
-              : "No information about genres has been provided"}
-          </div>
+          <div className="flex flex-wrap gap-2">{ensemble.genres ? ensemble.genres.map((genre, index) => <ProfileBadge key={index} ProfileBadgeLabel={genre} ProfileBadgeSize="sm" />) : "No information about genres has been provided"}</div>
         </div>
 
         <div className="flex flex-col gap-2">
@@ -179,21 +165,13 @@ export default function EnsembleDetailsPage() {
           </TextBody>
           <TextBody variant="p" size="md">
             {/* when the ensemble is created we could store the user name and last name + user id here. for now there's only user id*/}
-            {ensemble.createdBy}
+            {ensemble.createdBy.name}
           </TextBody>
           {/* button to see profile here to be added in the future */}
         </div>
       </div>
 
-      <Button
-        buttonVariant="secondary"
-        buttonState="default"
-        buttonLabel="Visit the webpage"
-        className="no-underline w-auto m-6"
-        size="lg"
-        iconPosition="none"
-        to={ensemble.webpage || "https://google.com"}
-      ></Button>
+      <Button buttonVariant="secondary" buttonState="default" buttonLabel="Visit the webpage" className="no-underline w-auto m-6" size="lg" iconPosition="none" to={ensemble.webpage || "https://google.com"}></Button>
     </div>
   );
 }
