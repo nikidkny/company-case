@@ -28,7 +28,15 @@ export class InstrumentsService {
       { name: 'Synthesizer' },
     ];
 
-    await this.instrumentModel.insertMany(instruments);
+    //to avoid duplication
+    for (const instrument of instruments) {
+      const exists = await this.instrumentModel
+        .findOne({ name: instrument.name })
+        .exec();
+      if (!exists) {
+        await this.instrumentModel.create(instrument);
+      }
+    }
   }
 
   // Method to retrieve all instruments

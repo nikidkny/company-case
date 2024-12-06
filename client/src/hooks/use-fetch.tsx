@@ -27,11 +27,11 @@ export function useFetch<T>(initialValue: T, subPath: string | null, method: HTT
           method,
           headers: memoizedHeaders,
           body: shouldFetch ? JSON.stringify(memoizedBody) : null,
-          credentials: 'include'
+          credentials: "include",
         });
         if (!response.ok) {
           const { message } = await response.json();
-          console.error(`Error ${response.status}: ${response.statusText}${message ? `; ${message}` : ''}`);
+          console.error(`Error ${response.status}: ${response.statusText}${message ? `; ${message}` : ""}`);
           throw new Error(`Error ${response.status}: ${message ? `${message}` : `${response.statusText}`}`);
         }
         const responseBody = await response.json();
@@ -47,5 +47,5 @@ export function useFetch<T>(initialValue: T, subPath: string | null, method: HTT
     getData();
   }, [subPath, method, memoizedHeaders, memoizedBody, shouldFetch]);
 
-  return { data, loading, error, triggerFetch, shouldFetch };
+  return { data, loading, error, triggerFetch, shouldFetch, setLoading };
 }

@@ -4,10 +4,10 @@ import { HydratedDocument, Types } from 'mongoose';
 
 export type InstrumentDocument = HydratedDocument<Instrument>;
 
-@Schema()
+@Schema({ timestamps: true })
 export class Instrument {
   _id: Types.ObjectId;
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   name: string;
 }
 

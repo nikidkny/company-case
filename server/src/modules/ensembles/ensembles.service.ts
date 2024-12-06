@@ -18,8 +18,12 @@ export class EnsemblesService {
   }
 
   async create(createEnsembleDto: CreateEnsembleDto): Promise<Ensemble> {
-    const createdEnsemble = new this.ensembleModel(createEnsembleDto);
-    return createdEnsemble.save();
+    try {
+      const createdEnsemble = new this.ensembleModel(createEnsembleDto);
+      return await createdEnsemble.save();
+    } catch (error) {
+      throw new Error(`Failed to create ensemble: ${error.message}`);
+    }
   }
   update(id: string) {}
   remove(id: string) {}

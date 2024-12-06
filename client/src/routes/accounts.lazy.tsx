@@ -86,7 +86,7 @@ function AccountsPage() {
       if (accessTokenCookie) {
         const accessToken = accessTokenCookie.split("=")[1];
         const decodedToken = jwtDecode(accessToken);
-
+        //TODO: fetch user here and setCurrentUser to the userObject from db so we can use the information throughout the application
         setUser(decodedToken); // Update user data in state
         setLoginStatus(true); // Set login status to true
       }
@@ -116,12 +116,8 @@ function AccountsPage() {
 
   return (
     <div>
-      {intent === "register" && (
-        <SignupForm formData={signupData} onChange={handleChange} onSubmit={handleSignupSubmit} />
-      )}
-      {intent === "login" && (
-        <LoginForm formData={formData} onChange={handleChange} onSubmit={handleLoginSubmit} />
-      )}
+      {intent === "register" && <SignupForm formData={signupData} onChange={handleChange} onSubmit={handleSignupSubmit} />}
+      {intent === "login" && <LoginForm formData={formData} onChange={handleChange} onSubmit={handleLoginSubmit} />}
       {!intent && <p>Please select login or register from the navigation.</p>}
     </div>
   );

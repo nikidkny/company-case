@@ -11,6 +11,9 @@ export default function Footer() {
   const displayPopUp = (arg: boolean) => {
     setPopUp(arg);
   };
+  // const toggleMenu = () => {
+  //   setIsMenuOpen();
+  // };
 
   return (
     <div className="bg-red-6 p-6">

@@ -12,7 +12,7 @@ const RegisterInEnsembleButton: React.FC<RegisterInEnsembleButtonProps> = ({ reg
 
       {registrationError && <TextBody className="text-red-500 mt-4">Looks like you're already part of this ensemble!</TextBody>}
 
-      {registrationData?.message && <TextBody className="text-green-500 mt-4">{registrationData.message}</TextBody>}
+      {registrationData?.message && <TextBody className="text-green-500 mt-4">You have successfully joined the ensemble!</TextBody>}
     </div>
   );
 };

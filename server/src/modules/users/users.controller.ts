@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { GetMembersDetailsDto } from './dto/get-members-details.dto';
 
 @Controller('users')
 export class UsersController {
@@ -27,6 +28,12 @@ export class UsersController {
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
     return await this.usersService.create(createUserDto);
+  }
+
+  @Post('details')
+  async getMembersDetails(@Body() getMembersDetailsDto: GetMembersDetailsDto) {
+    const { membersIds, creatorId } = getMembersDetailsDto;
+    return this.usersService.getMembersDetails({ membersIds, creatorId });
   }
 
   @Patch(':id')
