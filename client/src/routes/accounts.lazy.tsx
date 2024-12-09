@@ -10,6 +10,7 @@ export const Route = createLazyFileRoute("/accounts")({
   component: AccountsPage,
 });
 
+
 function AccountsPage() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -22,7 +23,7 @@ function AccountsPage() {
   const setLoginStatus = useStore((state) => state.setLoginStatus);
 
   // State to manage login form data
-  const [formData, setFormData] = useState({
+  const [loginData, setLoginData] = useState({
     email: "",
     password: "",
   });
@@ -49,7 +50,7 @@ function AccountsPage() {
     {
       "Content-Type": "application/json",
     },
-    formData
+    loginData
   );
 
   const signupFetch = useFetch(
@@ -72,7 +73,7 @@ function AccountsPage() {
       }));
     } else {
       // Update login form data
-      setFormData((prevData) => ({
+      setLoginData((prevData) => ({
         ...prevData,
         [name]: value,
       }));
@@ -80,54 +81,86 @@ function AccountsPage() {
   };
 
   // Function to validate signup form data
-  const validateForm = (formData: typeof signupData) => {
+  const validateForm = (signupFormData?: typeof signupData, loginFormData?: typeof loginData) => {
     const errors: { [key: string]: string } = {};
-    const nameRegex = /^[A-Za-z\s]+$/;
 
-    // Validate first and last name (letters only)
-    if (!nameRegex.test(formData.firstName.trim())) {
-      errors.firstName = "First name must contain only letters";
-    }
-    if (!nameRegex.test(formData.lastName.trim())) {
-      errors.lastName = "Last name must contain only letters";
-    }
+    if (signupFormData) {
+      console.log('SIGNUP');
+      const nameRegex = /^[A-Za-z\s]+$/;
 
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email.trim())) {
-      errors.email = "Invalid email format";
-    }
-
-    // Validate birthdate - check if it's a valid date and if the user is at least 18
-    const birthdate = new Date(formData.birthdate);
-    if (isNaN(birthdate.getTime())) {
-      errors.birthdate = "Invalid birthdate";
-    } else {
-      const today = new Date();
-      const age = today.getFullYear() - birthdate.getFullYear();
-      if (age < 18 || (age === 18 && today < new Date(birthdate.setFullYear(today.getFullYear())))) {
-        errors.birthdate = "Invalid birthdate. You must be at least 18 years old";
+      // Validate first and last name (letters only) TODO: add if empty to all 
+      if (!nameRegex.test(signupFormData.firstName.trim())) {
+        errors.firstName = "First name must contain only letters";
       }
+      if (!nameRegex.test(signupFormData.lastName.trim())) {
+        errors.lastName = "Last name must contain only letters";
+      }
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(signupFormData.email.trim())) {
+        errors.email = "Invalid email format";
+      }
+
+      // Validate birthdate - check if it's a valid date and if the user is at least 18
+      const birthdate = new Date(signupFormData.birthdate);
+      if (isNaN(birthdate.getTime())) {
+        errors.birthdate = "Invalid birthdate";
+      } else {
+        const today = new Date();
+        const age = today.getFullYear() - birthdate.getFullYear();
+        if (age < 18 || (age === 18 && today < new Date(birthdate.setFullYear(today.getFullYear())))) {
+          errors.birthdate = "Invalid birthdate. You must be at least 18 years old";
+        }
+      }
+
+      // Validate password length
+      if (signupFormData.password.trim().length < 8) {
+        errors.password = "Password must be at least 8 characters";
+      }
+
+      // Check if passwords match
+      if (signupFormData.password !== signupFormData.confirmPassword) {
+        errors.confirmPassword = "Passwords do not match";
+      }
+    } else if (loginFormData) {
+      //TODO: implement
+      console.log("LOGIN");
+      
     }
 
-    // Validate password length
-    if (formData.password.trim().length < 8) {
-      errors.password = "Password must be at least 8 characters";
-    }
-
-    // Check if passwords match
-    if (formData.password !== formData.confirmPassword) {
-      errors.confirmPassword = "Passwords do not match";
-    }
-
-    return errors; // Return an object with error messages
+    return errors;
   };
 
   // Handle login form submission
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+  
+    // Trim input values before validation
+    const trimmedData = {
+      email: loginData.email.trim(),
+      password: loginData.password.trim(),
+    };
+  
+    // Validate form data for login (pass the trimmedData)
+    const errors = validateForm(undefined, trimmedData); 
+  
+    // Convert errors object into an array of error messages
+    const errorMessages = Object.values(errors);
+  
+    if (errorMessages.length > 0) {
+      // If there are validation errors, set them
+      setValidationErrors(errorMessages);
+      return;
+    }
+  
+    // Clear previous validation errors if no issues
+    setValidationErrors([]);
+  
+    // Trigger login fetch with the trimmed data
     loginFetch.triggerFetch();
   };
+
 
   // Handle signup form submission
   const handleSignupSubmit = (formData: typeof signupData) => {
@@ -162,7 +195,11 @@ function AccountsPage() {
   };
 
   // Combine frontend and backend errors
-  const combinedErrors = [...validationErrors, ...(signupFetch.error || [])];
+  const combinedErrors = [
+    ...validationErrors,  // Frontend validation errors
+    ...(intent === "register" && signupFetch.error ? signupFetch.error : []),  // Backend errors for register, only if not null
+    ...(intent === "login" && loginFetch.error ? loginFetch.error : []),  // Backend errors for login, only if not null
+  ];
 
   useEffect(() => {
     if (loginFetch.data) {
@@ -221,10 +258,10 @@ function AccountsPage() {
       )}
       {intent === "login" && (
         <LoginForm
-          formData={formData}
+          formData={loginData}
           onChange={handleChange}
           onSubmit={handleLoginSubmit}
-          errorMessages={loginFetch.error}
+          errorMessages={combinedErrors}
         />
       )}
       {!intent && <p>Please select login or register from the navigation.</p>}
