@@ -3,7 +3,9 @@ import Button from "../atoms/Button"; // Assuming you've already imported Button
 import { getFieldErrorMessage } from "../../utilities/errorUtils";
 import Checkbox from "../atoms/Checkbox";
 
-// Update the interface to include formData
+
+//TODO: 
+// - Age should be at least 18
 interface SignupFormProps {
   formData: {
     firstName: string;
@@ -105,7 +107,7 @@ export default function SignupForm({
           placeholder="Birthdate"
           id="birthdate"
           name="birthdate"
-          isValid={!getFieldErrorMessage(errorMessages, 'Birthdate')}
+          isValid={!getFieldErrorMessage(errorMessages, 'Birthdate') }
           validityMsg={getFieldErrorMessage(errorMessages, 'Birthdate') || undefined}
         />
 

@@ -16,14 +16,18 @@ function AccountsPage() {
   const intent = searchParams.get("intent"); // Get the query parameter 'intent'
   const navigate = useNavigate(); // To handle navigation
   // const currentUser = useStore((state) => state.user);
+
+  // Zustand store setters for managing user state and login status
   const setUser = useStore((state) => state.setUser);
   const setLoginStatus = useStore((state) => state.setLoginStatus);
 
+  // State to manage login form data
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
+  // State to manage signup form data
   const [signupData, setSignupData] = useState({
     firstName: "",
     lastName: "",
@@ -34,6 +38,10 @@ function AccountsPage() {
     isAvailable: false,
   });
 
+  // State to hold validation error messages for the signup form
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
+
+  // API hooks for login and signup
   const loginFetch = useFetch(
     null,
     "/auth/login",
@@ -54,13 +62,16 @@ function AccountsPage() {
     signupData
   );
 
+  // Generalized change handler for both forms
   const handleChange = (name: string, value: string | boolean) => {
     if (intent === "register") {
+      // Update signup form data
       setSignupData((prevData) => ({
         ...prevData,
         [name]: value,
       }));
     } else {
+      // Update login form data
       setFormData((prevData) => ({
         ...prevData,
         [name]: value,
@@ -68,14 +79,90 @@ function AccountsPage() {
     }
   };
 
+  // Function to validate signup form data
+  const validateForm = (formData: typeof signupData) => {
+    const errors: { [key: string]: string } = {};
+    const nameRegex = /^[A-Za-z\s]+$/;
+
+    // Validate first and last name (letters only)
+    if (!nameRegex.test(formData.firstName.trim())) {
+      errors.firstName = "First name must contain only letters";
+    }
+    if (!nameRegex.test(formData.lastName.trim())) {
+      errors.lastName = "Last name must contain only letters";
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email.trim())) {
+      errors.email = "Invalid email format";
+    }
+
+    // Validate birthdate - check if it's a valid date and if the user is at least 18
+    const birthdate = new Date(formData.birthdate);
+    if (isNaN(birthdate.getTime())) {
+      errors.birthdate = "Invalid birthdate";
+    } else {
+      const today = new Date();
+      const age = today.getFullYear() - birthdate.getFullYear();
+      if (age < 18 || (age === 18 && today < new Date(birthdate.setFullYear(today.getFullYear())))) {
+        errors.birthdate = "Invalid birthdate. You must be at least 18 years old";
+      }
+    }
+
+    // Validate password length
+    if (formData.password.trim().length < 8) {
+      errors.password = "Password must be at least 8 characters";
+    }
+
+    // Check if passwords match
+    if (formData.password !== formData.confirmPassword) {
+      errors.confirmPassword = "Passwords do not match";
+    }
+
+    return errors; // Return an object with error messages
+  };
+
+  // Handle login form submission
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     loginFetch.triggerFetch();
   };
 
-  const handleSignupSubmit = async () => {
+  // Handle signup form submission
+  const handleSignupSubmit = (formData: typeof signupData) => {
+    // Trim all inputs before validation
+    const trimmedData = {
+      ...formData,
+      firstName: formData.firstName.trim(),
+      lastName: formData.lastName.trim(),
+      email: formData.email.trim(),
+      password: formData.password.trim(),
+      confirmPassword: formData.confirmPassword.trim(),
+    };
+
+    // Validate form data
+    const errors = validateForm(trimmedData); // Assuming validateForm returns an object like { field: errorMessage }
+
+    // Convert errors object into an array of error messages
+    const errorMessages = Object.values(errors);
+
+    if (errorMessages.length > 0) {
+      setValidationErrors(errorMessages); // Set validation errors as an array
+      return;
+    }
+
+    setValidationErrors([]); // Clear previous validation errors
+
+    // Update the signupData state with trimmed values
+    setSignupData(trimmedData);
+
+    // Trigger fetch with the updated state
     signupFetch.triggerFetch();
   };
+
+  // Combine frontend and backend errors
+  const combinedErrors = [...validationErrors, ...(signupFetch.error || [])];
 
   useEffect(() => {
     if (loginFetch.data) {
@@ -94,10 +181,11 @@ function AccountsPage() {
       navigate({ to: "/" });
     } else if (loginFetch.error) {
       console.log("Errror", loginFetch.error);
-      
+
     }
   }, [loginFetch.data, loginFetch.error, navigate, setUser, setLoginStatus]);
 
+  // Handle effects for login API response
   useEffect(() => {
     if (signupFetch.error) {
       if (signupFetch.error.includes("User already exists")) {
@@ -128,7 +216,7 @@ function AccountsPage() {
           formData={signupData}
           onChange={handleChange}
           onSubmit={handleSignupSubmit}
-          errorMessages={signupFetch.error}
+          errorMessages={combinedErrors}
         />
       )}
       {intent === "login" && (
