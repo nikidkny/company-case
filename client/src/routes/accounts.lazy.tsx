@@ -39,7 +39,7 @@ function AccountsPage() {
   });
 
   // State to hold validation error messages for the signup form
-  const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  const [validationErrors, setValidationErrors] = useState<string | string[]>([]);
 
   // API hooks for login and signup
   const loginFetch = useFetch(
@@ -180,7 +180,7 @@ function AccountsPage() {
       alert("Login successful! You will be redirected to the home page :)");
       navigate({ to: "/" });
     } else if (loginFetch.error) {
-      console.log("Errror", loginFetch.error);
+      console.log("Error", loginFetch.error);
 
     }
   }, [loginFetch.data, loginFetch.error, navigate, setUser, setLoginStatus]);

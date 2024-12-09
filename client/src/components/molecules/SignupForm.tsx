@@ -3,9 +3,6 @@ import Button from "../atoms/Button"; // Assuming you've already imported Button
 import { getFieldErrorMessage } from "../../utilities/errorUtils";
 import Checkbox from "../atoms/Checkbox";
 
-
-//TODO: 
-// - Age should be at least 18
 interface SignupFormProps {
   formData: {
     firstName: string;
