@@ -10,15 +10,17 @@ export function useFetch<T>(initialValue: T, subPath: string | null, method: HTT
   const [error, setError] = useState<string | null>(null);
   const [shouldFetch, setShouldFetch] = useState(false);
 
+  // the triggerFetch can now accept body as a parameter
   const triggerFetch = () => {
-    setShouldFetch(true);
+    setShouldFetch(true); // Trigger the fetch
   };
   const memoizedHeaders = useMemo(() => headers, [headers]);
   const memoizedBody = useMemo(() => body, [body]);
 
   useEffect(() => {
     if (!shouldFetch || !subPath) return;
-
+    console.log("Triggering fetch...");
+    console.log("memoizedBody", memoizedBody);
     const getData = async () => {
       setLoading(true);
       setError(null); // Reset error
@@ -27,16 +29,16 @@ export function useFetch<T>(initialValue: T, subPath: string | null, method: HTT
           method,
           headers: memoizedHeaders,
           body: shouldFetch ? JSON.stringify(memoizedBody) : null,
-          credentials: 'include'
+          credentials: "include",
         });
         if (!response.ok) {
           const { message } = await response.json();
-          console.error(`Error ${response.status}: ${response.statusText}${message ? `; ${message}` : ''}`);
+          console.error(`Error ${response.status}: ${response.statusText}${message ? `; ${message}` : ""}`);
           throw new Error(`Error ${response.status}: ${message ? `${message}` : `${response.statusText}`}`);
         }
         const responseBody = await response.json();
-
         setData(responseBody);
+        console.log("responseBody", responseBody);
       } catch (error) {
         setError(error instanceof Error ? error.message : "An unknown error occurred");
       } finally {

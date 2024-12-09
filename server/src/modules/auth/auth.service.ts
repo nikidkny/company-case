@@ -111,7 +111,8 @@ export class AuthService {
       });
 
       return {
-        message: 'Login successful',
+        accessToken,
+        refreshToken,
       };
     } catch (error) {
       console.error('Error during login', error);
@@ -148,6 +149,30 @@ export class AuthService {
       };
     } catch (error) {
       throw new UnauthorizedException('Invalid or expired refresh token');
+    }
+  }
+  // Method to get the current user's data based on the JWT token
+  async getCurrentUser(req: any): Promise<User> {
+    const token = req.cookies.accessToken;
+    if (!token) {
+      throw new UnauthorizedException('Access token is required');
+    }
+
+    try {
+      // Decode the JWT and get the user ID from it
+      const decoded = this.jwtService.verify(token, {
+        secret: process.env.JWT_SECRET,
+      });
+
+      // Fetch the user from the database
+      const user = await this.userModel.findById(decoded.id);
+      if (!user) {
+        throw new UnauthorizedException('User not found');
+      }
+
+      return user;
+    } catch (error) {
+      throw new UnauthorizedException('Invalid or expired token');
     }
   }
 }

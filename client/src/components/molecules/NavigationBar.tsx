@@ -4,54 +4,53 @@ import Button from "../atoms/Button";
 import { ICON_NAMES } from "../atoms/Icon/IconNames";
 import { Link } from "@tanstack/react-router";
 import { useStore } from "../../store/useStore";
-import { useEffect } from "react";
-import { jwtDecode } from "jwt-decode";
+import { useAuth } from "../../hooks/use-auth";
 
 export default function NavigationBar() {
-  const { isMenuOpen, setIsMenuOpen, setPopUp, setLoginStatus, setUser, loginStatus, user } = useStore();
+  const { isMenuOpen, setIsMenuOpen, setPopUp, loginStatus, currentUser } = useStore();
+  const { handleLogout } = useAuth();
 
-  useEffect(() => {
-    const cookies = document.cookie.split("; ");
-    const accessTokenCookie = cookies.find((cookie) =>
-      cookie.startsWith("accessToken=")
-    );
+  // useEffect(() => {
+  //   const cookies = document.cookie.split("; ");
+  //   const accessTokenCookie = cookies.find((cookie) => cookie.startsWith("accessToken="));
 
-    if (accessTokenCookie) {
-      const accessToken = accessTokenCookie.split("=")[1];
+  //   if (accessTokenCookie) {
+  //     const accessToken = accessTokenCookie.split("=")[1];
 
-      try {
-        const decodedToken = jwtDecode(accessToken) as Record<string, any>;
-        setUser(decodedToken);
-        setLoginStatus(true);
-      } catch (error) {
-        console.error("Invalid token:", error);
-        setUser(null);
-        setLoginStatus(false);
-      }
-      
-    } else {
-      setUser(null);
-      setLoginStatus(false);
-    }
-  }, [setUser, setLoginStatus]);
+  //     try {
+  //       const decodedToken = jwtDecode(accessToken) as Record<string, any>;
+  //       setCurrentUser(decodedToken);
+  //       setLoginStatus(true);
+  //     } catch (error) {
+  //       console.error("Invalid token:", error);
+  //       setCurrentUser(null);
+  //       setLoginStatus(false);
+  //     }
+  //   } else {
+  //     setCurrentUser(null);
+  //     setLoginStatus(false);
+  //   }
+  // }, [setCurrentUser, setLoginStatus]);
 
   // console.log('userID:',user?.id);
 
-  const handleLogout = async () => {
-    const cookies = document.cookie.split(";");
+  // const handleLogout = async () => {
+  //   const cookies = document.cookie.split(";");
 
-    cookies.forEach((cookie) => {
-      const cookieName = cookie.split("=")[0].trim();
-      // Set each cookie to expire in the past
-      document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;`;
-    });
+  //   cookies.forEach((cookie) => {
+  //     const cookieName = cookie.split("=")[0].trim();
+  //     // Set each cookie to expire in the past
+  //     document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;`;
+  //   });
 
-    setLoginStatus(false);
-    setUser(null);
-    setIsMenuOpen();
-    window.location.reload(); // Force reload the page to update the UI and clear cookies
+  //   setLoginStatus(false);
+  //   setCurrentUser(null);
+  //   setIsMenuOpen();
+  //   window.location.reload(); // Force reload the page to update the UI and clear cookies
+  // };
+  const userLogout = async () => {
+    handleLogout();
   };
-
   const isAuthenticated = document.cookie.includes("accessToken");
 
   const displayPopUp = (arg: boolean) => {
@@ -99,20 +98,12 @@ export default function NavigationBar() {
               </Link>
             </li>
             <li>
-              <Link
-                onClick={() => (!loginStatus && displayPopUp(true)) || toggleMenu()}
-                to={(loginStatus && "/posts") || "/"}
-                className="link text-base"
-              >
+              <Link onClick={() => (!loginStatus && displayPopUp(true)) || toggleMenu()} to={(loginStatus && "/posts") || "/"} className="link text-base">
                 See posts
               </Link>
             </li>
             <li>
-              <Link
-                onClick={() => (!loginStatus && displayPopUp(true)) || toggleMenu()}
-                to={(loginStatus && "/ensembles") || "/"}
-                className="link text-base"
-              >
+              <Link onClick={() => (!loginStatus && displayPopUp(true)) || toggleMenu()} to={(loginStatus && "/ensembles") || "/"} className="link text-base">
                 Find ensemble
               </Link>
             </li>
@@ -122,7 +113,7 @@ export default function NavigationBar() {
                 to={(loginStatus && "/profile/$profileId") || "/"}
                 className="link text-base"
                 params={{
-                  profileId: user?.id,
+                  profileId: currentUser?.id,
                 }}
               >
                 Profile
@@ -164,25 +155,14 @@ export default function NavigationBar() {
             )}
             {isAuthenticated && (
               <li className="p-be-8">
-                <Button
-                  size="sm"
-                  iconPosition="top"
-                  buttonState="default"
-                  buttonVariant="secondary"
-                  buttonLabel="Logout"
-                  onClick={handleLogout}
-                  to="/"
-                  className="no-underline w-auto"
-                ></Button>
+                <Button size="sm" iconPosition="top" buttonState="default" buttonVariant="secondary" buttonLabel="Logout" onClick={userLogout} to="/" className="no-underline w-auto"></Button>
               </li>
             )}
           </ul>
         </div>
       )}
 
-      {isMenuOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-10" onClick={toggleMenu}></div>
-      )}
+      {isMenuOpen && <div className="fixed inset-0 bg-black bg-opacity-50 z-10" onClick={toggleMenu}></div>}
     </div>
   );
 }

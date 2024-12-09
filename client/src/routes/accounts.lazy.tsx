@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { createLazyFileRoute, useLocation, useNavigate } from "@tanstack/react-router";
-import { jwtDecode } from "jwt-decode";
 import { useStore } from "../store/useStore";
 import LoginForm from "../components/molecules/LoginForm";
 import SignupForm from "../components/molecules/SignupForm";
-import { useFetch } from "../hooks/use-fetch";
+import { useAuth } from "../hooks/use-auth";
+import TextBody from "../components/atoms/TextBody";
 
 export const Route = createLazyFileRoute("/accounts")({
   component: AccountsPage,
@@ -15,15 +15,16 @@ function AccountsPage() {
   const searchParams = new URLSearchParams(location.search);
   const intent = searchParams.get("intent"); // Get the query parameter 'intent'
   const navigate = useNavigate(); // To handle navigation
-  // const currentUser = useStore((state) => state.user);
-  const setUser = useStore((state) => state.setUser);
-  const setLoginStatus = useStore((state) => state.setLoginStatus);
+
+  const currentUser = useStore((state) => state.currentUser);
+
+  const { handleLogin, handleSignup, error } = useAuth();
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-
+  console.log("currentUser", currentUser);
   const [signupData, setSignupData] = useState({
     firstName: "",
     lastName: "",
@@ -34,31 +35,32 @@ function AccountsPage() {
     isAvailable: false,
   });
 
-  const loginFetch = useFetch(
-    null,
-    "/auth/login",
-    "POST",
-    {
-      "Content-Type": "application/json",
-    },
-    formData
-  );
+  // const loginFetch = useFetch(
+  //   null,
+  //   "/auth/login",
+  //   "POST",
+  //   {
+  //     "Content-Type": "application/json",
+  //   },
+  //   formData
+  // );
 
-  const signupFetch = useFetch(
-    null,
-    "/auth/signup",
-    "POST",
-    {
-      "Content-Type": "application/json",
-    },
-    signupData
-  );
+  // const signupFetch = useFetch(
+  //   null,
+  //   "/auth/signup",
+  //   "POST",
+  //   {
+  //     "Content-Type": "application/json",
+  //   },
+  //   signupData
+  // );
 
-  const handleChange = (name: string, value: string | boolean) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
     if (intent === "register") {
       setSignupData((prevData) => ({
         ...prevData,
-        [name]: value,
+        [name]: type === "checkbox" ? checked : value,
       }));
     } else {
       setFormData((prevData) => ({
@@ -68,61 +70,36 @@ function AccountsPage() {
     }
   };
 
-  const handleLoginSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    loginFetch.triggerFetch();
-  };
-
-  const handleSignupSubmit = async (formData: typeof signupData) => {
-    signupFetch.triggerFetch();
-  };
-
-  //TODO: check if the user already has an access token
-  useEffect(() => {
-    if (loginFetch.data) {
-      const cookies = document.cookie.split("; ");
-      const accessTokenCookie = cookies.find((cookie) => cookie.startsWith("accessToken="));
-
-      if (accessTokenCookie) {
-        const accessToken = accessTokenCookie.split("=")[1];
-        const decodedToken = jwtDecode(accessToken);
-
-        setUser(decodedToken); // Update user data in state
-        setLoginStatus(true); // Set login status to true
-      }
-
-      alert("Login successful! You will be riderected to the home page :)");
-      navigate({ to: "/" });
-    }
-
-    if (loginFetch.error) {
-      alert(`Login failed: ${loginFetch.error}`);
-    }
-  }, [loginFetch.data, loginFetch.error, navigate, setUser, setLoginStatus]);
-
-  useEffect(() => {
-    if (signupFetch.error) {
-      if (signupFetch.error.includes("User already exists")) {
-        alert(`Email already in use. Try to log in instead.`);
+    if (intent === "register") {
+      console.log("signupData", signupData);
+      await handleSignup(signupData);
+      if (!error) {
+        alert("Signup successful! Redirecting...");
         navigate({ to: "/accounts", search: { intent: "login" } });
-      } else {
-        alert(`Signup failed: ${signupFetch.error}`);
       }
-    } else if (signupFetch.data) {
-      alert("Signup successful!  You will be riderected to the login page :)");
-      navigate({ to: "/accounts", search: { intent: "login" } });
+    } else {
+      console.log("login", formData);
+      await handleLogin(formData);
+      if (!error) {
+        alert("Login successful! Redirecting...");
+        navigate({ to: "/" });
+      }
     }
-  }, [signupFetch.data, signupFetch.error]);
+  };
 
   return (
     <div>
-      {intent === "register" && (
-        <SignupForm formData={signupData} onChange={handleChange} onSubmit={handleSignupSubmit} />
-      )}
-      {intent === "login" && (
-        <LoginForm formData={formData} onChange={handleChange} onSubmit={handleLoginSubmit} />
-      )}
-      {!intent && <p>Please select login or register from the navigation.</p>}
+      {intent === "register" && <SignupForm formData={signupData} onChange={handleChange} onSubmit={handleSubmit} />}
+      {intent === "login" && <LoginForm formData={formData} onChange={handleChange} onSubmit={handleSubmit} />}
+      {!intent && <TextBody variant="p">Please select login or register from the navigation.</TextBody>}
+      {/* {error && (
+        <TextBody variant="p" className="text-red-500">
+          {error}
+        </TextBody>
+      )} */}
+      {/* {loading && <TextBody variant="p">Loading...</TextBody>} */}
     </div>
   );
 }

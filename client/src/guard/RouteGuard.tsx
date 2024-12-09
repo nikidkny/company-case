@@ -4,36 +4,34 @@ import { useStore } from "../store/useStore";
 import { jwtDecode } from "jwt-decode";
 
 const AuthGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const setUser = useStore((state) => state.setUser);
+  const setCurrentUser = useStore((state) => state.setCurrentUser);
   const setLoginStatus = useStore((state) => state.setLoginStatus);
 
   const [isLoading, setIsLoading] = useState(true); // Prevent redirect until check is complete
 
   useEffect(() => {
     const cookies = document.cookie.split("; ");
-    const accessTokenCookie = cookies.find((cookie) =>
-      cookie.startsWith("accessToken=")
-    );
+    const accessTokenCookie = cookies.find((cookie) => cookie.startsWith("accessToken="));
 
     if (accessTokenCookie) {
       const accessToken = accessTokenCookie.split("=")[1];
 
       try {
         const decodedToken = jwtDecode(accessToken) as Record<string, any>;
-        setUser(decodedToken);
+        setCurrentUser(decodedToken);
         setLoginStatus(true);
       } catch (error) {
         console.error("Invalid token:", error);
-        setUser(null);
+        setCurrentUser(null);
         setLoginStatus(false);
       }
     } else {
-      setUser(null);
+      setCurrentUser(null);
       setLoginStatus(false);
     }
 
     setIsLoading(false); // Authentication check is complete
-  }, [setUser, setLoginStatus]);
+  }, [setCurrentUser, setLoginStatus]);
 
   const isAuthenticated = useStore((state) => state.loginStatus);
 
@@ -42,9 +40,7 @@ const AuthGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   }
 
   if (!isAuthenticated) {
-    return (
-      <Navigate to="/accounts" search={{ intent: "login" }} replace={true} />
-    );
+    return <Navigate to="/accounts" search={{ intent: "login" }} replace={true} />;
   }
 
   return <>{children}</>;

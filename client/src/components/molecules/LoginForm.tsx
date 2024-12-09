@@ -4,8 +4,8 @@ import Button from "../atoms/Button";
 
 interface LoginFormProps {
   formData: { email: string; password: string };
-  onChange: (name: string, value: string) => void;
-  onSubmit: (e: React.FormEvent) => Promise<void>;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSubmit: (e: React.FormEvent) => void;
 }
 
 export default function LoginForm({ formData, onChange, onSubmit }: LoginFormProps) {
@@ -17,14 +17,14 @@ export default function LoginForm({ formData, onChange, onSubmit }: LoginFormPro
         </TextHeadline>
 
         <div className="w-80">
-          <TextInput inputType="email" value={formData.email} onChange={(value) => onChange("email", value)} placeholder="Enter your email" id="email" name="email" />
+          <TextInput inputType="email" value={formData.email} onChange={onChange} placeholder="Enter your email" id="email" name="email" />
         </div>
 
         <div className="w-80">
-          <TextInput inputType="password" value={formData.password} onChange={(value) => onChange("password", value)} placeholder="Enter your password" id="password" name="password" />
+          <TextInput inputType="password" value={formData.password} onChange={onChange} placeholder="Enter your password" id="password" name="password" />
         </div>
 
-        <Button buttonState="default" buttonVariant="primary" buttonLabel="Login" iconPosition="none" />
+        <Button buttonState="default" buttonVariant="primary" type="submit" buttonLabel="Login" iconPosition="none" />
       </form>
     </div>
   );
