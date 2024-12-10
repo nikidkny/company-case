@@ -15,36 +15,29 @@ export class AuthController {
     return this.authService.signup(createUserDto);
   }
 
-  //TODO: maybe check if the user is already logged in before loggin in again and issue new tokens.
+  //TODO: 
+  // - check if the user is already logged in before loggin in again and issue new tokens.
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(@Body() body: { email: string, password: string }, @Res() res: Response, @Req() req: Request) {
-    // Check if the user already has a refresh token (i.e., already logged in)
-    const refreshToken = req.cookies['refreshCode'];
-
-    if (refreshToken) {
-      console.log("Already loggedin");
-      
-      // If a refresh token exists, return a message and do nothing
-      return res.json({ message: 'User already logged in' });
-    }
-
+    //TODO: Check if the user already
+    
     await this.authService.login(body.email, body.password, res);
     return res.json({ message: 'Login successful' });
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   async logout(@Res() res: Response) {
     // Clear both the accessToken and refreshToken cookies
     res.clearCookie('accessToken', { httpOnly: false, secure: process.env.NODE_ENV === 'production' ? true : false, });
     res.clearCookie('refreshToken', { httpOnly: false,secure: process.env.NODE_ENV === 'production' ? true : false, });
-
     return res.json({ message: 'Logout successful' });
   }
 
-  //TODO: implement in the client-side to detect '401 unauthorised' and call te refresh endpoint
+  //TODO:
+  // - implement in the client-side to detect '401 unauthorised' and call te refresh endpoint
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
   async refresh(@Body('refreshToken') refreshToken: string, @Res() res: Response) {
@@ -54,14 +47,5 @@ export class AuthController {
     res.cookie('accessToken', accessToken, { httpOnly: false, secure: process.env.NODE_ENV === 'production' ? true : false });
 
     return res.json({ message: 'Access token refreshed' });
-  }
-
-  /* Example on how to use guard:*/
-  // This route is protected by the JwtAuthGuard
-  @UseGuards(JwtAuthGuard)
-  @Post('protected')
-  @HttpCode(HttpStatus.OK)
-  async protectedRoute(@Body() body) {
-    return { message: 'You have access to this route' };
-  }
+  } 
 }

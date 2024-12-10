@@ -21,6 +21,7 @@ export class AuthService {
   ) {}
 
   async signup(createUserDto: CreateUserDto): Promise<{ message: string }> {
+    // Extracts attributes from createUserDto
     const { firstName, lastName, email, password, birthdate, isAvailable } =
       createUserDto;
 
@@ -76,8 +77,6 @@ export class AuthService {
         userFound.password,
       );
       if (!isPasswordValid) {
-        console.log('NOT SAME PASSWORD');
-
         throw new BadRequestException('Invalid credentials');
       }
 
@@ -103,7 +102,7 @@ export class AuthService {
         sameSite: 'strict', // Prevents cross-site requests
       });
 
-      res.cookie('refreshCode', refreshToken, {
+      res.cookie('refreshToken', refreshToken, {
         maxAge: 24 * 60 * 60 * 1000, // 1 day
         httpOnly: false, // Ensures the cookie is not accessible via JavaScript
         secure: process.env.NODE_ENV === 'production' ? true : false,
@@ -119,12 +118,14 @@ export class AuthService {
         error instanceof NotFoundException ||
         error instanceof BadRequestException
       ) {
+        console.error(error);
         throw error;
       }
       throw new InternalServerErrorException('An unexpected error occurred');
     }
   }
 
+  //TODO: improve refresh token
   async refreshToken(refreshToken: string) {
     try {
       //Verify refresh token

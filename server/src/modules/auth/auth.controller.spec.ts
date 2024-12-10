@@ -10,7 +10,6 @@ import { JwtModule } from '@nestjs/jwt';
 import * as request from 'supertest';
 import { ConfigService } from '@nestjs/config';
 import { JwtAuthStrategy } from './jwt.strategy';
-import { log } from 'console';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
@@ -50,6 +49,7 @@ describe('AuthController (e2e)', () => {
     userModel = moduleFixture.get(getModelToken(User.name));
   });
 
+  /*Signup*/
   it('should create a new user (signup)', async () => {
     // Define a sample user DTO with unique data for the test
     const createUserDto = {
@@ -72,6 +72,7 @@ describe('AuthController (e2e)', () => {
     expect(response.body.message).toBe('User registered successfully');
   });
 
+  /*Login existing user*/
   it('should login an existing user and return a JWT token', async () => {
     // Check if the user exists in the database
     //POST request. IMPORTANT: Keep same credentials as the test for signup
@@ -110,9 +111,24 @@ describe('AuthController (e2e)', () => {
     expect(decodedToken).toHaveProperty('email', 'john.doe@example.com'); // Ensure email matches
   });
 
+  /*Login not existing user expecting not found*/
+  it('should login an non existing user and get a not found exception', async() => {
+    const loginResponse = await request(app.getHttpServer())
+      .post('/auth/login')
+      .send({
+        email: 'jn.de@example.com',
+        password: 'password',
+      })
+      .expect(HttpStatus.NOT_FOUND);
+  })
+  // TODO:
+  // - Login existing user with wrong credentials expecting
+  // - Refresh Token
+
+  /*Accessing protected route with not logged in user*/
   it('should return 401 if no cookies are present', async () => {
     const response = await request(app.getHttpServer())
-      .post('/auth/protected')
+      .post('/auth/logout')
       .expect(HttpStatus.UNAUTHORIZED);
 
     expect(response.body.message).toBe('Unauthorized');
