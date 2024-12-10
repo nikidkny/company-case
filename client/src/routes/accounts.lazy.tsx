@@ -15,75 +15,15 @@ function AccountsPage() {
   const searchParams = new URLSearchParams(location.search);
   const intent = searchParams.get("intent"); // Get the query parameter 'intent'
   const navigate = useNavigate(); // To handle navigation
-  // const currentUser = useStore((state) => state.user);
-
   // Zustand store setters for managing user state and login status
   const setUser = useStore((state) => state.setUser);
   const setLoginStatus = useStore((state) => state.setLoginStatus);
 
-  // State to manage login form data
-  const [loginData, setLoginData] = useState({
-    email: "",
-    password: "",
-  });
-
-  // State to manage signup form data
-  const [signupData, setSignupData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    birthdate: "",
-    isAvailable: false,
-  });
-
-  //TODO: 
-  // - clean code
-
   // State to hold validation error messages for the signup form
   const [validationErrors, setValidationErrors] = useState<string | string[]>([]);
 
-  // API hooks for login and signup
-  const loginFetch = useFetch(
-    null,
-    "/auth/login",
-    "POST",
-    {
-      "Content-Type": "application/json",
-    },
-    loginData
-  );
-
-  const signupFetch = useFetch(
-    null,
-    "/auth/signup",
-    "POST",
-    {
-      "Content-Type": "application/json",
-    },
-    signupData
-  );
-
-  // Generalized change handler for both forms
-  const handleChange = (name: string, value: string | boolean) => {
-    if (intent === "register") {
-      // Update signup form data
-      setSignupData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
-    } else {
-      // Update login form data
-      setLoginData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
-    }
-  };
-
   // Function to validate signup form data
-  const validateForm = (signupFormData?: typeof signupData, loginFormData?: typeof loginData) => {
+  const validateForm = (signupFormData: typeof signupData) => {
     const errors: { [key: string]: string } = {};
     if (signupFormData) {
       const nameRegex = /^[A-Za-z\s]+$/;
@@ -123,42 +63,50 @@ function AccountsPage() {
       if (signupFormData.password !== signupFormData.confirmPassword) {
         errors.confirmPassword = "Passwords do not match";
       }
-    } else if (loginFormData) {
-      //TODO: 
     }
-
     return errors;
   };
 
-  // Handle login form submission
-  const handleLoginSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    // Trim input values before validation
-    const trimmedData = {
-      email: loginData.email.trim(),
-      password: loginData.password.trim(),
-    };
-
-    // Validate form data for login (pass the trimmedData)
-    const errors = validateForm(undefined, trimmedData);
-
-    // Convert errors object into an array of error messages
-    const errorMessages = Object.values(errors);
-
-    if (errorMessages.length > 0) {
-      // If there are validation errors, set them
-      setValidationErrors(errorMessages);
-      return;
+  // Generalized change handler for both forms
+  const handleChange = (name: string, value: string | boolean) => {
+    if (intent === "register") {
+      // Update signup form data
+      setSignupData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    } else {
+      // Update login form data
+      setLoginData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
     }
-
-    // Clear previous validation errors if no issues
-    setValidationErrors([]);
-
-    // Trigger login fetch with the trimmed data
-    loginFetch.triggerFetch();
   };
 
+  /*Signup*/
+  // State to manage signup form data
+  const [signupData, setSignupData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    birthdate: "",
+    isAvailable: false,
+  });
+
+
+  // API hooks for signup
+  const signupFetch = useFetch(
+    null,
+    "/auth/signup",
+    "POST",
+    {
+      "Content-Type": "application/json",
+    },
+    signupData
+  );
 
   // Handle signup form submission
   const handleSignupSubmit = (formData: typeof signupData) => {
@@ -192,13 +140,66 @@ function AccountsPage() {
     signupFetch.triggerFetch();
   };
 
-  // Combine frontend and backend errors
-  const combinedErrors = [
-    ...validationErrors,  // Frontend validation errors
-    ...(intent === "register" && signupFetch.error ? signupFetch.error : []),  // Backend errors for register
-    ...(intent === "login" && loginFetch.error ? loginFetch.error : []),  // Backend errors for login
-  ];
+  // Handle effects for signup API response
+  useEffect(() => {
+    if (signupFetch.error) {
+      if (signupFetch.error.includes("User already exists")) {
+        alert(`Email already in use. Try to log in instead.`);
+        navigate({ to: "/accounts", search: { intent: "login" } });
+      }
+    } else if (signupFetch.data) {
+      alert("Signup successful!  You will be riderected to the login page :)");
+      // Reset signup form data and error messages
+      setSignupData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        birthdate: "",
+        isAvailable: false,
+      });
 
+      navigate({ to: "/accounts", search: { intent: "login" } });
+    }
+  }, [signupFetch.data, signupFetch.error]);
+
+  /*Login*/
+  // State to manage login form data
+  const [loginData, setLoginData] = useState({
+    email: "",
+    password: "",
+  });
+
+  // API hooks for login
+  const loginFetch = useFetch(
+    null,
+    "/auth/login",
+    "POST",
+    {
+      "Content-Type": "application/json",
+    },
+    loginData
+  );
+
+  // Handle login form submission
+  const handleLoginSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Trim all inputs for login
+    const trimmedData = {
+      email: loginData.email.trim(),
+      password: loginData.password.trim(),
+    };
+
+    // Update the state with trimmed data (optional, if you need state to reflect trimmed values)
+    setLoginData(trimmedData);
+
+    // Trigger login fetch with the trimmed data
+    loginFetch.triggerFetch();
+  };
+
+  // Handle effects for login API response
   useEffect(() => {
     if (loginFetch.data) {
       const cookies = document.cookie.split("; ");
@@ -223,29 +224,12 @@ function AccountsPage() {
     }
   }, [loginFetch.data, loginFetch.error, navigate, setUser, setLoginStatus]);
 
-  // Handle effects for login API response
-  useEffect(() => {
-    if (signupFetch.error) {
-      if (signupFetch.error.includes("User already exists")) {
-        alert(`Email already in use. Try to log in instead.`);
-        navigate({ to: "/accounts", search: { intent: "login" } });
-      }
-    } else if (signupFetch.data) {
-      alert("Signup successful!  You will be riderected to the login page :)");
-      // Reset signup form data and error messages
-      setSignupData({
-        firstName: "",
-        lastName: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-        birthdate: "",
-        isAvailable: false,
-      });
-
-      navigate({ to: "/accounts", search: { intent: "login" } });
-    }
-  }, [signupFetch.data, signupFetch.error]);
+  // Combine frontend and backend errors
+  const combinedErrors = [
+    ...validationErrors,  // Frontend validation errors
+    ...(intent === "register" && signupFetch.error ? signupFetch.error : []),  // Backend errors for register
+    ...(intent === "login" && loginFetch.error ? loginFetch.error : []),  // Backend errors for login
+  ];
 
   return (
     <div>
