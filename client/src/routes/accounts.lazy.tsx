@@ -31,9 +31,14 @@ function AccountsPage() {
       // Validate first and last name (letters only)
       if (!nameRegex.test(signupFormData.firstName.trim())) {
         errors.firstName = "First name must contain only letters";
+      } else if (signupFormData.firstName.trim().length < 2) {
+        errors.firstName = "First name must be at least 2 characters";
       }
+
       if (!nameRegex.test(signupFormData.lastName.trim())) {
         errors.lastName = "Last name must contain only letters";
+      } else if (signupFormData.lastName.trim().length < 2) {
+        errors.lastName = "Last name must be at least 2 characters";
       }
 
       // Validate email format
