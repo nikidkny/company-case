@@ -5,9 +5,9 @@ import { Types } from "mongoose";
 export class User_Ensemble {
     _id: Types.ObjectId;
     @Prop({ required: true })
-    user_id: string; //TODO: check if it is the right type
+    user_id: string; 
     @Prop({ required: true })
-    ensemble_id: string;//TODO: check if it is the right type
+    ensemble_id: string;
     @Prop({ required: true })
     joined_at: Date;
 }

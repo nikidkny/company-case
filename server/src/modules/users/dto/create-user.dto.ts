@@ -1,22 +1,32 @@
 import { Type } from 'class-transformer';
-import { IsNotEmpty, IsEmail, IsDate, IsBoolean } from 'class-validator';
+import { IsNotEmpty, IsEmail, IsDate, IsBoolean, IsString, MinLength } from 'class-validator';
 
 
-//this is what the data the user will need to fill in when creating their profile. Very basic validation for now
+//this is what the data the user will need to fill in when creating their profile.
 export class CreateUserDto {
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'First name should not be empty' })
+  @IsString({ message: 'First name must be a string' })
   firstName: string;
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Last name should not be empty' })
+  @IsString({ message: 'Last name must be a string' })
   lastName: string;
-  @IsEmail()
+  @IsNotEmpty({ message: 'Email should not be empty' })
+  @IsEmail({}, { message: 'Email must be a valid email address' })
   email: string;
-  @IsNotEmpty()
+
+  @IsNotEmpty({ message: 'Password should not be empty' })
+  @MinLength(8, { message: 'Password must be at least 6 characters long' })
   password: string;
-  @IsNotEmpty()
-  @IsDate()
-  @Type(() => Date) // Use Type to transform the string into a Date object
+
+  @IsNotEmpty({ message: 'Confirm password should not be empty' })
+  confirmPassword: string;
+
+  @IsNotEmpty({ message: 'Birthdate should not be empty' })
+  @Type(() => Date)
+  @IsDate({ message: 'Birthdate must be a valid date' })
   birthdate: Date;
-  @IsNotEmpty()
-  @IsBoolean()
+
+  @IsNotEmpty({ message: 'Availability should not be empty' })
+  @IsBoolean({ message: 'isAvailable must be a boolean value' })
   isAvailable: boolean;
 }
