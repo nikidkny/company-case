@@ -1,3 +1,5 @@
+//utility functions to help clear out cookies and log out the user
+
 export const clearCookies = () => {
   const cookies = document.cookie.split(";");
   cookies.forEach((cookie) => {
@@ -7,6 +9,7 @@ export const clearCookies = () => {
   });
 };
 
+//resets the user store
 export const logoutUser = (setLoginStatus: (status: boolean) => void, resetUser: () => void) => {
   clearCookies();
   setLoginStatus(false);

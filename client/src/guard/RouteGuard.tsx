@@ -7,12 +7,13 @@ import HomePage from "../pages/HomePage";
 
 const AuthGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
-  const { userId, decodedToken } = getUserIdFromCookie();
+  const { userId } = getUserIdFromCookie();
   const { setUser, resetUser, setLoginStatus, loginStatus } = useStore();
   const { data: fetchedUser, triggerFetch: userFetchTrigger } = useFetch<User>({}, userId !== null ? `/users/${userId}` : null, "GET");
 
-  //setting the authenticated user and storing it
+  //setting the authenticated user and storing it in store
   useEffect(() => {
+    //if the user is logged in and there's cookies for them - fetching the user data
     if (userId) {
       userFetchTrigger();
     } else {
@@ -21,20 +22,13 @@ const AuthGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   }, [userId, userFetchTrigger]);
 
   useEffect(() => {
+    //if the user data has been fetched - store that data
     if (fetchedUser) {
-      setUser(fetchedUser);
-    } else {
-      resetUser();
-    }
-  }, [fetchedUser]);
-
-  useEffect(() => {
-    if (decodedToken) {
       try {
         setUser(fetchedUser);
         setLoginStatus(true);
       } catch (error) {
-        console.error("Invalid token:", error);
+        console.error("Couldn't retrieve user", error);
         resetUser();
         setLoginStatus(false);
       }
@@ -42,13 +36,14 @@ const AuthGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       resetUser();
       setLoginStatus(false);
     }
-    setIsLoading(false); // Authentication check is complete
+    setIsLoading(false);
   }, [fetchedUser]);
 
+  //optionally added - should get some love if we want to use it
   if (isLoading) {
-    return <div>Loading...</div>; // Optional: A spinner or loading state
+    return <div>Loading...</div>;
   }
-
+  //when the user is not logged in, this is showing them the default homepage
   if (!loginStatus) {
     return <HomePage />;
   }
