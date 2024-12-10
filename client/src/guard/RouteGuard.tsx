@@ -7,7 +7,7 @@ import HomePage from "../pages/HomePage";
 
 const AuthGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
-  const { userId } = getUserIdFromCookie();
+  const { userId, decodedToken } = getUserIdFromCookie();
   const { setUser, resetUser, setLoginStatus, loginStatus } = useStore();
   const { data: fetchedUser, triggerFetch: userFetchTrigger } = useFetch<User>({}, userId !== null ? `/users/${userId}` : null, "GET");
 
@@ -22,8 +22,8 @@ const AuthGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   }, [userId, userFetchTrigger]);
 
   useEffect(() => {
-    //if the user data has been fetched - store that data
-    if (fetchedUser) {
+    //if the user data has been fetched and the tokens are present - store the user data
+    if (decodedToken && fetchedUser) {
       try {
         setUser(fetchedUser);
         setLoginStatus(true);
