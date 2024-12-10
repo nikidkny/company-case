@@ -10,7 +10,6 @@ export const Route = createLazyFileRoute("/accounts")({
   component: AccountsPage,
 });
 
-
 function AccountsPage() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -38,6 +37,9 @@ function AccountsPage() {
     birthdate: "",
     isAvailable: false,
   });
+
+  //TODO: 
+  // - clean code
 
   // State to hold validation error messages for the signup form
   const [validationErrors, setValidationErrors] = useState<string | string[]>([]);
@@ -83,9 +85,7 @@ function AccountsPage() {
   // Function to validate signup form data
   const validateForm = (signupFormData?: typeof signupData, loginFormData?: typeof loginData) => {
     const errors: { [key: string]: string } = {};
-
     if (signupFormData) {
-      console.log('SIGNUP');
       const nameRegex = /^[A-Za-z\s]+$/;
 
       // Validate first and last name (letters only)
@@ -124,9 +124,7 @@ function AccountsPage() {
         errors.confirmPassword = "Passwords do not match";
       }
     } else if (loginFormData) {
-      //TODO: implement
-      console.log("LOGIN");
-      
+      //TODO: 
     }
 
     return errors;
@@ -135,28 +133,28 @@ function AccountsPage() {
   // Handle login form submission
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     // Trim input values before validation
     const trimmedData = {
       email: loginData.email.trim(),
       password: loginData.password.trim(),
     };
-  
+
     // Validate form data for login (pass the trimmedData)
-    const errors = validateForm(undefined, trimmedData); 
-  
+    const errors = validateForm(undefined, trimmedData);
+
     // Convert errors object into an array of error messages
     const errorMessages = Object.values(errors);
-  
+
     if (errorMessages.length > 0) {
       // If there are validation errors, set them
       setValidationErrors(errorMessages);
       return;
     }
-  
+
     // Clear previous validation errors if no issues
     setValidationErrors([]);
-  
+
     // Trigger login fetch with the trimmed data
     loginFetch.triggerFetch();
   };
@@ -197,8 +195,8 @@ function AccountsPage() {
   // Combine frontend and backend errors
   const combinedErrors = [
     ...validationErrors,  // Frontend validation errors
-    ...(intent === "register" && signupFetch.error ? signupFetch.error : []),  // Backend errors for register, only if not null
-    ...(intent === "login" && loginFetch.error ? loginFetch.error : []),  // Backend errors for login, only if not null
+    ...(intent === "register" && signupFetch.error ? signupFetch.error : []),  // Backend errors for register
+    ...(intent === "login" && loginFetch.error ? loginFetch.error : []),  // Backend errors for login
   ];
 
   useEffect(() => {
@@ -215,10 +213,13 @@ function AccountsPage() {
       }
 
       alert("Login successful! You will be redirected to the home page :)");
+      setLoginData({
+        email: "",
+        password: "",
+      })
       navigate({ to: "/" });
     } else if (loginFetch.error) {
       console.log("Error", loginFetch.error);
-
     }
   }, [loginFetch.data, loginFetch.error, navigate, setUser, setLoginStatus]);
 
@@ -261,7 +262,7 @@ function AccountsPage() {
           formData={loginData}
           onChange={handleChange}
           onSubmit={handleLoginSubmit}
-          errorMessages={combinedErrors}
+          errorMessages={loginFetch.error}
         />
       )}
       {!intent && <p>Please select login or register from the navigation.</p>}

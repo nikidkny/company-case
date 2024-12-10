@@ -2,6 +2,7 @@ import TextHeadline from "../atoms/TextHeadline";
 import TextInput from "../atoms/TextInput";
 import Button from "../atoms/Button";
 import { getFieldErrorMessage } from "../../utilities/errorUtils";
+import TextBody from "../atoms/TextBody";
 
 interface LoginFormProps {
   formData: { email: string; password: string };
@@ -16,11 +17,13 @@ export default function LoginForm({
   onSubmit,
   errorMessages
 }: LoginFormProps) {
-
+  
     // Check if 'User not found' is in error messages, and display a custom message
-    const displayErrorMessage = errorMessages?.includes("User not found")
-    ? "Invalid credentials"
-    : null;
+    const displayErrorMessage = errorMessages?.some((error) =>
+      ["User not found", "Invalid credentials"].includes(error)
+    )
+      ? "Invalid credentials"
+      : null;
 
   return (
     <div className="flex flex-col items-center">
@@ -37,8 +40,7 @@ export default function LoginForm({
             placeholder="Enter your email"
             id="email"
             name="email"
-            isValid={!getFieldErrorMessage(errorMessages, 'empty')}
-            validityMsg={getFieldErrorMessage(errorMessages, 'Credential')|| getFieldErrorMessage(errorMessages, 'Email') || undefined}
+            isValid={!displayErrorMessage}
             required={true}
           />
         </div>
@@ -51,14 +53,13 @@ export default function LoginForm({
             placeholder="Enter your password"
             id="password"
             name="password"
-            isValid={!getFieldErrorMessage(errorMessages, 'empty')}
-            validityMsg={getFieldErrorMessage(errorMessages, 'Credential') || getFieldErrorMessage(errorMessages, 'Password') || undefined}
+            isValid={!displayErrorMessage}
             required={true}
           />
         </div>
 
         {displayErrorMessage && (
-          <div className="text-red-500 text-sm mt-2">{displayErrorMessage}</div>
+          <TextBody className="text-red-500 text-sm mt-1" >{errorMessages}</TextBody>
         )}
 
         <Button buttonState="default" buttonVariant="primary" buttonLabel="Login" iconPosition="none" />
