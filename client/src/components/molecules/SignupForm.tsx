@@ -50,6 +50,7 @@ export default function SignupForm({
           name="firstName"
           isValid={!getFieldErrorMessage(errorMessages, 'First name')}
           validityMsg={getFieldErrorMessage(errorMessages, 'First name') || undefined}
+          required={true}
         />
 
         <TextInput
@@ -61,6 +62,7 @@ export default function SignupForm({
           name="lastName"
           isValid={!getFieldErrorMessage(errorMessages, 'Last name')}
           validityMsg={getFieldErrorMessage(errorMessages, 'Last name') || undefined}
+          required={true}
         />
 
         <TextInput
@@ -73,6 +75,7 @@ export default function SignupForm({
           name="email"
           isValid={!getFieldErrorMessage(errorMessages, 'Email')}
           validityMsg={getFieldErrorMessage(errorMessages, 'Email') || undefined}
+          required={true}
         />
 
         <TextInput
@@ -84,6 +87,7 @@ export default function SignupForm({
           name="password"
           isValid={!getFieldErrorMessage(errorMessages, 'Password')}
           validityMsg={getFieldErrorMessage(errorMessages, 'Password') || undefined}
+          required={true}
         />
 
         <TextInput
@@ -95,6 +99,7 @@ export default function SignupForm({
           name="confirmPassword"
           isValid={!getFieldErrorMessage(errorMessages, 'Confirm')}
           validityMsg={getFieldErrorMessage(errorMessages, 'match') || getFieldErrorMessage(errorMessages, 'Confirm') || undefined}
+          required={true}
         />
 
         <TextInput
@@ -106,6 +111,7 @@ export default function SignupForm({
           name="birthdate"
           isValid={!getFieldErrorMessage(errorMessages, 'Birthdate') }
           validityMsg={getFieldErrorMessage(errorMessages, 'Birthdate') || undefined}
+          required={true}
         />
 
         <Checkbox

@@ -88,7 +88,7 @@ function AccountsPage() {
       console.log('SIGNUP');
       const nameRegex = /^[A-Za-z\s]+$/;
 
-      // Validate first and last name (letters only) TODO: add if empty to all 
+      // Validate first and last name (letters only)
       if (!nameRegex.test(signupFormData.firstName.trim())) {
         errors.firstName = "First name must contain only letters";
       }

@@ -39,6 +39,7 @@ export default function LoginForm({
             name="email"
             isValid={!getFieldErrorMessage(errorMessages, 'empty')}
             validityMsg={getFieldErrorMessage(errorMessages, 'Credential')|| getFieldErrorMessage(errorMessages, 'Email') || undefined}
+            required={true}
           />
         </div>
 
@@ -52,6 +53,7 @@ export default function LoginForm({
             name="password"
             isValid={!getFieldErrorMessage(errorMessages, 'empty')}
             validityMsg={getFieldErrorMessage(errorMessages, 'Credential') || getFieldErrorMessage(errorMessages, 'Password') || undefined}
+            required={true}
           />
         </div>
 
