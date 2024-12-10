@@ -1,50 +1,56 @@
 import React, { useEffect, useState } from "react";
 import { Navigate } from "@tanstack/react-router";
 import { useStore } from "../store/useStore";
-import { jwtDecode } from "jwt-decode";
+import { getUserIdFromCookie } from "../hooks/getCookies";
+import { useFetch } from "../hooks/use-fetch";
+import { User } from "../types/UserType";
 
 const AuthGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const setUser = useStore((state) => state.setUser);
-  const setLoginStatus = useStore((state) => state.setLoginStatus);
+  const [isLoading, setIsLoading] = useState(true);
+  const { userId, decodedToken } = getUserIdFromCookie();
+  const { setUser, resetUser, setLoginStatus, loginStatus } = useStore();
+  const { data: fetchedUser, triggerFetch: userFetchTrigger } = useFetch<User>({}, userId !== null ? `/users/${userId}` : null, "GET");
 
-  const [isLoading, setIsLoading] = useState(true); // Prevent redirect until check is complete
+  //setting the authenticated user and storing it
+  useEffect(() => {
+    if (userId) {
+      userFetchTrigger();
+    } else {
+      return;
+    }
+  }, [userId, userFetchTrigger]);
 
   useEffect(() => {
-    const cookies = document.cookie.split("; ");
-    const accessTokenCookie = cookies.find((cookie) =>
-      cookie.startsWith("accessToken=")
-    );
+    if (fetchedUser) {
+      setUser(fetchedUser);
+    } else {
+      resetUser();
+    }
+  }, [fetchedUser]);
 
-    if (accessTokenCookie) {
-      const accessToken = accessTokenCookie.split("=")[1];
-
+  useEffect(() => {
+    if (decodedToken) {
       try {
-        const decodedToken = jwtDecode(accessToken) as Record<string, any>;
-        setUser(decodedToken);
+        setUser(fetchedUser);
         setLoginStatus(true);
       } catch (error) {
         console.error("Invalid token:", error);
-        setUser(null);
+        resetUser();
         setLoginStatus(false);
       }
     } else {
-      setUser(null);
+      resetUser();
       setLoginStatus(false);
     }
-
     setIsLoading(false); // Authentication check is complete
-  }, [setUser, setLoginStatus]);
-
-  const isAuthenticated = useStore((state) => state.loginStatus);
+  }, [fetchedUser]);
 
   if (isLoading) {
     return <div>Loading...</div>; // Optional: A spinner or loading state
   }
 
-  if (!isAuthenticated) {
-    return (
-      <Navigate to="/accounts" search={{ intent: "login" }} replace={true} />
-    );
+  if (!loginStatus) {
+    return <Navigate to="/accounts" search={{ intent: "login" }} replace={true} />;
   }
 
   return <>{children}</>;

@@ -7,7 +7,7 @@ import DividerWithText from "../atoms/DividerWithText";
 import { useStore } from "../../store/useStore";
 
 export default function Hero() {
-  const { popUp, setPopUp, loginStatus, setIsMenuOpen } = useStore();
+  const { popUp, setPopUp, loginStatus, setIsMenuOpen, user } = useStore();
   const displayPopUp = (arg: boolean) => {
     setPopUp(arg);
   };
@@ -24,7 +24,7 @@ export default function Hero() {
           {(!loginStatus && <Icon name={ICON_NAMES.hero_image} viewBox={"0 0 470 325.475"} className="w-full h-auto" />) || <Icon name={ICON_NAMES.profile_welcome} viewBox={"0 0 153.993 159.24"} className="w-full h-auto" />}
         </div>
         <TextHeadline size="sm" variant="h1" className="pt-6 pb-8">
-          {(!loginStatus && "A place where musicians find other musicians and play music together") || `Welcome back '${"user.name"}'!`}
+          {(!loginStatus && "A place where musicians find other musicians and play music together") || `Welcome back ${user.firstName}!`}
         </TextHeadline>
         <div className="flex flex-row items-center justify-between gap-3 w-full items-stretch text-blue-500">
           <Button
