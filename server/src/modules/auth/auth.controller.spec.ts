@@ -126,7 +126,7 @@ describe('AuthController (e2e)', () => {
   // - Refresh Token
 
   /*Accessing protected route with not logged in user*/
-  it('should return 401 if no cookies are present', async () => {
+  it('should return 401 if cookies are not present', async () => {
     const response = await request(app.getHttpServer())
       .post('/auth/logout')
       .expect(HttpStatus.UNAUTHORIZED);
