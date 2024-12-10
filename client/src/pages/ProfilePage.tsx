@@ -98,7 +98,7 @@ export default function ProfilePage() {
           </div>
         </div>
         <div className="flex flex-row gap-4">
-          <Button buttonVariant="secondary" to="/profile/$profileId/edit" params={{ profileId: userId ? userId : "" }} iconPosition="none" buttonLabel="Edit Profile" className="no-underline"></Button>
+          <Button buttonVariant="secondary" to="/profile/$profileId/edit" params={{ profileId: userId }} iconPosition="none" buttonLabel="Edit Profile" className="no-underline"></Button>
           <Button buttonVariant="secondary" onClick={() => console.log("Settings")} iconPosition="none" buttonLabel="Settings"></Button>
         </div>
       </div>
