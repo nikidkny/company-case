@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Navigate } from "@tanstack/react-router";
 import { useStore } from "../store/useStore";
 import { getUserIdFromCookie } from "../hooks/getCookies";
 import { useFetch } from "../hooks/use-fetch";
 import { User } from "../types/UserType";
+import HomePage from "../pages/HomePage";
 
 const AuthGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -50,7 +50,7 @@ const AuthGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   }
 
   if (!loginStatus) {
-    return <Navigate to="/accounts" search={{ intent: "login" }} replace={true} />;
+    return <HomePage />;
   }
 
   return <>{children}</>;
