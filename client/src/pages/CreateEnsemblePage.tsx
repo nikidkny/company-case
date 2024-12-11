@@ -56,8 +56,8 @@ export function CreateEnsemblePage() {
       webpage,
       zip,
       city,
-      memberList: [user?.id ?? "1"],
-      createdBy: user?.id,
+      memberList: [user?._id ?? "1"],
+      createdBy: user?._id,
       //createdAt : new Date().toLocaleString(),
       // image,
       activeMusicians,
@@ -122,15 +122,7 @@ export function CreateEnsemblePage() {
           Create an ensemble
         </TextHeadline>
         <form onSubmit={handleSubmit} className="flex flex-col justify-around gap-6">
-          <TextInput
-            inputType="text"
-            value={name}
-            onChange={(value) => setName(value)}
-            placeholder={"Ensemble's name"}
-            id="ensembleName"
-            name="ensembleName"
-            className="w-auto"
-          />
+          <TextInput inputType="text" value={name} onChange={(value) => setName(value)} placeholder={"Ensemble's name"} id="ensembleName" name="ensembleName" className="w-auto" />
 
           {/* image */}
           {/* <ImageInput variant="cover" onImageChange={(file) => setImage(file)} /> */}
@@ -140,26 +132,14 @@ export function CreateEnsemblePage() {
             <TextBody variant="strong" size="md" className="text-blue-500">
               Description
             </TextBody>
-            <Textarea
-              textareaPlaceholder="Write a short description of your ensemble or orchestra"
-              textareaValue={description}
-              onChange={(value) => setDescription(value)}
-            />
+            <Textarea textareaPlaceholder="Write a short description of your ensemble or orchestra" textareaValue={description} onChange={(value) => setDescription(value)} />
           </div>
           {/* homepage link */}
           <div className="flex flex-col gap-3">
             <TextBody variant="strong" size="md" className="text-blue-500">
               Webpage
             </TextBody>
-            <TextInput
-              inputType="text"
-              value={webpage}
-              onChange={(value) => setWebpage(value)}
-              placeholder="Insert the link"
-              id="webpage"
-              name="webpage"
-              className="w-auto"
-            />
+            <TextInput inputType="text" value={webpage} onChange={(value) => setWebpage(value)} placeholder="Insert the link" id="webpage" name="webpage" className="w-auto" />
           </div>
           {/* location */}
           <div className="flex flex-col gap-3">
@@ -196,13 +176,7 @@ export function CreateEnsemblePage() {
             <TextBody variant="strong" size="md" className="text-blue-500">
               Number of active musicians
             </TextBody>
-            <Dropdown
-              initialSelectedLabel="Select a number"
-              options={activeMusiciansNumberOptions}
-              className="w-auto"
-              selectedOption={activeMusicians}
-              onSelect={(value: string) => setActiveMusicians(value)}
-            />
+            <Dropdown initialSelectedLabel="Select a number" options={activeMusiciansNumberOptions} className="w-auto" selectedOption={activeMusicians} onSelect={(value: string) => setActiveMusicians(value)} />
           </div>
 
           {/* sessions frequency */}
@@ -210,13 +184,7 @@ export function CreateEnsemblePage() {
             <TextBody variant="strong" size="md" className="text-blue-500">
               Frequency of music sessions
             </TextBody>
-            <Dropdown
-              initialSelectedLabel="Select a frequency"
-              options={musicSessionsFrequencyOptions}
-              selectedOption={sessionFrequency}
-              onSelect={(value) => setSessionFrequency(value)}
-              className="w-auto"
-            />
+            <Dropdown initialSelectedLabel="Select a frequency" options={musicSessionsFrequencyOptions} selectedOption={sessionFrequency} onSelect={(value) => setSessionFrequency(value)} className="w-auto" />
           </div>
 
           {/* Type of ensemble */}
@@ -225,18 +193,8 @@ export function CreateEnsemblePage() {
             <TextBody variant="strong" size="md" className="text-blue-500">
               The ensemble plays...
             </TextBody>
-            <Checkbox
-              name="checkbox"
-              label="Continuously"
-              checked={isPermanent === true}
-              onChange={() => setEnsembleType(isPermanent === true ? null : true)}
-            />
-            <Checkbox
-              name="checkbox"
-              label="On a project basis"
-              checked={isPermanent === false}
-              onChange={() => setEnsembleType(isPermanent === false ? null : false)}
-            />
+            <Checkbox name="checkbox" label="Continuously" checked={isPermanent === true} onChange={() => setEnsembleType(isPermanent === true ? null : true)} />
+            <Checkbox name="checkbox" label="On a project basis" checked={isPermanent === false} onChange={() => setEnsembleType(isPermanent === false ? null : false)} />
           </div>
 
           {/* music genre */}
@@ -254,14 +212,7 @@ export function CreateEnsemblePage() {
           </div>
           {/* <Button buttonVariant="primary" buttonLabel="Create ensemble" buttonState={"default"} iconPosition="top" className="w-auto m-b-6" type="submit"></Button> */}
 
-          <Button
-            buttonVariant="primary"
-            buttonLabel="Create ensemble"
-            buttonState={(loading && "disabled") || "default"}
-            iconPosition="top"
-            className="w-auto m-b-6"
-            type="submit"
-          >
+          <Button buttonVariant="primary" buttonLabel="Create ensemble" buttonState={(loading && "disabled") || "default"} iconPosition="top" className="w-auto m-b-6" type="submit">
             {loading ? "Creating..." : "Create Ensemble"}
           </Button>
         </form>
