@@ -45,12 +45,14 @@ export function CreateEnsemblePage() {
     setEnsembles,
   } = useStore();
 
- // const userId = "6751e7b6ef87e8376bba326e";
+  // const userId = "6751e7b6ef87e8376bba326e";
+  const { user } = useStore();
+  console.log(user);
   const navigate = useNavigate();
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     //this is just when the ensemble is first created. the only member is the creator itself.
-    const memberList = [userId];
+    const memberList = [user._id];
     const ensembleData = {
       name,
       description,
@@ -75,11 +77,12 @@ export function CreateEnsemblePage() {
       alert("The ensemble has been created!");
       navigate({
         to: "/profile/$profileId",
-        params: { profileId: userId },
+        params: { profileId: user._id },
       });
     }, 2000);
     resetForm();
   };
+
   useEffect(() => {
     console.log("Updated objectData:", objectData);
   }, [objectData]);
@@ -225,9 +228,7 @@ export function CreateEnsemblePage() {
             />
           </div>
 
-
           <Button buttonVariant="primary" buttonLabel="Create ensemble" buttonState={(loading && "disabled") || "default"} iconPosition="top" className="w-auto m-b-6 py-4" type="submit">
-
             {loading ? "Creating..." : "Create Ensemble"}
           </Button>
         </form>

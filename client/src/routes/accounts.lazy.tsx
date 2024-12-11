@@ -19,7 +19,7 @@ function AccountsPage() {
 
   const { userId } = getUserIdFromCookie();
   const { setUser, setLoginStatus } = useStore();
-  const { data: fetchedUser, triggerFetch: userFetchTrigger } = useFetch<User>({}, userId !== null ? `/users/${userId}` : null, "GET");
+  const { data: fetchedUser, triggerFetch: userFetchTrigger } = useFetch<User>({ _id: "" }, userId !== null ? `/users/${userId}` : null, "GET");
 
   const [formData, setFormData] = useState({
     email: "",
@@ -81,10 +81,8 @@ function AccountsPage() {
 
   //TODO: check if the user already has an access token
   useEffect(() => {
-
     if (loginFetch.data && userId) {
       userFetchTrigger();
-
     }
     if (loginFetch.error) {
       alert(`Login failed: ${loginFetch.error}`);

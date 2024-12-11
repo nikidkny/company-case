@@ -11,7 +11,6 @@ export default function Hero() {
   const displayPopUp = (arg: boolean) => {
     setPopUp(arg);
   };
-  console.log("user", user);
 
   const handleClick = () => {
     setIsMenuOpen();
@@ -27,7 +26,6 @@ export default function Hero() {
 
         <TextHeadline size="sm" variant="h1" className="pt-6 pb-8">
           {(!loginStatus && "A place where musicians find other musicians and play music together") || `Welcome back ${user.firstName}!`}
-
         </TextHeadline>
         <div className="flex flex-row items-center justify-between gap-3 w-full items-stretch text-blue-500">
           <Button

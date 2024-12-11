@@ -9,12 +9,14 @@ import Image from "./../components/atoms/Image";
 import RegisterInEnsembleButton from "../components/molecules/RegisterInEnsembleButton";
 import { useParams } from "@tanstack/react-router";
 import { User } from "../types/UserType";
+import { useStore } from "../store/useStore";
 
 export default function EnsembleDetailsPage() {
   // Get the ensembleId from the URL
   const { ensemblesId } = useParams({ strict: false });
-  const userId = "6751e7b6ef87e8376bba326e";
-
+  //const userId = "6751e7b6ef87e8376bba326e";
+  const { user } = useStore();
+  console.log(user);
   const {
     data: ensemble,
     triggerFetch: triggerFetchEnsembleDetails,
@@ -44,7 +46,7 @@ export default function EnsembleDetailsPage() {
 
   // Get members' details (first name, last name) including the creator of the ensemble
   const { data: membersDetails, triggerFetch: triggerFetchMembersDetails } = useFetch(
-    { foundMembers: [], creator: {} },
+    { foundMembers: [], creator: { _id: "" } },
     "/users/details",
     "POST",
     {
@@ -57,7 +59,7 @@ export default function EnsembleDetailsPage() {
 
   const membersList: User[] = membersDetails.foundMembers;
   const creator: User = membersDetails.creator;
-  const isUserMember = ensemble.memberList.includes(userId);
+  const isUserMember = ensemble.memberList.includes(user._id);
   console.log("isUserMember", isUserMember);
   //Join the ensemble
   const {

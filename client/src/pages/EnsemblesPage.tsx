@@ -32,7 +32,7 @@ export default function EnsemblesPage() {
 
       // Only fetch if ensembles or instruments are not yet loaded
     }
-    if (!instrumentsFetch.data.length) {
+    if (instrumentsFetch.data.length === 0) {
       instrumentsFetch.triggerFetch();
     }
   }, [ensembles, triggerFetch, data, instrumentsFetch]);
