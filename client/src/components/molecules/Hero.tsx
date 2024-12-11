@@ -24,8 +24,10 @@ export default function Hero() {
         <div className="w-full max-w-sm xs:max-w-xs">
           {(!loginStatus && <Icon name={ICON_NAMES.hero_image} viewBox={"0 0 470 325.475"} className="w-full h-auto" />) || <Icon name={ICON_NAMES.profile_welcome} viewBox={"0 0 150.993 180.24"} className="w-full h-auto" />}
         </div>
-        <TextHeadline size="lg" variant="h3" className="pt-6 pb-8">
-          {(!loginStatus && "A place where musicians find other musicians and play music together") || `Welcome back ${user?.firstName}!`}
+
+        <TextHeadline size="sm" variant="h1" className="pt-6 pb-8">
+          {(!loginStatus && "A place where musicians find other musicians and play music together") || `Welcome back ${user.firstName}!`}
+
         </TextHeadline>
         <div className="flex flex-row items-center justify-between gap-3 w-full items-stretch text-blue-500">
           <Button

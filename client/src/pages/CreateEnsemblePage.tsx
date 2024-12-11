@@ -45,7 +45,7 @@ export function CreateEnsemblePage() {
     setEnsembles,
   } = useStore();
 
-  const userId = "6751e7b6ef87e8376bba326e";
+ // const userId = "6751e7b6ef87e8376bba326e";
   const navigate = useNavigate();
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -58,7 +58,7 @@ export function CreateEnsemblePage() {
       zip,
       city,
       memberList,
-      createdBy: userId,
+      createdBy: user._id,
       numberOfMembers: memberList.length,
       createdAt: new Date().toLocaleString(),
       image: "",
@@ -225,7 +225,9 @@ export function CreateEnsemblePage() {
             />
           </div>
 
+
           <Button buttonVariant="primary" buttonLabel="Create ensemble" buttonState={(loading && "disabled") || "default"} iconPosition="top" className="w-auto m-b-6 py-4" type="submit">
+
             {loading ? "Creating..." : "Create Ensemble"}
           </Button>
         </form>
