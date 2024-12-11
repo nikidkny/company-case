@@ -8,6 +8,7 @@ import mockUsers from './mockUsers';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class SeederService {
@@ -15,7 +16,19 @@ export class SeederService {
     @InjectModel(User.name) private userModel: Model<User>,
     @InjectModel(Ensemble.name) private ensembleModel: Model<Ensemble>,
     @InjectModel(Post.name) private postModel: Model<Post>,
-  ) {}
+  ) { }
+
+  // Hash passwords for users
+  private async hashPasswordsForUsers(users: any[]) {
+    const saltRounds = 10; // Set number of salt rounds for bcrypt
+    const usersWithHashedPasswords = await Promise.all(
+      users.map(async (user) => {
+        const hashedPassword = await bcrypt.hash(user.password, saltRounds);
+        return { ...user, password: hashedPassword };
+      }),
+    );
+    return usersWithHashedPasswords;
+  }
 
   async seedDatabase() {
     try {
@@ -24,9 +37,12 @@ export class SeederService {
       await this.ensembleModel.deleteMany({});
       await this.postModel.deleteMany({});
 
+      // Hash passwords for mock users
+      const usersWithHashedPasswords = await this.hashPasswordsForUsers(mockUsers);
+
       // Insert mock data into collections
-      await this.userModel.insertMany(mockUsers);
-      console.log(`${mockUsers.length} users have been added to the database.`);
+      await this.userModel.insertMany(usersWithHashedPasswords);
+      console.log(`${usersWithHashedPasswords.length} users have been added to the database.`);
 
       await this.ensembleModel.insertMany(mockEnsembles);
       console.log(

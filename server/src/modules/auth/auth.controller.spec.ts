@@ -3,7 +3,7 @@ import { HttpStatus, INestApplication } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from '../users/user.entity';
 import { AuthController } from './auth.controller';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { getModelToken } from '@nestjs/mongoose';
 import { AuthService } from './auth.service';
 import { JwtModule } from '@nestjs/jwt';
@@ -112,7 +112,7 @@ describe('AuthController (e2e)', () => {
   });
 
   /*Login not existing user expecting not found*/
-  it('should login an non existing user and get a not found exception', async() => {
+  it('should login an non existing user and get a not found exception', async () => {
     const loginResponse = await request(app.getHttpServer())
       .post('/auth/login')
       .send({
@@ -121,9 +121,6 @@ describe('AuthController (e2e)', () => {
       })
       .expect(HttpStatus.NOT_FOUND);
   })
-  // TODO:
-  // - Login existing user with wrong credentials expecting
-  // - Refresh Token
 
   /*Accessing protected route with not logged in user*/
   it('should return 401 if cookies are not present', async () => {
@@ -133,6 +130,93 @@ describe('AuthController (e2e)', () => {
 
     expect(response.body.message).toBe('Unauthorized');
   });
+
+  /*Login existing user with wrong credentials expecting 400*/
+  it('should return 400 if login with wrong credentials', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/auth/login')
+      .send({
+        email: 'john.doe@example.com',
+        password: 'wrongPassword'
+      })
+      .expect(HttpStatus.BAD_REQUEST);
+  });
+
+  // TODO:
+  // - Refresh Token (in progress)
+
+  /*Refresh Token using valid refresh token*/
+  // TODO: find a way to use the service to search in the mock database and not in the actual db. Or login an existing user in the actual db.
+  it('should refresh the access token successfully', async () => {
+
+    //TODO: FINISH TO FIND A WAY TO PASS AN ACTUAL USER TOT HE REFRESHTOKEN SERVICE (BECAUSE IT LOOKS INTO THE EXISTING DB)
+    // Create a mock user with all required fields
+    const mockUser = await userModel.create({
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'user@example.com',
+      password: 'hashedPassword',
+      description: '',
+      birthdate: new Date(),
+      isAvailable: true,
+      city: 'Odense',
+      zip: '5000',
+      phoneNumber: '5739603',
+      image: 'imageurl',
+      lastLoggedIn: new Date(),
+      createdAt: new Date(),
+      isNewsletter: false,
+      isDeleted: false,
+    });
+
+    // First, log in to get a valid refresh token
+    const loginResponse = await request(app.getHttpServer())
+      .post('/auth/login')
+      .send({
+        email: 'user@example.com',
+        password: 'hashedPassword',
+      })
+      .expect(HttpStatus.OK);
+
+    // Extract the refresh token from the response cookies
+    const cookies = loginResponse.headers['set-cookie'] as unknown as string[];
+
+    // Ensure cookies are defined and find the refresh token
+    expect(cookies).toBeDefined();
+    const refreshTokenCookie = cookies.find((cookie) =>
+      cookie.startsWith('refreshToken='),
+    );
+
+    const refreshToken = refreshTokenCookie?.split(';')[0].split('=')[1];
+
+    console.log('refreshtokenCookies In TEST', refreshToken);
+
+    // Make a request to refresh the access token
+    const refreshResponse = await request(app.getHttpServer())
+      .post('/auth/refresh')
+      .set('Cookie', [`refreshToken=${refreshToken}`])
+      .expect(HttpStatus.OK);
+
+    // Verify the response contains a new access token cookie
+    const refreshCookies = refreshResponse.headers['set-cookie'] as unknown as string[];
+    expect(refreshCookies).toBeDefined();
+    expect(
+      refreshCookies.some((cookie) => cookie.startsWith('accessToken=')),
+    ).toBeTruthy();
+
+    // Optionally, decode the new access token to verify its payload
+    const accessTokenCookie = refreshCookies.find((cookie) =>
+      cookie.startsWith('accessToken='),
+    );
+    const newAccessToken = accessTokenCookie?.split(';')[0].split('=')[1];
+
+    const jwt = require('jsonwebtoken');
+    const decodedToken = jwt.decode(newAccessToken);
+
+    expect(decodedToken).toHaveProperty('id'); // Ensure the token contains the user ID
+    expect(decodedToken).toHaveProperty('email', 'john.doe@example.com'); // Ensure email matches
+  });
+
 
   afterAll(async () => {
     try {

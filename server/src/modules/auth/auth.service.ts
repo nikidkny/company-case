@@ -18,7 +18,7 @@ export class AuthService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   async signup(createUserDto: CreateUserDto): Promise<{ message: string }> {
     // Extracts attributes from createUserDto
@@ -125,29 +125,43 @@ export class AuthService {
     }
   }
 
-  //TODO: improve refresh token
-  async refreshToken(refreshToken: string) {
+
+  async refreshToken(refreshToken: string, res: Response): Promise<{ accessToken: string }> {
     try {
-      //Verify refresh token
+      console.log('RefreshToken SERVICE', refreshToken);
+      
+      // Validate refresh token
       const payload = this.jwtService.verify(refreshToken, {
         secret: process.env.JWT_REFRESH_SECRET,
       });
 
-      const user = await this.userModel.findById(payload.id);
+      // Find user by ID (stored in the payload)
+      const user = await this.userModel.findById(payload.sub);
+      console.log(user);
+      if (!user) {
+        console.error("USER NOT FOUND")
+        throw new NotFoundException('User not found');
+      }
 
-      //Generate new acess token
-      const newAccessToken = this.jwtService.sign(
-        { email: user.email, id: user.id },
-        {
-          secret: process.env.JWT_SECRET,
-          expiresIn: '60m',
-        },
+      // Issue a new access token
+      const accessToken = this.jwtService.sign(
+        { sub: user.id, email: user.email },
+        { secret: process.env.JWT_ACCESS_SECRET, expiresIn: '1h' },
       );
 
-      return {
-        accessToken: newAccessToken,
-      };
+      // Set the new access token in the response cookie
+      res.cookie('accessToken', accessToken, {
+        httpOnly: false, // Accessible by frontend
+        secure: process.env.NODE_ENV === 'production', // Only sent over HTTPS in production
+        maxAge: 60 * 60 * 1000, // 1 hour
+      });
+
+      return { accessToken };
     } catch (error) {
+      console.error(error);
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException('User not found');
+      }
       throw new UnauthorizedException('Invalid or expired refresh token');
     }
   }
