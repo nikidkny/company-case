@@ -206,6 +206,17 @@ function AccountsPage() {
     loginFetch.triggerFetch();
   };
 
+  // TODO: is it needed ? Seems to work fine without it 
+  useEffect(() => {
+    if (loginFetch.data && userId) {
+      userFetchTrigger();
+    }
+    if (loginFetch.error) {
+      console.error(loginFetch.error)
+      setLoginError(loginFetch.error);
+    }
+  }, [loginFetch.data, loginFetch.error, navigate]);
+
   // Handle effects for login API response
   useEffect(() => {
    if (loginFetch.data && fetchedUser) {
