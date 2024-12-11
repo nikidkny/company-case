@@ -1,16 +1,10 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import Hero from "../components/molecules/Hero";
+import AuthGuard from "../guard/RouteGuard";
+import HomePage from "../pages/HomePage";
 export const Route = createLazyFileRoute("/")({
-  component: Home,
+  component: () => (
+    <AuthGuard>
+      <HomePage />
+    </AuthGuard>
+  ),
 });
-
-//the content of the homepage goes here
-function Home() {
-  return (
-    <div className="p-6">
-      {/* hero */}
-      <Hero />
-      {/* other contents if necessary */}
-    </div>
-  );
-}
