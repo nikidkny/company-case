@@ -22,6 +22,7 @@ function AccountsPage() {
 
   // State to hold validation error messages for the signup form
   const [validationErrors, setValidationErrors] = useState<string | string[]>([]);
+  const [loginError, setLoginError] = useState<string | string[]>([]); 
 
   // Function to validate signup form data
   const validateForm = (signupFormData: typeof signupData) => {
@@ -232,7 +233,7 @@ function AccountsPage() {
       alert("Login successful! You will be riderected to the home page :)");
       navigate({ to: "/" });
     } else if (loginFetch.error) {
-      console.log("Error", loginFetch.error);
+      setLoginError(loginFetch.error);
     }
   }, [loginFetch.data, loginFetch.error, navigate,fetchedUser]);
 
@@ -240,8 +241,29 @@ function AccountsPage() {
   const combinedErrors = [
     ...validationErrors,  // Frontend validation errors
     ...(intent === "register" && signupFetch.error ? signupFetch.error : []),  // Backend errors for register
-    ...(intent === "login" && loginFetch.error ? loginFetch.error : []),  // Backend errors for login
+    ...(intent === "login" && loginError.length ? loginError : []),  // Backend errors for login
   ];
+
+  // Reset form data on intent change (switch between register and login)
+  useEffect(() => {
+    setSignupData({
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      birthdate: "",
+      isAvailable: false,
+    });
+
+    setLoginData({
+      email: "",
+      password: "",
+    });
+
+    setValidationErrors([]); // Clear any validation errors
+    setLoginError([]);
+  }, [location, intent]); 
 
   return (
     <div>
@@ -258,7 +280,7 @@ function AccountsPage() {
           formData={loginData}
           onChange={handleChange}
           onSubmit={handleLoginSubmit}
-          errorMessages={loginFetch.error}
+          errorMessages={combinedErrors}
         />
       )}
 
