@@ -28,14 +28,21 @@ export class InstrumentsService {
       { name: 'Synthesizer' },
     ];
 
-    //to avoid duplication
-    for (const instrument of instruments) {
-      const exists = await this.instrumentModel
-        .findOne({ name: instrument.name })
-        .exec();
-      if (!exists) {
-        await this.instrumentModel.create(instrument);
-      }
+    // Fetch existing instruments to check which are already in the database
+    const existingInstruments = await this.instrumentModel
+      .find({ name: { $in: instruments.map((inst) => inst.name) } })
+      .exec();
+
+    const existingNames = existingInstruments.map((inst) => inst.name);
+
+    // Filter out instruments that already exist
+    const newInstruments = instruments.filter(
+      (instrument) => !existingNames.includes(instrument.name),
+    );
+
+    // Insert only the new instruments
+    if (newInstruments.length > 0) {
+      await this.instrumentModel.insertMany(newInstruments);
     }
   }
 
