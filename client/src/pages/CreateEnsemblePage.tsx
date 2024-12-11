@@ -47,7 +47,7 @@ export function CreateEnsemblePage() {
 
   // const userId = "6751e7b6ef87e8376bba326e";
   const { user } = useStore();
-  console.log(user);
+  // console.log(user);
   const navigate = useNavigate();
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -72,13 +72,18 @@ export function CreateEnsemblePage() {
     console.log("ensembleData", ensembleData);
     setObjectData(ensembleData);
     setLoading(true);
-    triggerFetch();
+
     setTimeout(() => {
-      alert("The ensemble has been created!");
-      navigate({
-        to: "/profile/$profileId",
-        params: { profileId: user._id },
-      });
+      triggerFetch();
+      if (createdEnsemble.length < 1) {
+        return; // Stop further execution if there's an error
+      } else {
+        alert("The ensemble has been created! You will be redirected to your profile");
+        navigate({
+          to: "/profile/$profileId",
+          params: { profileId: user._id },
+        });
+      }
     }, 2000);
     resetForm();
   };
@@ -106,17 +111,21 @@ export function CreateEnsemblePage() {
   console.log(loading);
 
   useEffect(() => {
-    if (createdEnsemble) {
+    if (createdEnsemble.length >= 1) {
       console.log("Ensemble created:", createdEnsemble);
       setEnsembles(createdEnsemble);
+    } else {
+      console.log("errors", error);
+      return;
     }
-  }, [createdEnsemble, setEnsembles]);
+  }, [createdEnsemble, setEnsembles, error]);
 
-  useEffect(() => {
-    if (error) {
-      console.error("Error creating ensemble:", error);
-    }
-  }, [error]);
+  // useEffect(() => {
+  //   if (error) {
+  //     console.error("Error creating ensemble:", error);
+  //     return;
+  //   }
+  // }, [triggerFetch]);
 
   const handleTagChange = (tags: string[]) => {
     const currentTags = new Set(genres);
