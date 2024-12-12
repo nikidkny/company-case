@@ -40,6 +40,7 @@ export class AuthController {
   // - Test in postman
   // - implement in the client-side to detect '401 unauthorised' and call te refresh endpoint
   @Post('refresh')
+  @HttpCode(HttpStatus.CREATED)
   async refresh(@Req() req: Request, @Res() res: Response) {
     // Ensure the cookie header exists
     const refreshTokenRaw = req.headers.cookie || '';

@@ -141,7 +141,6 @@ export class AuthService {
     }
   }
 
-
   async refreshToken(refreshToken: string, res: Response): Promise<{ accessToken: string }> {
     try {
       console.log('RefreshToken SERVICE', refreshToken);
@@ -152,7 +151,7 @@ export class AuthService {
       });
 
       // Find user by ID (stored in the payload)
-      const user = await this.userModel.findById(payload.sub);
+      const user = await this.userModel.findById(payload.id);
       console.log(user);
       if (!user) {
         console.error("USER NOT FOUND")
@@ -161,7 +160,7 @@ export class AuthService {
 
       // Issue a new access token
       const accessToken = this.jwtService.sign(
-        { sub: user.id, email: user.email },
+        { id: user.id, email: user.email },
         { secret: process.env.JWT_ACCESS_SECRET, expiresIn: '1h' },
       );
 
