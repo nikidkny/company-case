@@ -35,11 +35,13 @@ export const DropdownWithTags = ({ options, className, selectedTags, onTagChange
         {/* Dropdown Menu */}
         {isOpen && (
           <div className="absolute z-10  bg-white border border-gray-300 rounded-lg shadow-lg w-full">
-            {options
-              .filter((option) => !selectedTags.includes(option))
-              .map((option) => (
-                <DropdownItem key={option} label={option} onSelect={() => handleSelectOption(option)} />
-              ))}
+            <div className="max-h-50 overflow-y-auto">
+              {options
+                .filter((option) => !selectedTags.includes(option))
+                .map((option) => (
+                  <DropdownItem key={option} label={option} onSelect={() => handleSelectOption(option)} />
+                ))}
+            </div>
           </div>
         )}
       </div>
