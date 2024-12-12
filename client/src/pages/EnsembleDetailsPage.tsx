@@ -5,18 +5,21 @@ import TextBody from "../components/atoms/TextBody";
 import TextHeadline from "../components/atoms/TextHeadline";
 import { useFetch } from "../hooks/use-fetch";
 import { EnsembleType } from "../types/EnsembleType";
-//import { User } from "../types/UserType";
 import Image from "./../components/atoms/Image";
 import RegisterInEnsembleButton from "../components/molecules/RegisterInEnsembleButton";
 import { useParams } from "@tanstack/react-router";
+import { User } from "../types/UserType";
+import { useStore } from "../store/useStore";
 
 export default function EnsembleDetailsPage() {
   // Get the ensembleId from the URL
   const { ensemblesId } = useParams({ strict: false });
-
+  //const userId = "6751e7b6ef87e8376bba326e";
+  const { user } = useStore();
+  console.log(user);
   const {
     data: ensemble,
-    triggerFetch,
+    triggerFetch: triggerFetchEnsembleDetails,
     shouldFetch,
   } = useFetch<EnsembleType>(
     {
@@ -39,7 +42,25 @@ export default function EnsembleDetailsPage() {
     `/ensembles/${ensemblesId}`,
     "GET"
   );
+  console.log("ensemble - fetched", ensemble);
 
+  // Get members' details (first name, last name) including the creator of the ensemble
+  const { data: membersDetails, triggerFetch: triggerFetchMembersDetails } = useFetch(
+    { foundMembers: [], creator: { _id: "" } },
+    "/users/details",
+    "POST",
+    {
+      "Content-Type": "application/json",
+    },
+    { membersIds: ensemble.memberList, creatorId: ensemble.createdBy }
+  );
+
+  console.log("membersDetails", membersDetails);
+
+  const membersList: User[] = membersDetails.foundMembers;
+  const creator: User = membersDetails.creator;
+  const isUserMember = ensemble.memberList.includes(user._id);
+  console.log("isUserMember", isUserMember);
   //Join the ensemble
   const {
     data: registrationData,
@@ -58,32 +79,29 @@ export default function EnsembleDetailsPage() {
 
   const handleAddUserToEnsemble = () => {
     triggerRegisterFetch();
+    triggerFetchMembersDetails();
   };
 
   useEffect(() => {
-    triggerFetch();
+    if (registrationData !== null && !registrationLoading) {
+      triggerFetchEnsembleDetails();
+    }
     // console.log("ensembles", ensemble);
-  }, [ensemble, shouldFetch]);
+  }, [registrationData, registrationLoading]);
 
-  // const { data: ensembleOwner } = useFetch<User>(
-  //   {
-  //     id: "",
-  //     email: "",
-  //   },
-  //   `/users/${ensemble.createdBy}`,
-  //   "GET"
-  // );
-  // console.log("ensembleOwner", ensembleOwner);
+  useEffect(() => {
+    triggerFetchEnsembleDetails();
+
+    if (ensemble.memberList && ensemble.createdBy) {
+      triggerFetchMembersDetails();
+    }
+    // triggerFetchCurrentUser();
+  }, [ensemble, shouldFetch]);
 
   return (
     <div>
       {/* image */}
-      <Image
-        src="https://picsum.photos/600"
-        alt="Placeholder"
-        height={"200"}
-        className="w-full object-cover"
-      />
+      <Image src="https://picsum.photos/600" alt="Placeholder" height={"200"} className="w-full object-cover" />
 
       {/* name, zip city and button */}
       <div className="flex flex-col gap-6 p-6 items-center">
@@ -93,12 +111,10 @@ export default function EnsembleDetailsPage() {
         <TextBody variant="p" size="md">
           {ensemble.zip} {ensemble.city}
         </TextBody>
-        <RegisterInEnsembleButton
-          registrationLoading={registrationLoading}
-          registrationError={registrationError}
-          registrationData={registrationData}
-          handleAddUserToEnsemble={handleAddUserToEnsemble}
-        />
+
+        {(!isUserMember && <RegisterInEnsembleButton registrationLoading={registrationLoading} registrationError={registrationError} registrationData={registrationData} handleAddUserToEnsemble={handleAddUserToEnsemble} />) || (
+          <ProfileBadge ProfileBadgeLabel="You're a member of this ensemble" ProfileBadgeSize="sm" />
+        )}
       </div>
       <div className="h-[30px] bg-gray-300 border-solid border-1 border-gray-400"></div>
 
@@ -127,10 +143,10 @@ export default function EnsembleDetailsPage() {
             Members
           </TextBody>
           <div>
-            {ensemble.memberList.length > 0 ? (
-              ensemble.memberList.map((member, index) => (
+            {membersList.length > 0 ? (
+              membersList.map((member: User, index) => (
                 <TextBody key={index} variant="p" size="md">
-                  {member}
+                  {member.firstName} {member.lastName}
                 </TextBody>
               ))
             ) : (
@@ -164,13 +180,7 @@ export default function EnsembleDetailsPage() {
             Genres
           </TextBody>
 
-          <div className="flex flex-wrap gap-2">
-            {ensemble.genres
-              ? ensemble.genres.map((genre, index) => (
-                  <ProfileBadge key={index} ProfileBadgeLabel={genre} ProfileBadgeSize="sm" />
-                ))
-              : "No information about genres has been provided"}
-          </div>
+          <div className="flex flex-wrap gap-2">{ensemble.genres ? ensemble.genres.map((genre, index) => <ProfileBadge key={index} ProfileBadgeLabel={genre} ProfileBadgeSize="sm" />) : "No information about genres has been provided"}</div>
         </div>
 
         <div className="flex flex-col gap-2">
@@ -179,21 +189,13 @@ export default function EnsembleDetailsPage() {
           </TextBody>
           <TextBody variant="p" size="md">
             {/* when the ensemble is created we could store the user name and last name + user id here. for now there's only user id*/}
-            {ensemble.createdBy}
+            {creator.firstName} {creator.lastName}
           </TextBody>
           {/* button to see profile here to be added in the future */}
         </div>
       </div>
 
-      <Button
-        buttonVariant="secondary"
-        buttonState="default"
-        buttonLabel="Visit the webpage"
-        className="no-underline w-auto m-6"
-        size="lg"
-        iconPosition="none"
-        to={ensemble.webpage || "https://google.com"}
-      ></Button>
+      <Button buttonVariant="secondary" buttonState="default" buttonLabel="Visit the webpage" className="no-underline w-auto m-6" size="lg" iconPosition="none" to={ensemble.webpage || "https://google.com"}></Button>
     </div>
   );
 }

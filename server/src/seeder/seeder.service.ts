@@ -1,4 +1,3 @@
-
 import { Ensemble } from 'src/modules/ensembles/ensemble.entity';
 import { Post } from 'src/modules/posts/post.entity';
 import { User } from 'src/modules/users/user.entity';
@@ -32,25 +31,46 @@ export class SeederService {
 
   async seedDatabase() {
     try {
-      // Clear existing collections (optional)
-      await this.userModel.deleteMany({});
-      await this.ensembleModel.deleteMany({});
-      await this.postModel.deleteMany({});
-
+      // Seed Users
       // Hash passwords for mock users
       const usersWithHashedPasswords = await this.hashPasswordsForUsers(mockUsers);
+      const existingUsersCount = await this.userModel.countDocuments();
+      if (existingUsersCount === 0) {
+        await this.userModel.insertMany(usersWithHashedPasswords);
+        console.log(
+          `${mockUsers.length} users have been added to the database.`,
+        );
+      } else {
+        console.log(
+          `Users already exist in the database. Skipping user seeding.`,
+        );
+      }
 
-      // Insert mock data into collections
-      await this.userModel.insertMany(usersWithHashedPasswords);
-      console.log(`${usersWithHashedPasswords.length} users have been added to the database.`);
+      // Seed Ensembles
+      const existingEnsemblesCount = await this.ensembleModel.countDocuments();
+      if (existingEnsemblesCount === 0) {
+        await this.ensembleModel.insertMany(mockEnsembles);
+        console.log(
+          `${mockEnsembles.length} ensembles have been added to the database.`,
+        );
+      } else {
+        console.log(
+          `Ensembles already exist in the database. Skipping ensemble seeding.`,
+        );
+      }
 
-      await this.ensembleModel.insertMany(mockEnsembles);
-      console.log(
-        `${mockEnsembles.length} ensembles have been added to the database.`,
-      );
-
-      await this.postModel.insertMany(mockPosts);
-      console.log(`${mockPosts.length} posts have been added to the database.`);
+      // Seed Posts
+      const existingPostsCount = await this.postModel.countDocuments();
+      if (existingPostsCount === 0) {
+        await this.postModel.insertMany(mockPosts);
+        console.log(
+          `${mockPosts.length} posts have been added to the database.`,
+        );
+      } else {
+        console.log(
+          `Posts already exist in the database. Skipping post seeding.`,
+        );
+      }
     } catch (error) {
       console.error('Error during seeding:', error);
     }

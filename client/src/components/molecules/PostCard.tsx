@@ -9,7 +9,8 @@ import mockEnsembles from "../../../../server/src/seeder/mockEnsembles";
 interface PostProps {
   _id: Types.ObjectId | string;
   title: string;
-  location: string;
+  city: string;
+  zip: string;
   description: string;
   type: string;
   createdBy: Types.ObjectId | string;
@@ -30,9 +31,7 @@ interface Props {
 }
 
 export default function PostCard({ post }: Props) {
-  const ensemble = mockEnsembles.find(
-    (ensemble) => ensemble.createdBy.toString() === post.createdBy.toString()
-  );
+  const ensemble = mockEnsembles.find((ensemble) => ensemble.createdBy.toString() === post.createdBy.toString());
 
   return (
     <div className="postcard-wrapper flex flex-col gap-4 border-solid border border-gray-400  rounded-lg shadow-md">
@@ -43,17 +42,11 @@ export default function PostCard({ post }: Props) {
             {ensemble?.name}
           </TextHeadline>
           <TextBody size="sm" className="text-gray-600">
-            {ensemble?.location} •
+            {ensemble?.city} •
           </TextBody>
         </div>
         <div className="h-full flex">
-          <Icon
-            name={ICON_NAMES.instruments}
-            height={32}
-            width={36}
-            viewBox={"0 0 36 32"}
-            className="text-blue-500"
-          />
+          <Icon name={ICON_NAMES.instruments} height={32} width={36} viewBox={"0 0 36 32"} className="text-blue-500" />
         </div>
       </div>
       <div className="px-6 py-4">

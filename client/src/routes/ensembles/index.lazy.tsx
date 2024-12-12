@@ -2,6 +2,7 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import AuthGuard from "../../guard/RouteGuard";
 import EnsemblesPage from "../../pages/EnsemblesPage";
 
+//ensembles overview page
 export const Route = createLazyFileRoute("/ensembles/")({
   component: () => (
     <AuthGuard>
@@ -9,8 +10,3 @@ export const Route = createLazyFileRoute("/ensembles/")({
     </AuthGuard>
   ),
 });
-//not much goes on here. it is needed for creating the route
-
-// function EnsemblesIndexComponent() {
-//   return "Hello /ensembles/!";
-// }

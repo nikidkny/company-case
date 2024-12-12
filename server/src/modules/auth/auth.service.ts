@@ -21,11 +21,15 @@ export class AuthService {
   ) { }
 
   async signup(createUserDto: CreateUserDto): Promise<{ message: string }> {
-    // Extracts attributes from createUserDto
-    const { firstName, lastName, email, password, birthdate, isAvailable } =
+    const { firstName, lastName, email, password, confirmPassword, birthdate, isAvailable } =
       createUserDto;
 
     try {
+      // Check if passwords match
+      if (password !== confirmPassword) {
+        throw new BadRequestException('Confirm Password do not match');
+      }
+
       const userFound = await this.userModel.findOne({ email });
 
       // Check if a user already exists with the provided email
@@ -53,7 +57,7 @@ export class AuthService {
       // Log the error in more detail
       console.error('Error during singup', error);
       if (error instanceof BadRequestException) {
-        throw error; // Re-throw the existing BadRequestException
+        throw error;
       }
 
       // If it's an unexpected error, throw an internal server error
@@ -64,7 +68,19 @@ export class AuthService {
   }
 
   async login(email: string, password: string, res: Response) {
+
     try {
+      // Check if email and password are provided
+      if (!email && !password) {
+        throw new BadRequestException('Credentials must not be empty');
+      }
+      if (!email) {
+        throw new BadRequestException('Email must not be empty');
+      }
+      if (!password) {
+        throw new BadRequestException('Password must not be empty');
+      }
+
       //Check if user exists
       const userFound = await this.userModel.findOne({ email });
       if (!userFound) {
