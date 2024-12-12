@@ -16,19 +16,6 @@ import { Route as rootRoute } from './routes/__root'
 
 // Create Virtual Routes
 
-const AssetsLazyImport = createFileRoute("/assets")();
-const AccountsLazyImport = createFileRoute("/accounts")();
-const IndexLazyImport = createFileRoute("/")();
-const PostsIndexLazyImport = createFileRoute("/posts/")();
-const EnsemblesIndexLazyImport = createFileRoute("/ensembles/")();
-const AccountsIndexLazyImport = createFileRoute("/accounts/")();
-const PostsCreateLazyImport = createFileRoute("/posts/create")();
-const PostsPostIdLazyImport = createFileRoute("/posts/$postId")();
-const EnsemblesCreateLazyImport = createFileRoute("/ensembles/create")();
-const EnsemblesEnsemblesIdLazyImport = createFileRoute("/ensembles/$ensemblesId")();
-const ProfileProfileIdIndexLazyImport = createFileRoute("/profile/$profileId/")();
-const ProfileProfileIdSettingsLazyImport = createFileRoute("/profile/$profileId/settings")();
-const ProfileProfileIdEditLazyImport = createFileRoute("/profile/$profileId/edit")();
 const AssetsLazyImport = createFileRoute('/assets')()
 const AccountsLazyImport = createFileRoute('/accounts')()
 const IndexLazyImport = createFileRoute('/')()
@@ -43,6 +30,9 @@ const EnsemblesEnsemblesIdLazyImport = createFileRoute(
 )()
 const ProfileProfileIdIndexLazyImport = createFileRoute(
   '/profile/$profileId/',
+)()
+const ProfileProfileIdSettingsLazyImport = createFileRoute(
+  '/profile/$profileId/settings',
 )()
 const ProfileProfileIdEditLazyImport = createFileRoute(
   '/profile/$profileId/edit',
@@ -89,8 +79,9 @@ const AccountsIndexLazyRoute = AccountsIndexLazyImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AccountsLazyRoute,
-} as any).lazy(() => import("./routes/accounts.index.lazy").then((d) => d.Route));
-
+} as any).lazy(() =>
+  import('./routes/accounts.index.lazy').then((d) => d.Route),
+)
 
 const PostsCreateLazyRoute = PostsCreateLazyImport.update({
   id: '/posts/create',
@@ -128,27 +119,16 @@ const ProfileProfileIdIndexLazyRoute = ProfileProfileIdIndexLazyImport.update({
   import('./routes/profile/$profileId/index.lazy').then((d) => d.Route),
 )
 
-const ProfileProfileIdIndexLazyRoute = ProfileProfileIdIndexLazyImport.update({
-  id: "/profile/$profileId/",
-  path: "/profile/$profileId/",
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import("./routes/profile/$profileId.index.lazy").then((d) => d.Route));
-
-const ProfileProfileIdSettingsLazyRoute = ProfileProfileIdSettingsLazyImport.update({
-  id: "/profile/$profileId/settings",
-  path: "/profile/$profileId/settings",
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import("./routes/profile/$profileId.settings.lazy").then((d) => d.Route));
+const ProfileProfileIdSettingsLazyRoute =
+  ProfileProfileIdSettingsLazyImport.update({
+    id: '/profile/$profileId/settings',
+    path: '/profile/$profileId/settings',
+    getParentRoute: () => rootRoute,
+  } as any).lazy(() =>
+    import('./routes/profile/$profileId.settings.lazy').then((d) => d.Route),
+  )
 
 const ProfileProfileIdEditLazyRoute = ProfileProfileIdEditLazyImport.update({
-  id: "/profile/$profileId/edit",
-  path: "/profile/$profileId/edit",
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import("./routes/profile/$profileId.edit.lazy").then((d) => d.Route));
-
-const ProfileProfileIdInstrumentsEditLazyRoute = ProfileProfileIdInstrumentsEditLazyImport.update({
-  id: "/profile/$profileId/instruments/edit",
-  path: "/profile/$profileId/instruments/edit",
   id: '/profile/$profileId/edit',
   path: '/profile/$profileId/edit',
   getParentRoute: () => rootRoute,
@@ -171,104 +151,6 @@ const ProfileProfileIdInstrumentsEditLazyRoute =
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    "/": {
-      id: "/";
-      path: "/";
-      fullPath: "/";
-      preLoaderRoute: typeof IndexLazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/accounts": {
-      id: "/accounts";
-      path: "/accounts";
-      fullPath: "/accounts";
-      preLoaderRoute: typeof AccountsLazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/assets": {
-      id: "/assets";
-      path: "/assets";
-      fullPath: "/assets";
-      preLoaderRoute: typeof AssetsLazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/ensembles/$ensemblesId": {
-      id: "/ensembles/$ensemblesId";
-      path: "/ensembles/$ensemblesId";
-      fullPath: "/ensembles/$ensemblesId";
-      preLoaderRoute: typeof EnsemblesEnsemblesIdLazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/ensembles/create": {
-      id: "/ensembles/create";
-      path: "/ensembles/create";
-      fullPath: "/ensembles/create";
-      preLoaderRoute: typeof EnsemblesCreateLazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/posts/$postId": {
-      id: "/posts/$postId";
-      path: "/posts/$postId";
-      fullPath: "/posts/$postId";
-      preLoaderRoute: typeof PostsPostIdLazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/posts/create": {
-      id: "/posts/create";
-      path: "/posts/create";
-      fullPath: "/posts/create";
-      preLoaderRoute: typeof PostsCreateLazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/accounts/": {
-      id: "/accounts/";
-      path: "/";
-      fullPath: "/accounts/";
-      preLoaderRoute: typeof AccountsIndexLazyImport;
-      parentRoute: typeof AccountsLazyImport;
-    };
-    "/ensembles/": {
-      id: "/ensembles/";
-      path: "/ensembles";
-      fullPath: "/ensembles";
-      preLoaderRoute: typeof EnsemblesIndexLazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/posts/": {
-      id: "/posts/";
-      path: "/posts";
-      fullPath: "/posts";
-      preLoaderRoute: typeof PostsIndexLazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/profile/$profileId/edit": {
-      id: "/profile/$profileId/edit";
-      path: "/profile/$profileId/edit";
-      fullPath: "/profile/$profileId/edit";
-      preLoaderRoute: typeof ProfileProfileIdEditLazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/profile/$profileId/settings": {
-      id: "/profile/$profileId/settings";
-      path: "/profile/$profileId/settings";
-      fullPath: "/profile/$profileId/settings";
-      preLoaderRoute: typeof ProfileProfileIdSettingsLazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/profile/$profileId/": {
-      id: "/profile/$profileId/";
-      path: "/profile/$profileId";
-      fullPath: "/profile/$profileId";
-      preLoaderRoute: typeof ProfileProfileIdIndexLazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/profile/$profileId/instruments/edit": {
-      id: "/profile/$profileId/instruments/edit";
-      path: "/profile/$profileId/instruments/edit";
-      fullPath: "/profile/$profileId/instruments/edit";
-      preLoaderRoute: typeof ProfileProfileIdInstrumentsEditLazyImport;
-      parentRoute: typeof rootRoute;
-    };
     '/': {
       id: '/'
       path: '/'
@@ -346,6 +228,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileProfileIdEditLazyImport
       parentRoute: typeof rootRoute
     }
+    '/profile/$profileId/settings': {
+      id: '/profile/$profileId/settings'
+      path: '/profile/$profileId/settings'
+      fullPath: '/profile/$profileId/settings'
+      preLoaderRoute: typeof ProfileProfileIdSettingsLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/profile/$profileId/': {
       id: '/profile/$profileId/'
       path: '/profile/$profileId'
@@ -371,59 +260,6 @@ interface AccountsLazyRouteChildren {
 
 const AccountsLazyRouteChildren: AccountsLazyRouteChildren = {
   AccountsIndexLazyRoute: AccountsIndexLazyRoute,
-};
-
-const AccountsLazyRouteWithChildren = AccountsLazyRoute._addFileChildren(AccountsLazyRouteChildren);
-
-export interface FileRoutesByFullPath {
-  "/": typeof IndexLazyRoute;
-  "/accounts": typeof AccountsLazyRouteWithChildren;
-  "/assets": typeof AssetsLazyRoute;
-  "/ensembles/$ensemblesId": typeof EnsemblesEnsemblesIdLazyRoute;
-  "/ensembles/create": typeof EnsemblesCreateLazyRoute;
-  "/posts/$postId": typeof PostsPostIdLazyRoute;
-  "/posts/create": typeof PostsCreateLazyRoute;
-  "/accounts/": typeof AccountsIndexLazyRoute;
-  "/ensembles": typeof EnsemblesIndexLazyRoute;
-  "/posts": typeof PostsIndexLazyRoute;
-  "/profile/$profileId/edit": typeof ProfileProfileIdEditLazyRoute;
-  "/profile/$profileId/settings": typeof ProfileProfileIdSettingsLazyRoute;
-  "/profile/$profileId": typeof ProfileProfileIdIndexLazyRoute;
-  "/profile/$profileId/instruments/edit": typeof ProfileProfileIdInstrumentsEditLazyRoute;
-}
-
-export interface FileRoutesByTo {
-  "/": typeof IndexLazyRoute;
-  "/assets": typeof AssetsLazyRoute;
-  "/ensembles/$ensemblesId": typeof EnsemblesEnsemblesIdLazyRoute;
-  "/ensembles/create": typeof EnsemblesCreateLazyRoute;
-  "/posts/$postId": typeof PostsPostIdLazyRoute;
-  "/posts/create": typeof PostsCreateLazyRoute;
-  "/accounts": typeof AccountsIndexLazyRoute;
-  "/ensembles": typeof EnsemblesIndexLazyRoute;
-  "/posts": typeof PostsIndexLazyRoute;
-  "/profile/$profileId/edit": typeof ProfileProfileIdEditLazyRoute;
-  "/profile/$profileId/settings": typeof ProfileProfileIdSettingsLazyRoute;
-  "/profile/$profileId": typeof ProfileProfileIdIndexLazyRoute;
-  "/profile/$profileId/instruments/edit": typeof ProfileProfileIdInstrumentsEditLazyRoute;
-}
-
-export interface FileRoutesById {
-  __root__: typeof rootRoute;
-  "/": typeof IndexLazyRoute;
-  "/accounts": typeof AccountsLazyRouteWithChildren;
-  "/assets": typeof AssetsLazyRoute;
-  "/ensembles/$ensemblesId": typeof EnsemblesEnsemblesIdLazyRoute;
-  "/ensembles/create": typeof EnsemblesCreateLazyRoute;
-  "/posts/$postId": typeof PostsPostIdLazyRoute;
-  "/posts/create": typeof PostsCreateLazyRoute;
-  "/accounts/": typeof AccountsIndexLazyRoute;
-  "/ensembles/": typeof EnsemblesIndexLazyRoute;
-  "/posts/": typeof PostsIndexLazyRoute;
-  "/profile/$profileId/edit": typeof ProfileProfileIdEditLazyRoute;
-  "/profile/$profileId/settings": typeof ProfileProfileIdSettingsLazyRoute;
-  "/profile/$profileId/": typeof ProfileProfileIdIndexLazyRoute;
-  "/profile/$profileId/instruments/edit": typeof ProfileProfileIdInstrumentsEditLazyRoute;
 }
 
 const AccountsLazyRouteWithChildren = AccountsLazyRoute._addFileChildren(
@@ -442,6 +278,7 @@ export interface FileRoutesByFullPath {
   '/ensembles': typeof EnsemblesIndexLazyRoute
   '/posts': typeof PostsIndexLazyRoute
   '/profile/$profileId/edit': typeof ProfileProfileIdEditLazyRoute
+  '/profile/$profileId/settings': typeof ProfileProfileIdSettingsLazyRoute
   '/profile/$profileId': typeof ProfileProfileIdIndexLazyRoute
   '/profile/$profileId/instruments/edit': typeof ProfileProfileIdInstrumentsEditLazyRoute
 }
@@ -457,6 +294,7 @@ export interface FileRoutesByTo {
   '/ensembles': typeof EnsemblesIndexLazyRoute
   '/posts': typeof PostsIndexLazyRoute
   '/profile/$profileId/edit': typeof ProfileProfileIdEditLazyRoute
+  '/profile/$profileId/settings': typeof ProfileProfileIdSettingsLazyRoute
   '/profile/$profileId': typeof ProfileProfileIdIndexLazyRoute
   '/profile/$profileId/instruments/edit': typeof ProfileProfileIdInstrumentsEditLazyRoute
 }
@@ -474,6 +312,7 @@ export interface FileRoutesById {
   '/ensembles/': typeof EnsemblesIndexLazyRoute
   '/posts/': typeof PostsIndexLazyRoute
   '/profile/$profileId/edit': typeof ProfileProfileIdEditLazyRoute
+  '/profile/$profileId/settings': typeof ProfileProfileIdSettingsLazyRoute
   '/profile/$profileId/': typeof ProfileProfileIdIndexLazyRoute
   '/profile/$profileId/instruments/edit': typeof ProfileProfileIdInstrumentsEditLazyRoute
 }
@@ -481,68 +320,6 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | "/"
-    | "/accounts"
-    | "/assets"
-    | "/ensembles/$ensemblesId"
-    | "/ensembles/create"
-    | "/posts/$postId"
-    | "/posts/create"
-    | "/accounts/"
-    | "/ensembles"
-    | "/posts"
-    | "/profile/$profileId/edit"
-    | "/profile/$profileId/settings"
-    | "/profile/$profileId"
-    | "/profile/$profileId/instruments/edit";
-  fileRoutesByTo: FileRoutesByTo;
-  to:
-    | "/"
-    | "/assets"
-    | "/ensembles/$ensemblesId"
-    | "/ensembles/create"
-    | "/posts/$postId"
-    | "/posts/create"
-    | "/accounts"
-    | "/ensembles"
-    | "/posts"
-    | "/profile/$profileId/edit"
-    | "/profile/$profileId/settings"
-    | "/profile/$profileId"
-    | "/profile/$profileId/instruments/edit";
-  id:
-    | "__root__"
-    | "/"
-    | "/accounts"
-    | "/assets"
-    | "/ensembles/$ensemblesId"
-    | "/ensembles/create"
-    | "/posts/$postId"
-    | "/posts/create"
-    | "/accounts/"
-    | "/ensembles/"
-    | "/posts/"
-    | "/profile/$profileId/edit"
-    | "/profile/$profileId/settings"
-    | "/profile/$profileId/"
-    | "/profile/$profileId/instruments/edit";
-  fileRoutesById: FileRoutesById;
-}
-
-export interface RootRouteChildren {
-  IndexLazyRoute: typeof IndexLazyRoute;
-  AccountsLazyRoute: typeof AccountsLazyRouteWithChildren;
-  AssetsLazyRoute: typeof AssetsLazyRoute;
-  EnsemblesEnsemblesIdLazyRoute: typeof EnsemblesEnsemblesIdLazyRoute;
-  EnsemblesCreateLazyRoute: typeof EnsemblesCreateLazyRoute;
-  PostsPostIdLazyRoute: typeof PostsPostIdLazyRoute;
-  PostsCreateLazyRoute: typeof PostsCreateLazyRoute;
-  EnsemblesIndexLazyRoute: typeof EnsemblesIndexLazyRoute;
-  PostsIndexLazyRoute: typeof PostsIndexLazyRoute;
-  ProfileProfileIdEditLazyRoute: typeof ProfileProfileIdEditLazyRoute;
-  ProfileProfileIdSettingsLazyRoute: typeof ProfileProfileIdSettingsLazyRoute;
-  ProfileProfileIdIndexLazyRoute: typeof ProfileProfileIdIndexLazyRoute;
-  ProfileProfileIdInstrumentsEditLazyRoute: typeof ProfileProfileIdInstrumentsEditLazyRoute;
     | '/'
     | '/accounts'
     | '/assets'
@@ -554,6 +331,7 @@ export interface RootRouteChildren {
     | '/ensembles'
     | '/posts'
     | '/profile/$profileId/edit'
+    | '/profile/$profileId/settings'
     | '/profile/$profileId'
     | '/profile/$profileId/instruments/edit'
   fileRoutesByTo: FileRoutesByTo
@@ -568,6 +346,7 @@ export interface RootRouteChildren {
     | '/ensembles'
     | '/posts'
     | '/profile/$profileId/edit'
+    | '/profile/$profileId/settings'
     | '/profile/$profileId'
     | '/profile/$profileId/instruments/edit'
   id:
@@ -583,6 +362,7 @@ export interface RootRouteChildren {
     | '/ensembles/'
     | '/posts/'
     | '/profile/$profileId/edit'
+    | '/profile/$profileId/settings'
     | '/profile/$profileId/'
     | '/profile/$profileId/instruments/edit'
   fileRoutesById: FileRoutesById
@@ -599,6 +379,7 @@ export interface RootRouteChildren {
   EnsemblesIndexLazyRoute: typeof EnsemblesIndexLazyRoute
   PostsIndexLazyRoute: typeof PostsIndexLazyRoute
   ProfileProfileIdEditLazyRoute: typeof ProfileProfileIdEditLazyRoute
+  ProfileProfileIdSettingsLazyRoute: typeof ProfileProfileIdSettingsLazyRoute
   ProfileProfileIdIndexLazyRoute: typeof ProfileProfileIdIndexLazyRoute
   ProfileProfileIdInstrumentsEditLazyRoute: typeof ProfileProfileIdInstrumentsEditLazyRoute
 }
@@ -616,10 +397,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProfileProfileIdEditLazyRoute: ProfileProfileIdEditLazyRoute,
   ProfileProfileIdSettingsLazyRoute: ProfileProfileIdSettingsLazyRoute,
   ProfileProfileIdIndexLazyRoute: ProfileProfileIdIndexLazyRoute,
-  ProfileProfileIdInstrumentsEditLazyRoute: ProfileProfileIdInstrumentsEditLazyRoute,
-};
-  ProfileProfileIdIndexLazyRoute: ProfileProfileIdIndexLazyRoute,
-  ProfileProfileIdInstrumentsEditLazyRoute;
+  ProfileProfileIdInstrumentsEditLazyRoute:
     ProfileProfileIdInstrumentsEditLazyRoute,
 }
 
@@ -683,17 +461,10 @@ export const routeTree = rootRoute
       "filePath": "posts/index.lazy.tsx"
     },
     "/profile/$profileId/edit": {
-      "filePath": "profile/$profileId.edit.lazy.tsx"
+      "filePath": "profile/$profileId/edit.lazy.tsx"
     },
     "/profile/$profileId/settings": {
       "filePath": "profile/$profileId.settings.lazy.tsx"
-    },
-    "/profile/$profileId/": {
-      "filePath": "profile/$profileId.index.lazy.tsx"
-    },
-    "/profile/$profileId/instruments/edit": {
-      "filePath": "profile/$profileId.instruments.edit.lazy.tsx"
-      "filePath": "profile/$profileId/edit.lazy.tsx"
     },
     "/profile/$profileId/": {
       "filePath": "profile/$profileId/index.lazy.tsx"
