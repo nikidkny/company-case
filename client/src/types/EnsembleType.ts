@@ -12,13 +12,13 @@ export type EnsembleType = {
   sessionFrequency: string | null;
   isPermanent: boolean | null;
   genres: string[];
-  createdBy?: string;
+  createdBy: string;
   createdAt: string;
 };
 
 export type RegisterInEnsembleButtonProps = {
   registrationLoading: boolean;
-  registrationError: string | null;
+  registrationError: string | string[] | null;
   registrationData: { message?: string } | null;
   handleAddUserToEnsemble: () => void;
 };

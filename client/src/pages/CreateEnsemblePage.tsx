@@ -13,6 +13,7 @@ import Checkbox from "../components/atoms/Checkbox";
 import { DropdownWithTags } from "../components/molecules/DropdownWithTags";
 import { musicGenresOptions } from "../utilities/musicGenresOptions";
 import Button from "../components/atoms/Button";
+import { useNavigate } from "@tanstack/react-router";
 // import ImageInput from "../atoms/ImageInput";
 
 export function CreateEnsemblePage() {
@@ -24,9 +25,6 @@ export function CreateEnsemblePage() {
     webpage,
     setWebpage,
     zip,
-    // memberList,
-    //numberOfMembers,
-    //createdAt,
     // image,
     // setImage,
     city,
@@ -44,39 +42,61 @@ export function CreateEnsemblePage() {
     resetForm,
     setObjectData,
     objectData,
-    user,
+    setEnsembles,
   } = useStore();
 
+  // const userId = "6751e7b6ef87e8376bba326e";
+  const { user } = useStore();
+  // console.log(user);
+  const navigate = useNavigate();
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    //this is just when the ensemble is first created. the only member is the creator itself.
+    const memberList = [user._id];
     const ensembleData = {
       name,
       description,
       webpage,
       zip,
       city,
-      memberList: [user?._id ?? "1"],
-      createdBy: user?._id,
-      //createdAt : new Date().toLocaleString(),
-      // image,
+      memberList,
+      createdBy: user._id,
+      numberOfMembers: memberList.length,
+      createdAt: new Date().toLocaleString(),
+      image: "",
       activeMusicians,
       sessionFrequency,
       isPermanent,
       genres,
     };
-    // const numberOfMembers = ensembleData.memberList?.length;
-    // ensembleData.numberOfMembers = numberOfMembers;
+    console.log("ensembleData", ensembleData);
     setObjectData(ensembleData);
-    triggerFetch();
-    // console.log(formDataToSend.get("name"));
+    setLoading(true);
+
+    setTimeout(() => {
+      triggerFetch();
+      if (createdEnsemble.length < 1) {
+        return; // Stop further execution if there's an error
+      } else {
+        alert("The ensemble has been created! You will be redirected to your profile");
+        navigate({
+          to: "/profile/$profileId",
+          params: { profileId: user._id },
+        });
+      }
+    }, 2000);
     resetForm();
   };
 
+  useEffect(() => {
+    console.log("Updated objectData:", objectData);
+  }, [objectData]);
+
   const {
-    data: ensembles,
+    data: createdEnsemble,
     error,
     loading,
+    setLoading,
     triggerFetch,
   } = useFetch<EnsembleType[]>(
     [],
@@ -89,17 +109,23 @@ export function CreateEnsemblePage() {
   );
 
   console.log(loading);
-  useEffect(() => {
-    if (ensembles.length >= 1) {
-      console.log("Ensemble created:", ensembles);
-    }
-  }, [ensembles]);
 
   useEffect(() => {
-    if (error) {
-      console.error("Error creating ensemble:", error);
+    if (createdEnsemble.length >= 1) {
+      console.log("Ensemble created:", createdEnsemble);
+      setEnsembles(createdEnsemble);
+    } else {
+      console.log("errors", error);
+      return;
     }
-  }, [error]);
+  }, [createdEnsemble, setEnsembles, error]);
+
+  // useEffect(() => {
+  //   if (error) {
+  //     console.error("Error creating ensemble:", error);
+  //     return;
+  //   }
+  // }, [triggerFetch]);
 
   const handleTagChange = (tags: string[]) => {
     const currentTags = new Set(genres);
@@ -210,9 +236,8 @@ export function CreateEnsemblePage() {
               }}
             />
           </div>
-          {/* <Button buttonVariant="primary" buttonLabel="Create ensemble" buttonState={"default"} iconPosition="top" className="w-auto m-b-6" type="submit"></Button> */}
 
-          <Button buttonVariant="primary" buttonLabel="Create ensemble" buttonState={(loading && "disabled") || "default"} iconPosition="top" className="w-auto m-b-6" type="submit">
+          <Button buttonVariant="primary" buttonLabel="Create ensemble" buttonState={(loading && "disabled") || "default"} iconPosition="top" className="w-auto m-b-6 py-4" type="submit">
             {loading ? "Creating..." : "Create Ensemble"}
           </Button>
         </form>

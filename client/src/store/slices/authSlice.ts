@@ -8,7 +8,7 @@ export interface AuthState {
 }
 
 export const createAuthSlice: StateCreator<AuthState, [], [], AuthState> = (set): AuthState => ({
-  user: {},
+  user: { _id: "" },
   setUser: (user: User) => set({ user }),
   resetUser: () => set(() => ({})),
 });
