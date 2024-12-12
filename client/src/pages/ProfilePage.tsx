@@ -1,10 +1,8 @@
-import { jwtDecode } from "jwt-decode";
 import Button from "../components/atoms/Button";
 import ProfileBadge from "../components/atoms/ProfileBadge";
 import TextBody from "../components/atoms/TextBody";
 import TextHeadline from "../components/atoms/TextHeadline";
 import { useStore } from "../store/useStore";
-import { User } from "../types/UserType";
 import { useEffect } from "react";
 import { useFetch } from "../hooks/use-fetch";
 import Image from "../components/atoms/Image";
@@ -12,62 +10,49 @@ import { ICON_NAMES } from "../components/atoms/Icon/IconNames";
 import { Icon } from "../components/atoms/Icon/Icon";
 import EnsembleCard from "../components/molecules/EnsembleCard";
 import { EnsembleType } from "../types/EnsembleType";
+import { getUserIdFromCookie } from "../hooks/getCookies";
 
 export default function ProfilePage() {
-  const user = useStore((state) => state.user);
-  const setUser = useStore((state) => state.setUser);
+  const { user } = useStore();
+  const { userId } = getUserIdFromCookie();
+  //utility to format dates
+  const formatDate = (date?: Date | string): string => {
+    if (!date) return "N/A"; // Handle undefined or null
+    const parsedDate = typeof date === "string" ? new Date(date) : date;
+    return isNaN(parsedDate.getTime()) ? "Invalid Date" : parsedDate.toDateString();
+  };
 
-  const cookies = document.cookie.split("; ");
-  const authCodeCookie = cookies.find((cookie) => cookie.startsWith("accessToken="));
-  const decodedToken: Record<string, any> | null = authCodeCookie
-    ? jwtDecode(authCodeCookie.split("=")[1])
-    : null;
+  // console.log("user from profile", user);
+  //the user.lastLoggedIn has to be added to the createUserDTO in the backend when the user is created, that's why is appears as undefined.
 
-  const userId = decodedToken?.id || null;
-  const { data: fetchedUser, triggerFetch: userFetchTrigger } = useFetch<Partial<User> | null>(
-    null,
-    userId ? `/users/${userId}` : null,
-    "GET"
-  );
-
-  useEffect(() => {
-    if (userId) {
-      userFetchTrigger();
-    }
-  }, [userId, userFetchTrigger]);
-  useEffect(() => {
-    if (fetchedUser) {
-      setUser({
-        id: userId,
-        firstName: fetchedUser.firstName
-          ? fetchedUser.firstName.charAt(0).toUpperCase() +
-            fetchedUser.firstName.slice(1).toLowerCase()
-          : "",
-        lastName: fetchedUser.lastName
-          ? fetchedUser.lastName.charAt(0).toUpperCase() +
-            fetchedUser.lastName.slice(1).toLowerCase()
-          : "",
-        email: fetchedUser.email || "",
-        description: fetchedUser.description
-          ? fetchedUser.description.charAt(0).toUpperCase() +
-            fetchedUser.description.slice(1).toLowerCase()
-          : "",
-        birthdate: fetchedUser.birthdate ? new Date(fetchedUser.birthdate) : undefined,
-        isAvailable: fetchedUser.isAvailable || false,
-        city: fetchedUser.city
-          ? fetchedUser.city.charAt(0).toUpperCase() + fetchedUser.city.slice(1).toLowerCase()
-          : "",
-        zip: fetchedUser.zip || "",
-        phoneNumber: fetchedUser.phoneNumber || "",
-        image: fetchedUser.image || "",
-        // show the last logged in date if it is available, otherwise show the created at date
-        lastLoggedIn: fetchedUser.lastLoggedIn ? new Date(fetchedUser.lastLoggedIn) : new Date(),
-        createdAt: fetchedUser.createdAt ? new Date(fetchedUser.createdAt) : undefined,
-        isNewsletter: fetchedUser.isNewsletter || false,
-        isDeleted: fetchedUser.isDeleted || false,
-      });
-    }
-  }, [userId, fetchedUser, setUser]);
+  //console.log(user.lastLoggedIn);
+  // useEffect(() => {
+  //   if (userId) {
+  //     userFetchTrigger();
+  //   }
+  // }, [userId, userFetchTrigger]);
+  // useEffect(() => {
+  //   if (fetchedUser) {
+  //     setUser({
+  //       id: userId,
+  //       firstName: fetchedUser.firstName ? fetchedUser.firstName.charAt(0).toUpperCase() + fetchedUser.firstName.slice(1).toLowerCase() : "",
+  //       lastName: fetchedUser.lastName ? fetchedUser.lastName.charAt(0).toUpperCase() + fetchedUser.lastName.slice(1).toLowerCase() : "",
+  //       email: fetchedUser.email || "",
+  //       description: fetchedUser.description ? fetchedUser.description.charAt(0).toUpperCase() + fetchedUser.description.slice(1).toLowerCase() : "",
+  //       birthdate: fetchedUser.birthdate ? new Date(fetchedUser.birthdate) : undefined,
+  //       isAvailable: fetchedUser.isAvailable || false,
+  //       city: fetchedUser.city ? fetchedUser.city.charAt(0).toUpperCase() + fetchedUser.city.slice(1).toLowerCase() : "",
+  //       zip: fetchedUser.zip || "",
+  //       phoneNumber: fetchedUser.phoneNumber || "",
+  //       image: fetchedUser.image || "",
+  //       // show the last logged in date if it is available, otherwise show the created at date
+  //       lastLoggedIn: fetchedUser.lastLoggedIn ? new Date(fetchedUser.lastLoggedIn) : new Date(),
+  //       createdAt: fetchedUser.createdAt ? new Date(fetchedUser.createdAt) : undefined,
+  //       isNewsletter: fetchedUser.isNewsletter || false,
+  //       isDeleted: fetchedUser.isDeleted || false,
+  //     });
+  //   }
+  // }, [userId, fetchedUser, setUser]);
   // console.log(user);
   // const { data: userInstrument, triggerFetch: userInstrumentsTrigger } =
   //   useFetch<Partial<Instrument> | null>(null, userId ? `/instruments/${userId}` : null, "GET");
@@ -124,8 +109,8 @@ export default function ProfilePage() {
                 <ProfileBadge ProfileBadgeLabel="Seeking" ProfileBadgeSize="sm" />
               )}
             </div>
-            <TextBody>{user?.createdAt?.toDateString()}</TextBody>
-            <TextBody>{user?.lastLoggedIn?.toDateString()}</TextBody>
+            <TextBody>{formatDate(user.createdAt)}</TextBody>
+            <TextBody>{formatDate(user.lastLoggedIn)}</TextBody>
           </div>
         </div>
         <div className="flex flex-row gap-4">

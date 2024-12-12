@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import { Icon } from "./Icon/Icon";
 import { ICON_NAMES } from "./Icon/IconNames";
+import TextBody from "./TextBody";
 
 interface Props {
   value: string;
@@ -14,6 +15,7 @@ interface Props {
   className?: string;
   id: string;
   name: string;
+  required?: boolean;
 }
 
 export default function TextInput({
@@ -28,6 +30,7 @@ export default function TextInput({
   className,
   id,
   name,
+  required,
 }: Props) {
   const containerClasses = classNames(
     "input-container",
@@ -58,9 +61,10 @@ export default function TextInput({
         disabled={disabled}
         id={id}
         name={name}
+        required={required}
       />
       {isValid === false && validityMsg && (
-        <span className="text-red-500 text-sm mt-1">{validityMsg}</span>
+        <TextBody className="text-red-500 text-sm mt-1">{validityMsg}</TextBody>
       )}
     </div>
   );

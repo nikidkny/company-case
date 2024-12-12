@@ -1,8 +1,8 @@
-// SignupForm.tsx
 import TextInput from "../atoms/TextInput"; // Assuming you've already imported TextInput
 import Button from "../atoms/Button"; // Assuming you've already imported Button
+import { getFieldErrorMessage } from "../../utilities/errorUtils";
+import Checkbox from "../atoms/Checkbox";
 
-// Update the interface to include formData
 interface SignupFormProps {
   formData: {
     firstName: string;
@@ -23,9 +23,15 @@ interface SignupFormProps {
     birthdate: string;
     isAvailable: boolean;
   }) => void;
+  errorMessages: string[] | null;
 }
 
-export default function SignupForm({ formData, onChange, onSubmit }: SignupFormProps) {
+export default function SignupForm({
+  formData,
+  onChange,
+  onSubmit,
+  errorMessages,
+}: SignupFormProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formData); // Pass formData to parent component's handler
@@ -44,6 +50,9 @@ export default function SignupForm({ formData, onChange, onSubmit }: SignupFormP
           placeholder="First Name"
           id="firstName"
           name="firstName"
+          isValid={!getFieldErrorMessage(errorMessages, "First name")}
+          validityMsg={getFieldErrorMessage(errorMessages, "First name") || undefined}
+          required={true}
         />
 
         <TextInput
@@ -53,6 +62,9 @@ export default function SignupForm({ formData, onChange, onSubmit }: SignupFormP
           placeholder="Last Name"
           id="lastName"
           name="lastName"
+          isValid={!getFieldErrorMessage(errorMessages, "Last name")}
+          validityMsg={getFieldErrorMessage(errorMessages, "Last name") || undefined}
+          required={true}
         />
 
         <TextInput
@@ -62,6 +74,9 @@ export default function SignupForm({ formData, onChange, onSubmit }: SignupFormP
           placeholder="Email"
           id="email"
           name="email"
+          isValid={!getFieldErrorMessage(errorMessages, "Email")}
+          validityMsg={getFieldErrorMessage(errorMessages, "Email") || undefined}
+          required={true}
         />
 
         <TextInput
@@ -71,6 +86,9 @@ export default function SignupForm({ formData, onChange, onSubmit }: SignupFormP
           placeholder="Password"
           id="password"
           name="password"
+          isValid={!getFieldErrorMessage(errorMessages, "Password")}
+          validityMsg={getFieldErrorMessage(errorMessages, "Password") || undefined}
+          required={true}
         />
 
         <TextInput
@@ -80,6 +98,13 @@ export default function SignupForm({ formData, onChange, onSubmit }: SignupFormP
           placeholder="Confirm Password"
           id="confirmPassword"
           name="confirmPassword"
+          isValid={!getFieldErrorMessage(errorMessages, "Confirm")}
+          validityMsg={
+            getFieldErrorMessage(errorMessages, "match") ||
+            getFieldErrorMessage(errorMessages, "Confirm") ||
+            undefined
+          }
+          required={true}
         />
 
         <TextInput
@@ -89,20 +114,19 @@ export default function SignupForm({ formData, onChange, onSubmit }: SignupFormP
           placeholder="Birthdate"
           id="birthdate"
           name="birthdate"
+          isValid={!getFieldErrorMessage(errorMessages, "Birthdate")}
+          validityMsg={getFieldErrorMessage(errorMessages, "Birthdate") || undefined}
+          required={true}
         />
 
-        <div className="w-80 flex items-center space-x-2">
-          <input
-            type="checkbox"
-            name="isAvailable"
-            checked={formData.isAvailable}
-            onChange={(e) => onChange("isAvailable", e.target.checked)}
-            className="h-5 w-5"
-          />
-          <label htmlFor="isAvailable" className="text-gray-700">
-            Available for contact
-          </label>
-        </div>
+        <Checkbox
+          name="isAvailable"
+          label="Available for contact"
+          checked={formData.isAvailable}
+          onChange={(checked) => onChange("isAvailable", checked)}
+          required={false}
+          shouldValidate={false}
+        />
 
         <Button
           buttonState="default"
