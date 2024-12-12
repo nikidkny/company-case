@@ -37,14 +37,14 @@ export default function EditProfilePage() {
     isAvailable,
   };
   console.log(userData);
-  const { data: editedUser, triggerFetch: userFetchTrigger } = useFetch<Partial<User> | null>(
+  const { triggerFetch: userFetchTrigger } = useFetch<Partial<User> | null>(
     null,
     userId ? `/users/${userId}` : null,
     "PUT",
     { "Content-Type": "application/json" },
     userData
   );
-
+  // populate the data from the user object
   useEffect(() => {
     if (user) {
       setFirstName(user.firstName);
@@ -58,12 +58,6 @@ export default function EditProfilePage() {
       setHasChanges(false);
     }
   }, [user]);
-
-  useEffect(() => {
-    if (editedUser) {
-      console.log(editedUser);
-    }
-  }, [editedUser]);
 
   const handleSaveChanges = async () => {
     try {
