@@ -143,8 +143,6 @@ export class AuthService {
 
   async refreshToken(refreshToken: string, res: Response): Promise<{ accessToken: string }> {
     try {
-      console.log('RefreshToken SERVICE', refreshToken);
-      
       // Validate refresh token
       const payload = this.jwtService.verify(refreshToken, {
         secret: process.env.JWT_REFRESH_SECRET,
@@ -152,7 +150,6 @@ export class AuthService {
 
       // Find user by ID (stored in the payload)
       const user = await this.userModel.findById(payload.id);
-      console.log(user);
       if (!user) {
         console.error("USER NOT FOUND")
         throw new NotFoundException('User not found');

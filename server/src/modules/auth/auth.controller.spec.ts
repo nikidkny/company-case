@@ -10,6 +10,9 @@ import { JwtModule } from '@nestjs/jwt';
 import * as request from 'supertest';
 import { ConfigService } from '@nestjs/config';
 import { JwtAuthStrategy } from './jwt.strategy';
+import * as jwt from 'jsonwebtoken';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
@@ -171,35 +174,79 @@ describe('AuthController (e2e)', () => {
 
     const refreshToken = refreshTokenCookie?.split(';')[0].split('=')[1];
 
-    console.log('refreshtokenCookies In TEST:', refreshToken);
-
     const refreshResponse = await request(app.getHttpServer())
       .post('/auth/refresh')
       .set('Cookie', [`refreshToken=${refreshToken}`])
       .expect(HttpStatus.CREATED);
-      
-      
-      // Make a request to refresh the access token
-      // Verify the response contains a new access token cookie
-      const refreshCookies = refreshResponse.headers['set-cookie'] as unknown as string[];
-      expect(refreshCookies).toBeDefined();
-      expect(
-        refreshCookies.some((cookie) => cookie.startsWith('accessToken=')),
-        ).toBeTruthy();
-        
-        // Optionally, decode the new access token to verify its payload
-        const accessTokenCookie = refreshCookies.find((cookie) =>
-          cookie.startsWith('accessToken='),
-        );
-        const newAccessToken = accessTokenCookie?.split(';')[0].split('=')[1];
-        
-        const jwt = require('jsonwebtoken');
-        const decodedToken = jwt.decode(newAccessToken);
-        
-        expect(decodedToken).toHaveProperty('id'); // Ensure the token contains the user ID
-        expect(decodedToken).toHaveProperty('email', mockUserEmail); // Ensure email matches
+
+    // Make a request to refresh the access token
+    // Verify the response contains a new access token cookie
+    const refreshCookies = refreshResponse.headers['set-cookie'] as unknown as string[];
+    expect(refreshCookies).toBeDefined();
+    expect(
+      refreshCookies.some((cookie) => cookie.startsWith('accessToken=')),
+    ).toBeTruthy();
+
+    // Optionally, decode the new access token to verify its payload
+    const accessTokenCookie = refreshCookies.find((cookie) =>
+      cookie.startsWith('accessToken='),
+    );
+    const newAccessToken = accessTokenCookie?.split(';')[0].split('=')[1];
+
+    const jwt = require('jsonwebtoken');
+    const decodedToken = jwt.decode(newAccessToken);
+
+    expect(decodedToken).toHaveProperty('id'); // Ensure the token contains the user ID
+    expect(decodedToken).toHaveProperty('email', mockUserEmail); // Ensure email matches
   });
 
+  /* Refresh Token using invalid refresh token */
+  it('should return UNAUTHORIZED for an invalid refresh token', async () => {
+    const invalidRefreshToken = 'someInvalidToken123';
+
+    const refreshResponse = await request(app.getHttpServer())
+      .post('/auth/refresh')
+      .set('Cookie', [`refreshToken=${invalidRefreshToken}`])
+      .expect(HttpStatus.UNAUTHORIZED);
+
+    expect(refreshResponse.body.message).toBe('Invalid or expired refresh token');
+  });
+
+  it('should return UNAUTHORIZED for an expired refresh token', async () => {
+    // Log in to get a valid refresh token
+    const loginResponse = await request(app.getHttpServer())
+      .post('/auth/login')
+      .send({
+        email: mockUserEmail,
+        password: mockUserPassword,
+      })
+      .expect(HttpStatus.OK);
+
+    const cookies = loginResponse.headers['set-cookie'] as unknown as string[];
+    const refreshTokenCookie = cookies.find((cookie) =>
+      cookie.startsWith('refreshToken='),
+    );
+
+    expect(refreshTokenCookie).toBeDefined();
+
+    const validRefreshToken = refreshTokenCookie?.split(';')[0].split('=')[1];
+    const decodedRefreshToken = jwt.decode(validRefreshToken) as any;
+    
+    // Manually expire the refresh token
+    const expiredRefreshToken = jwt.sign(
+      { id: decodedRefreshToken.id, email: decodedRefreshToken.email },
+      process.env.JWT_REFRESH_SECRET!,
+      { expiresIn: '-10s' }, // Expired 10 seconds ago
+    );
+
+    // Use the expired token in the refresh request
+    const refreshResponse = await request(app.getHttpServer())
+      .post('/auth/refresh')
+      .set('Cookie', [`refreshToken=${expiredRefreshToken}`])
+      .expect(HttpStatus.UNAUTHORIZED);
+
+    expect(refreshResponse.body.message).toBe('Invalid or expired refresh token');
+  });
 
   afterAll(async () => {
     try {

@@ -58,8 +58,6 @@ export class AuthController {
       throw new UnauthorizedException('Refresh token is missing');
     }
     
-    console.log('refreshToken CONTROLLER',refreshToken);
-    
     // Delegate the token refresh logic to the service
     const { accessToken } = await this.authService.refreshToken(refreshToken, res);
 
