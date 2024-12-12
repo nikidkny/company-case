@@ -119,7 +119,6 @@ export default function SignupForm({
           label="Available for contact"
           checked={formData.isAvailable}
           onChange={(checked) => onChange("isAvailable", checked)}
-          className="h-5 w-5"
           required={false} 
           shouldValidate={false}
         />
