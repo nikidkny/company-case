@@ -2,7 +2,7 @@ import { Body, Controller, HttpCode, HttpStatus, Post, Req, Res, UnauthorizedExc
 import { AuthService } from "./auth.service";
 import { CreateUserDto } from "../users/dto/create-user.dto";
 import { JwtAuthGuard } from "./jwt-auth.guard";
-import e, { Response, Request } from 'express';
+import { Response, Request } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -16,13 +16,15 @@ export class AuthController {
   }
 
   //TODO: 
-  // - check if the user is already logged in before loggin in again and issue new tokens.
+  // - check if the user is already logged in before loggin in again and before  issuing new tokens.
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Body() body: { email: string, password: string }, @Res() res: Response, @Req() req: Request) {
-    //TODO: Check if the user already
+  async login(
+    @Body() body: { email: string, password: string },
+    @Res() res: Response,
+    @Req() req: Request,) {
 
-    await this.authService.login(body.email, body.password, res);
+    await this.authService.handleLogin(body.email, body.password, req, res);
     return res.json({ message: 'Login successful' });
   }
 
@@ -37,7 +39,6 @@ export class AuthController {
   }
 
   //TODO:
-  // - Test in postman
   // - implement in the client-side to detect '401 unauthorised' and call te refresh endpoint
   @Post('refresh')
   @HttpCode(HttpStatus.CREATED)
@@ -57,11 +58,11 @@ export class AuthController {
     if (!refreshToken) {
       throw new UnauthorizedException('Refresh token is missing');
     }
-    
+
     // Delegate the token refresh logic to the service
     const { accessToken } = await this.authService.refreshToken(refreshToken, res);
 
-    return res.json({ message: 'Access token refreshed', accessToken });
+    return res.json({ message: 'Access token refreshed' });
   }
 
 }

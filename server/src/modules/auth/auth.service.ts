@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  HttpStatus,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -11,7 +12,8 @@ import { Model } from 'mongoose';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
-import { Response } from 'express';
+import { Response, Request } from 'express';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class AuthService {
@@ -67,9 +69,69 @@ export class AuthService {
     }
   }
 
-  async login(email: string, password: string, res: Response) {
+  async handleLogin(email: string, password: string, req: Request, res: Response) {
+    //TODO: 
+    // - check if the user is already logged in before loggin in again and before issuing new tokens.
 
+    // Check if the user is already logged in by verifying the refresh token
+    const existingRefreshToken = req.cookies['refreshToken'];
+
+    if (existingRefreshToken) {
+      try {
+        //TODO: add test if invalid token and logout users
+        // Try to verify the refresh token
+        jwt.verify(existingRefreshToken, process.env.JWT_REFRESH_SECRET);
+
+        // check if already logged in 
+        await this.alreadyLoggedIn(email, password);
+
+        // If valid refresh token return 204 No Content:the request was successful, but there is no additional content to send in the response.
+        return res.status(HttpStatus.OK).json({
+          message: 'User is already logged',
+        });
+      } catch (e) {
+        // Check if the error message is "Invalid credentials from logged in user"
+        if (e.message === 'Invalid credentials from logged in user') {
+          // Clear the cookies if the error is related to invalid credentials from a logged-in user
+          res.clearCookie('accessToken'); // Clear the access token cookie
+          res.clearCookie('refreshToken'); // Clear the refresh token cookie
+
+          return res.status(HttpStatus.BAD_REQUEST).json({
+            message: 'Invalid credentials from logged in user, cookies cleared',
+          });
+        }
+
+        // If refresh token is invalid, expired, or credentials don't match
+        if (e instanceof NotFoundException || e instanceof BadRequestException) {
+          // Send specific error messages in case of invalid credentials
+          return res.status(HttpStatus.BAD_REQUEST).json({
+            message: e.message || 'Invalid credentials',
+          });
+        }
+
+        // Handle any other unexpected errors
+        console.log('Error during login check:', e);
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+          message: 'An unexpected error occurred',
+        });
+      }
+    }
+
+    // If no valid refresh token, proceed with normal login
     try {
+      await this.login(email, password, res);
+      return res.json({ message: 'Login successful' });
+    } catch (error) {
+      console.error('Error during login:', error);
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: 'An unexpected error occurred during login',
+      });
+    }
+  }
+
+  async login(email: string, password: string, res: Response) {
+    try {
+      // Check if email and password are provided
       // Check if email and password are provided
       if (!email && !password) {
         throw new BadRequestException('Credentials must not be empty');
@@ -138,6 +200,22 @@ export class AuthService {
         throw error;
       }
       throw new InternalServerErrorException('An unexpected error occurred');
+    }
+  }
+
+  async alreadyLoggedIn(email: string, password: string) {
+    const userFound = await this.userModel.findOne({ email });
+    if (!userFound) {
+      throw new NotFoundException('User not found');
+    }
+
+    // Compare the provided password with the hashed password
+    const isPasswordValid = await bcrypt.compare(
+      password,
+      userFound.password,
+    );
+    if (!isPasswordValid) {
+      throw new BadRequestException('Invalid credentials from logged in user');
     }
   }
 
