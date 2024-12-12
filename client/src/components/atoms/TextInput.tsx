@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import { Icon } from "./Icon/Icon";
 import { ICON_NAMES } from "./Icon/IconNames";
+import TextBody from "./TextBody";
 
 interface Props {
   value: string;
@@ -63,7 +64,7 @@ export default function TextInput({
         required={required}
       />
       {isValid === false && validityMsg && (
-        <span className="text-red-500 text-sm mt-1">{validityMsg}</span>
+        <TextBody className="text-red-500 text-sm mt-1">{validityMsg}</TextBody>
       )}
     </div>
   );
