@@ -8,9 +8,10 @@ import { createEnsembleSlice, CreateEnsembleState } from "./slices/createEnsembl
 import { ensemblesSlice, EnsemblesState } from "./slices/ensemblesSlice";
 import { createFetchDataSlice, FetchDataState } from "./slices/fetchDataSlice";
 import { filterSlice, FilterSliceState } from "./slices/filterSlice";
+import { createPostSlice, CreatePostState } from "./slices/createPostSlice";
 
 // Combined store type, add other types for the additional slices
-interface Store extends MenuState, LoginStatusState, CreateEnsembleState, FetchDataState, EnsemblesState, PopUpState, FilterSliceState, AuthState {}
+interface Store extends MenuState, LoginStatusState, CreateEnsembleState, FetchDataState, EnsemblesState, PopUpState, FilterSliceState, AuthState, CreatePostState {}
 
 export const useStore = create<Store>((set, ...args) => ({
   ...createPopUpSlice(set),
@@ -21,4 +22,5 @@ export const useStore = create<Store>((set, ...args) => ({
   ...createFetchDataSlice(set, ...args),
   ...ensemblesSlice(set, ...args),
   ...filterSlice(set, ...args),
+  ...createPostSlice(set, ...args),
 }));

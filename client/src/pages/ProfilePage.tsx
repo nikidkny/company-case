@@ -155,7 +155,7 @@ export default function ProfilePage() {
             My Posts
           </TextHeadline>
           <div>
-            <Button buttonVariant="secondary" onClick={() => console.log("Create Post")} iconPosition="none" buttonLabel="Create"></Button>
+            <Button buttonVariant="secondary" to="/posts/create/" iconPosition="none" buttonLabel="Create" className="no-underline"></Button>
           </div>
         </div>
         {/* TO DO: map through logged in user's posts for now it is static posts */}

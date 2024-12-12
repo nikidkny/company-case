@@ -3,17 +3,17 @@ import DropdownInput from "../atoms/DropdownInput";
 import DropdownItem from "../atoms/DropdownItem";
 import classNames from "classnames";
 
-interface DropdownOptionProps {
+export type DropdownOptionType = {
   label: string; // The text to display in the dropdown
   value: string; // The value to return on selection
-}
+};
 
 interface DropdownProps {
-  options: string[] | DropdownOptionProps[];
+  options: string[] | DropdownOptionType[];
   initialSelectedLabel?: string;
   className?: string;
-  selectedOption: string | null;
-  onSelect: (value: string) => void;
+  selectedOption: string | DropdownOptionType | null;
+  onSelect: (value: string | DropdownOptionType) => void;
 }
 
 export function Dropdown({ options, initialSelectedLabel = "Select an option", className, selectedOption, onSelect }: DropdownProps) {
@@ -24,7 +24,7 @@ export function Dropdown({ options, initialSelectedLabel = "Select an option", c
   const normalizedOptions = Array.isArray(options) ? options.map((option) => (typeof option === "string" ? { label: option, value: option } : option)) : [];
 
   // Find the selected label based on the current selectedOption value
-  const selectedLabel = normalizedOptions.find((option) => option.value === selectedOption)?.label || initialSelectedLabel;
+  const selectedLabel = typeof selectedOption === "string" ? normalizedOptions.find((option) => option.value === selectedOption)?.label || initialSelectedLabel : selectedOption?.label || initialSelectedLabel;
 
   return (
     <div className={classes}>
@@ -37,7 +37,7 @@ export function Dropdown({ options, initialSelectedLabel = "Select an option", c
                 key={index}
                 label={option.label}
                 onSelect={() => {
-                  onSelect(option.value);
+                  onSelect(option);
                   setIsOpen(false);
                 }}
               />

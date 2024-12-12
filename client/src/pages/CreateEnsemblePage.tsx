@@ -202,7 +202,7 @@ export function CreateEnsemblePage() {
             <TextBody variant="strong" size="md" className="text-blue-500">
               Number of active musicians
             </TextBody>
-            <Dropdown initialSelectedLabel="Select a number" options={activeMusiciansNumberOptions} className="w-auto" selectedOption={activeMusicians} onSelect={(value: string) => setActiveMusicians(value)} />
+            <Dropdown initialSelectedLabel="Select a number" options={activeMusiciansNumberOptions} className="w-auto" selectedOption={activeMusicians} onSelect={(value) => setActiveMusicians(value)} />
           </div>
 
           {/* sessions frequency */}
