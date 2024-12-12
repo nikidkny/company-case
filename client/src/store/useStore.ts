@@ -9,17 +9,10 @@ import { ensemblesSlice, EnsemblesState } from "./slices/ensemblesSlice";
 import { createFetchDataSlice, FetchDataState } from "./slices/fetchDataSlice";
 import { filterSlice, FilterSliceState } from "./slices/filterSlice";
 
-interface BearState {
-  bears: number;
-  increase: (by: number) => void;
-}
-
 // Combined store type, add other types for the additional slices
-interface Store extends BearState, MenuState, LoginStatusState, CreateEnsembleState, FetchDataState, EnsemblesState, PopUpState, FilterSliceState, AuthState {}
+interface Store extends MenuState, LoginStatusState, CreateEnsembleState, FetchDataState, EnsemblesState, PopUpState, FilterSliceState, AuthState {}
 
 export const useStore = create<Store>((set, ...args) => ({
-  bears: 0,
-  increase: (by) => set((state) => ({ bears: state.bears + by })),
   ...createPopUpSlice(set),
   ...createToggleMenuSlice(set),
   ...createLoginStatusSlice(set),
