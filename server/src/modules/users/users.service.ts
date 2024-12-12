@@ -3,7 +3,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User } from './user.entity';
 import { Model, Types } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { GetMembersDetailsDto } from './dto/get-members-details.dto';
+
 
 @Injectable()
 export class UsersService {
@@ -21,6 +23,13 @@ export class UsersService {
     const createdUser = new this.userModel(createUserDto);
     return createdUser.save();
   }
+
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+    return this.userModel
+      .findByIdAndUpdate(id, updateUserDto, { new: true })
+      .exec();
+  }
+
   //takes an array of userIds and finds each user + creator
   async getMembersDetails({
     membersIds,
@@ -39,6 +48,5 @@ export class UsersService {
     return foundResults;
   }
 
-  update(id: string) {}
   remove(id: string) {}
 }
