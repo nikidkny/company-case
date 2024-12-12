@@ -1,13 +1,12 @@
-import { useState } from "react";
+import { FC } from "react";
 import Button from "../atoms/Button";
 
-export default function ToggleButtonGroup() {
-  const [selectedOption, setSelectedOption] = useState<"searching" | "notSearching" | null>(null);
+interface ToggleButtonGroupProps {
+  selectedOption: "searching" | "notSearching" | null;
+  onSelect: (option: "searching" | "notSearching") => void;
+}
 
-  const handleSelect = (option: "searching" | "notSearching") => {
-    setSelectedOption(option);
-  };
-
+const ToggleButtonGroup: FC<ToggleButtonGroupProps> = ({ selectedOption, onSelect }) => {
   return (
     <div className="toggle-button-group flex flex-row">
       <Button
@@ -15,15 +14,17 @@ export default function ToggleButtonGroup() {
         buttonState="default"
         buttonLabel="Searching"
         iconPosition="none"
-        onClick={() => handleSelect("searching")}
+        onClick={() => onSelect("searching")}
       />
       <Button
         buttonVariant={selectedOption === "notSearching" ? "primary" : "secondary"} // Highlight selected button
         buttonState="default"
         buttonLabel="Not Searching"
         iconPosition="none"
-        onClick={() => handleSelect("notSearching")}
+        onClick={() => onSelect("notSearching")}
       />
     </div>
   );
-}
+};
+
+export default ToggleButtonGroup;

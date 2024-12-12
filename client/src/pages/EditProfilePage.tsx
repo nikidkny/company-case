@@ -8,22 +8,24 @@ import { useStore } from "../store/useStore";
 import { useEffect, useState } from "react";
 import { useFetch } from "../hooks/use-fetch";
 import { User } from "../types/UserType";
-import { useParams } from "@tanstack/react-router";
+import { getUserIdFromCookie } from "../hooks/getCookies";
+import { useNavigate } from "@tanstack/react-router";
 
 export default function EditProfilePage() {
-  const user = useStore((state) => state.user);
-  const setObjectData = useStore((state) => state.setObjectData);
-  const { profileId } = useParams({ strict: false });
+  const { user } = useStore();
+  const { userId } = getUserIdFromCookie();
+  const navigate = useNavigate();
+  const [hasChanges, setHasChanges] = useState(false);
 
   console.log(user);
-  const [firstName, setFirstName] = useState(user?.firstName);
-  const [lastName, setLastName] = useState(user?.lastName);
-  const [description, setDescription] = useState(user?.description);
-  const [zip, setZip] = useState(user?.zip);
-  const [city, setCity] = useState(user?.city);
-  const [email, setEmail] = useState(user?.email);
-  const [phoneNumber, setPhoneNumber] = useState(user?.phoneNumber);
-
+  const [firstName, setFirstName] = useState(user.firstName);
+  const [lastName, setLastName] = useState(user.lastName);
+  const [description, setDescription] = useState(user.description);
+  const [zip, setZip] = useState(user.zip);
+  const [city, setCity] = useState(user.city);
+  const [email, setEmail] = useState(user.email);
+  const [phoneNumber, setPhoneNumber] = useState(user.phoneNumber);
+  const [isAvailable, setIsAvailable] = useState(user.isAvailable);
   const userData = {
     firstName,
     lastName,
@@ -32,15 +34,42 @@ export default function EditProfilePage() {
     city,
     email,
     phoneNumber,
+    isAvailable,
   };
   console.log(userData);
   const { data: editedUser, triggerFetch: userFetchTrigger } = useFetch<Partial<User> | null>(
     null,
-    `/users/${profileId}`,
+    userId ? `/users/${userId}` : null,
     "PUT",
     { "Content-Type": "application/json" },
     userData
   );
+
+  const { data: fetchedUser, triggerFetch: fetchUser } = useFetch<User | null>(
+    null,
+    userId ? `/users/${userId}` : null,
+    "GET"
+  );
+
+  useEffect(() => {
+    if (userId) {
+      fetchUser();
+    }
+  }, [userId, fetchUser]);
+
+  useEffect(() => {
+    if (fetchedUser) {
+      setFirstName(fetchedUser.firstName);
+      setLastName(fetchedUser.lastName);
+      setDescription(fetchedUser.description);
+      setZip(fetchedUser.zip);
+      setCity(fetchedUser.city);
+      setEmail(fetchedUser.email);
+      setPhoneNumber(fetchedUser.phoneNumber);
+      setIsAvailable(fetchedUser.isAvailable);
+      setHasChanges(false);
+    }
+  }, [fetchedUser]);
 
   useEffect(() => {
     if (editedUser) {
@@ -48,15 +77,31 @@ export default function EditProfilePage() {
     }
   }, [editedUser]);
 
-  const handleSaveChanges = () => {
-    userFetchTrigger();
+  const handleSaveChanges = async () => {
+    try {
+      await userFetchTrigger();
+      alert("Changes saved successfully!");
+      setHasChanges(false);
+    } catch (error) {
+      alert(`Failed to save changes: ${error.message}`);
+    }
   };
+
+  const handleBackButtonClick = () => {
+    if (hasChanges) {
+      if (window.confirm("You have unsaved changes. Are you sure you want to go back?")) {
+        navigate({ to: `/profile/${userId}` });
+      }
+    } else {
+      navigate({ to: `/profile/${userId}` });
+    }
+  };
+
   return (
     <div className="edit-page-wrapper flex flex-col gap-6 p-6 ">
       <div className="back-button-wrapper flex flex-col items-start">
         <Button
-          to="/profile/$profileId"
-          params={{ profileId: profileId || "" }}
+          onClick={handleBackButtonClick}
           buttonVariant="secondary"
           iconPosition="none"
           className="w-fit"
@@ -67,18 +112,22 @@ export default function EditProfilePage() {
       <TextHeadline variant="h2" size="sm">
         Edit Profile
       </TextHeadline>
-      <div className="edit-name-wrapper">
+      <div className="edit-name-wrapper flex flex-col gap-4">
         <TextHeadline variant="h3" size="sm">
           Name
         </TextHeadline>
-        <div className="flex flex-row">
+        <div className="flex flex-row ">
           <TextInput
             inputType="text"
             id="firstName"
             name="firstName"
             placeholder="First Name"
             value={firstName || ""}
-            onChange={(value: string) => setFirstName(value)}
+            onChange={(value) => {
+              setFirstName(value);
+              setHasChanges(true);
+            }}
+            className="w-full"
           />
           <TextInput
             inputType="text"
@@ -86,17 +135,21 @@ export default function EditProfilePage() {
             id="lastName"
             name="lastName"
             value={lastName || ""}
-            onChange={(value: string) => setLastName(value)}
+            onChange={(value: string) => {
+              setLastName(value);
+              setHasChanges(true);
+            }}
+            className="w-full"
           />
         </div>
       </div>
-      <div className="edit-image-wrapper">
+      <div className="edit-image-wrapper flex flex-col gap-4">
         <TextHeadline variant="h3" size="sm">
           Profile Image
         </TextHeadline>
-        <ImageInput onImageChange={(file) => console.log(file)} />
+        <ImageInput variant="profile" onImageChange={(file) => console.log(file)} />
       </div>
-      <div className="edit-description-wrapper">
+      <div className="edit-description-wrapper flex flex-col gap-4">
         <TextHeadline variant="h3" size="sm">
           Description
         </TextHeadline>
@@ -106,31 +159,44 @@ export default function EditProfilePage() {
           id="description"
           name="description"
           value={description || ""}
-          onChange={(value: string) => setDescription(value)}
+          onChange={(value: string) => {
+            setDescription(value);
+            setHasChanges(true);
+          }}
         />
       </div>
-      <div className="edit-address-wrapper">
+      <div className="edit-address-wrapper flex flex-col gap-4">
         <TextHeadline variant="h3" size="sm">
           Address
         </TextHeadline>
-        <TextInput
-          inputType="text"
-          placeholder="ZIP"
-          id="zip"
-          name="zip"
-          value={zip || ""}
-          onChange={(value: string) => setZip(value)}
-        />
-        <TextInput
-          inputType="text"
-          placeholder="City"
-          id="city"
-          name="city"
-          value={city || ""}
-          onChange={(value: string) => setCity(value)}
-        />
+        <div className="flex flex-row ">
+          <TextInput
+            inputType="text"
+            placeholder="ZIP"
+            id="zip"
+            name="zip"
+            value={zip || ""}
+            onChange={(value: string) => {
+              setZip(value);
+              setHasChanges(true);
+            }}
+            className="w-full"
+          />
+          <TextInput
+            inputType="text"
+            placeholder="City"
+            id="city"
+            name="city"
+            value={city || ""}
+            onChange={(value: string) => {
+              setCity(value);
+              setHasChanges(true);
+            }}
+            className="w-full"
+          />
+        </div>
       </div>
-      <div className="edit-contact-wrapper">
+      <div className="edit-contact-wrapper flex flex-col gap-4">
         <TextHeadline variant="h3" size="sm">
           Contact information
         </TextHeadline>
@@ -144,7 +210,10 @@ export default function EditProfilePage() {
           id="email"
           name="email"
           value={email || ""}
-          onChange={(value: string) => setEmail(value)}
+          onChange={(value: string) => {
+            setEmail(value);
+            setHasChanges(true);
+          }}
         />
         <TextInput
           inputType="text"
@@ -152,19 +221,28 @@ export default function EditProfilePage() {
           id="phoneNumber"
           name="phoneNumber"
           value={phoneNumber || ""}
-          onChange={(value: string) => setPhoneNumber(value)}
+          onChange={(value: string) => {
+            setPhoneNumber(value);
+            setHasChanges(true);
+          }}
         />
       </div>
-      <div className="edit-availability-wrapper">
+      <div className="edit-availability-wrapper flex flex-col gap-4">
         <TextHeadline variant="h3" size="sm">
           Profile status
         </TextHeadline>
         <TextBody size="sm">
           Are you currently looking for someone to play with? If you select 'not looking' your
-          profile will not appear when other musicians do a search.{" "}
+          profile will not appear when other musicians do a search.
         </TextBody>
         <div className="">
-          <ToggleButtonGroup />
+          <ToggleButtonGroup
+            selectedOption={isAvailable ? "searching" : "notSearching"}
+            onSelect={(option) => {
+              setIsAvailable(option === "searching");
+              setHasChanges(true);
+            }}
+          />
         </div>
       </div>
       <div className="w-full h-full">
