@@ -8,7 +8,7 @@ const serverBaseURL = "http://localhost:3000";
 export function useFetch<T>(initialValue: T, subPath: string | null, method: HTTP_Methods, headers?: HeadersInit, body?: unknown) {
   const [data, setData] = useState<T>(initialValue);
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string[] | null>(null);
   const [shouldFetch, setShouldFetch] = useState(false);
 
   //trigger function to make the fetchign start - it avoids loops
@@ -32,16 +32,19 @@ export function useFetch<T>(initialValue: T, subPath: string | null, method: HTT
           credentials: "include",
         });
         if (!response.ok) {
-          const { message } = await response.json();
-          console.error(`Error ${response.status}: ${response.statusText}${message ? `; ${message}` : ""}`);
-          throw new Error(`Error ${response.status}: ${message ? `${message}` : `${response.statusText}`}`);
+          const responseBody = await response.json();
+          // Set the error without throwing the error so it doesn't enter the catch block
+          setError(Array.isArray(responseBody.message) ? responseBody.message : [responseBody.message]);
+          return;  // Stop execution here, no need to continue the try block
         }
         const responseBody = await response.json();
 
         //data is set as the response of the request
         setData(responseBody);
       } catch (error) {
-        setError(error instanceof Error ? error.message : "An unknown error occurred");
+        setError(
+          error instanceof Error ? [error.message] : ["An unknown error occurred"]
+        );
       } finally {
         setLoading(false);
       }

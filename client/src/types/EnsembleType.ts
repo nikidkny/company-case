@@ -18,7 +18,7 @@ export type EnsembleType = {
 
 export type RegisterInEnsembleButtonProps = {
   registrationLoading: boolean;
-  registrationError: string | null;
+  registrationError: string | string[] | null;
   registrationData: { message?: string } | null;
   handleAddUserToEnsemble: () => void;
 };
