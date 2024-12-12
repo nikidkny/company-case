@@ -45,31 +45,19 @@ export default function EditProfilePage() {
     userData
   );
 
-  const { data: fetchedUser, triggerFetch: fetchUser } = useFetch<User | null>(
-    null,
-    userId ? `/users/${userId}` : null,
-    "GET"
-  );
-
   useEffect(() => {
-    if (userId) {
-      fetchUser();
-    }
-  }, [userId, fetchUser]);
-
-  useEffect(() => {
-    if (fetchedUser) {
-      setFirstName(fetchedUser.firstName);
-      setLastName(fetchedUser.lastName);
-      setDescription(fetchedUser.description);
-      setZip(fetchedUser.zip);
-      setCity(fetchedUser.city);
-      setEmail(fetchedUser.email);
-      setPhoneNumber(fetchedUser.phoneNumber);
-      setIsAvailable(fetchedUser.isAvailable);
+    if (user) {
+      setFirstName(user.firstName);
+      setLastName(user.lastName);
+      setDescription(user.description);
+      setZip(user.zip);
+      setCity(user.city);
+      setEmail(user.email);
+      setPhoneNumber(user.phoneNumber);
+      setIsAvailable(user.isAvailable);
       setHasChanges(false);
     }
-  }, [fetchedUser]);
+  }, [user]);
 
   useEffect(() => {
     if (editedUser) {
