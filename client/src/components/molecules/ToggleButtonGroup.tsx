@@ -1,4 +1,3 @@
-import { FC } from "react";
 import Button from "../atoms/Button";
 
 interface ToggleButtonGroupProps {
@@ -6,7 +5,7 @@ interface ToggleButtonGroupProps {
   onSelect: (option: "searching" | "notSearching") => void;
 }
 
-const ToggleButtonGroup: FC<ToggleButtonGroupProps> = ({ selectedOption, onSelect }) => {
+export default function ToggleButtonGroup({ selectedOption, onSelect }: ToggleButtonGroupProps) {
   return (
     <div className="toggle-button-group flex flex-row">
       <Button
@@ -25,6 +24,4 @@ const ToggleButtonGroup: FC<ToggleButtonGroupProps> = ({ selectedOption, onSelec
       />
     </div>
   );
-};
-
-export default ToggleButtonGroup;
+}
