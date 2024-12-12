@@ -28,7 +28,22 @@ export class InstrumentsService {
       { name: 'Synthesizer' },
     ];
 
-    await this.instrumentModel.insertMany(instruments);
+    // Fetch existing instruments to check which are already in the database
+    const existingInstruments = await this.instrumentModel
+      .find({ name: { $in: instruments.map((inst) => inst.name) } })
+      .exec();
+
+    const existingNames = existingInstruments.map((inst) => inst.name);
+
+    // Filter out instruments that already exist
+    const newInstruments = instruments.filter(
+      (instrument) => !existingNames.includes(instrument.name),
+    );
+
+    // Insert only the new instruments
+    if (newInstruments.length > 0) {
+      await this.instrumentModel.insertMany(newInstruments);
+    }
   }
 
   // Method to retrieve all instruments

@@ -9,7 +9,7 @@ const AuthGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const { userId, decodedToken } = getUserIdFromCookie();
   const { setUser, resetUser, setLoginStatus, loginStatus } = useStore();
-  const { data: fetchedUser, triggerFetch: userFetchTrigger } = useFetch<User>({}, userId !== null ? `/users/${userId}` : null, "GET");
+  const { data: fetchedUser, triggerFetch: userFetchTrigger } = useFetch<User>({ _id: "" }, userId !== null ? `/users/${userId}` : null, "GET");
 
   //setting the authenticated user and storing it in store
   useEffect(() => {

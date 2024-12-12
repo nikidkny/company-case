@@ -14,6 +14,7 @@ export function useFetch<T>(initialValue: T, subPath: string | null, method: HTT
   //trigger function to make the fetchign start - it avoids loops
   const triggerFetch = () => {
     setShouldFetch(true);
+    setError(null);
   };
   const memoizedHeaders = useMemo(() => headers, [headers]);
   const memoizedBody = useMemo(() => body, [body]);
@@ -23,12 +24,12 @@ export function useFetch<T>(initialValue: T, subPath: string | null, method: HTT
 
     const getData = async () => {
       setLoading(true);
-      setError(null); // Reset error
       try {
         const response = await fetch(serverBaseURL + subPath, {
           method,
           headers: memoizedHeaders,
-          body: shouldFetch ? JSON.stringify(memoizedBody) : null,
+          body: method !== "GET" && memoizedBody ? JSON.stringify(memoizedBody) : null,
+          // body: shouldFetch ? JSON.stringify(memoizedBody) : null,
           credentials: "include",
         });
         if (!response.ok) {
@@ -53,5 +54,5 @@ export function useFetch<T>(initialValue: T, subPath: string | null, method: HTT
     getData();
   }, [subPath, method, memoizedHeaders, memoizedBody, shouldFetch]);
 
-  return { data, loading, error, triggerFetch, shouldFetch };
+  return { data, loading, error, triggerFetch, shouldFetch, setLoading };
 }
