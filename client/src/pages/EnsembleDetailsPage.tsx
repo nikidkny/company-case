@@ -14,9 +14,8 @@ import { useStore } from "../store/useStore";
 export default function EnsembleDetailsPage() {
   // Get the ensembleId from the URL
   const { ensemblesId } = useParams({ strict: false });
-  //const userId = "6751e7b6ef87e8376bba326e";
   const { user } = useStore();
-  console.log(user);
+  //console.log(user);
   const { data: ensemble, triggerFetch: triggerFetchEnsembleDetails } = useFetch<EnsembleType>(
     {
       _id: "",
@@ -55,6 +54,7 @@ export default function EnsembleDetailsPage() {
 
   const membersList: User[] = membersDetails.foundMembers;
   const creator: User = membersDetails.creator;
+
   const isUserMember = ensemble.memberList.includes(user._id);
   console.log("isUserMember", isUserMember);
   //Join the ensemble
@@ -81,17 +81,22 @@ export default function EnsembleDetailsPage() {
   useEffect(() => {
     if (registrationData !== null && !registrationLoading) {
       triggerFetchEnsembleDetails();
+      console.log("fetched");
     }
     // console.log("ensembles", ensemble);
   }, [registrationData, registrationLoading]);
 
   useEffect(() => {
-    triggerFetchEnsembleDetails();
+    if (!ensemble && ensemblesId) {
+      triggerFetchEnsembleDetails();
+    }
+    // triggerFetchCurrentUser();
+  }, [ensemblesId, ensemble]);
 
+  useEffect(() => {
     if (ensemble.memberList && ensemble.createdBy) {
       triggerFetchMembersDetails();
     }
-    // triggerFetchCurrentUser();
   }, [ensemble]);
 
   return (
