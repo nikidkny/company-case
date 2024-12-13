@@ -1,4 +1,5 @@
 import { StateCreator } from "zustand";
+import { EnsembleType } from "../../types/EnsembleType";
 
 export interface CreateEnsembleState {
   name: string;
@@ -7,10 +8,11 @@ export interface CreateEnsembleState {
   zip: string;
   city: string;
   image?: File | null;
-  activeMusicians: string | null;
-  sessionFrequency: string | null;
+  activeMusicians: string;
+  sessionFrequency: string;
   isPermanent: boolean | null;
   genres: string[];
+  ensembles: EnsembleType[];
 
   // Actions
   setName: (name: string) => void;
@@ -24,7 +26,8 @@ export interface CreateEnsembleState {
   setEnsembleType: (isPermanent: boolean | null) => void;
   addGenre: (genre: string) => void;
   removeGenre: (genre: string) => void;
-
+  // Accept both a single ensemble and an array because sometimes we might need to reset the ensembles
+  setEnsembles: (ensembles: EnsembleType | EnsembleType[]) => void;
   resetForm: () => void;
 }
 
@@ -36,10 +39,11 @@ export const createEnsembleSlice: StateCreator<CreateEnsembleState, [], [], Crea
   zip: "",
   city: "",
   image: null,
-  activeMusicians: null,
-  sessionFrequency: null,
+  activeMusicians: "",
+  sessionFrequency: "",
   isPermanent: null,
   genres: [],
+  ensembles: [],
 
   // Actions
   setName: (name) => set(() => ({ name })),
@@ -69,6 +73,16 @@ export const createEnsembleSlice: StateCreator<CreateEnsembleState, [], [], Crea
       genres: state.genres.filter((g) => g !== genre),
     })),
 
+  setEnsembles: (ensembles: EnsembleType | EnsembleType[]) =>
+    set((state) => {
+      if (Array.isArray(ensembles)) {
+        // If it's an array, append it to the current ensemble list
+        return { ensembles: [...state.ensembles, ...ensembles] };
+      } else {
+        // If it's a single ensemble, append it to the list
+        return { ensembles: [...state.ensembles, ensembles] };
+      }
+    }),
   resetForm: () =>
     set(() => ({
       name: "",
@@ -77,8 +91,8 @@ export const createEnsembleSlice: StateCreator<CreateEnsembleState, [], [], Crea
       zip: "",
       city: "",
       image: null,
-      activeMusicians: null,
-      sessionFrequency: null,
+      activeMusicians: "",
+      sessionFrequency: "",
       isPermanent: null,
       genres: [],
     })),

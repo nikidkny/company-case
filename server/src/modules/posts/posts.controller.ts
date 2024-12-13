@@ -14,8 +14,8 @@ import { CreatePostDto } from './dto/create-post.dto';
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
   @Get()
-  findAll() {
-    // Empty endpoint to get all posts
+  async findAll() {
+    return await this.postsService.findAll();
   }
 
   @Get(':id')

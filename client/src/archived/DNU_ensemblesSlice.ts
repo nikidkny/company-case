@@ -1,9 +1,10 @@
 import { StateCreator } from "zustand";
-import { EnsembleType } from "../../types/EnsembleType";
+import { EnsembleType } from "../types/EnsembleType";
 
 export interface EnsemblesState {
   ensembles: EnsembleType[];
-  setEnsembles: (ensembles: EnsembleType | EnsembleType[]) => void; // Accept both a single ensemble and an array
+  setEnsembles: (ensembles: EnsembleType | EnsembleType[]) => void;
+  // Accept both a single ensemble and an array because sometimes we might need to reset the ensembles
 }
 
 export const ensemblesSlice: StateCreator<EnsemblesState, [], [], EnsemblesState> = (set) => ({

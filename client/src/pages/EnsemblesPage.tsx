@@ -54,7 +54,7 @@ export default function EnsemblesPage() {
           Find ensemble
         </TextHeadline>
         <TextBody variant="span">{ensembles.length} results found</TextBody>
-        <Dropdown initialSelectedLabel="Choose an instrument" options={instrumentsFetch.data.map((instrument) => instrument.name)} selectedOption={filterOption} onSelect={(value) => setFilterOption(value)} className="w-auto" />
+        <Dropdown initialSelectedLabel="Choose an instrument" options={instrumentsFetch.data.map((instrument) => instrument.name)} selectedOption={filterOption} onSelect={(value) => setFilterOption(value as string)} className="w-auto" />
         <div className="flex flex-row items-center justify-between gap-3 w-full items-stretch text-blue-500">
           {/* //TODO: finish adding filter options as needed */}
           <Button

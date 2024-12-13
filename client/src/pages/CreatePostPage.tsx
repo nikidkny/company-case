@@ -2,15 +2,18 @@ import { useEffect } from "react";
 import Button from "../components/atoms/Button";
 import TextBody from "../components/atoms/TextBody";
 import TextHeadline from "../components/atoms/TextHeadline";
-import { Dropdown } from "../components/molecules/Dropdown";
+import { Dropdown, DropdownOptionType } from "../components/molecules/Dropdown";
 import { getUserIdFromCookie } from "../hooks/getCookies";
 import { useFetch } from "../hooks/use-fetch";
 import { useStore } from "../store/useStore";
 import { EnsembleType } from "../types/EnsembleType";
+import { useLocation } from "@tanstack/react-router";
 
 export default function CreatePostPage() {
-  const { selectedEnsembleOption, setSelectedEnsembleOption } = useStore();
+  const { selectedEnsembleOption, setSelectedEnsembleOption, resetPostData } = useStore();
   const { userId } = getUserIdFromCookie();
+  //   const navigate = useNavigate();
+  const location = useLocation();
   const { data: userEnsembles, triggerFetch: fetchUserEnsembles } = useFetch<EnsembleType[] | null>(null, userId ? `/ensembles/user/${userId}` : null, "GET");
 
   //fetching the ensembles if the user is logged in
@@ -27,8 +30,19 @@ export default function CreatePostPage() {
       label: ensemble.name,
     })) || [];
 
+  //reset selectedEnsemble state if the user doesn't want to continue with creating a post
+  useEffect(() => {
+    return () => {
+      // Check if the user is navigating away to the "create post" page
+      const nextPath = location.pathname;
+      if (!nextPath.startsWith("/posts/create")) {
+        resetPostData();
+      }
+    };
+  }, [resetPostData, location]);
+
   console.log("ensemblesDropdownOptions", ensemblesDropdownOptions);
-  console.log("selectedPostEnsemble", selectedEnsembleOption.label);
+  console.log("selectedPostEnsemble", selectedEnsembleOption);
 
   return (
     <>
@@ -56,7 +70,7 @@ export default function CreatePostPage() {
                 className="w-auto"
                 selectedOption={selectedEnsembleOption}
                 onSelect={(value) => {
-                  setSelectedEnsembleOption(value);
+                  setSelectedEnsembleOption(value as DropdownOptionType);
                 }}
               />
             </>

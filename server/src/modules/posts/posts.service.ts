@@ -7,12 +7,19 @@ import { Post } from './post.entity';
 @Injectable()
 export class PostsService {
   constructor(@InjectModel(Post.name) private postModel: Model<Post>) {}
-  findAll() {}
+  async findAll(): Promise<Post[]> {
+    return this.postModel.find().exec();
+  }
   findOne(id: string) {}
   async create(createPostDto: CreatePostDto): Promise<Post> {
-    const createdPost = new this.postModel(createPostDto);
-    return createdPost.save();
+    try {
+      const createdPost = new this.postModel(createPostDto);
+      return await createdPost.save();
+    } catch (error) {
+      throw new Error(`Failed to create post: ${error.message}`);
+    }
   }
+
   update(id: string) {}
   remove(id: string) {}
 }

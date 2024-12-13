@@ -17,11 +17,7 @@ export default function EnsembleDetailsPage() {
   //const userId = "6751e7b6ef87e8376bba326e";
   const { user } = useStore();
   console.log(user);
-  const {
-    data: ensemble,
-    triggerFetch: triggerFetchEnsembleDetails,
-    shouldFetch,
-  } = useFetch<EnsembleType>(
+  const { data: ensemble, triggerFetch: triggerFetchEnsembleDetails } = useFetch<EnsembleType>(
     {
       _id: "",
       name: "",
@@ -96,7 +92,7 @@ export default function EnsembleDetailsPage() {
       triggerFetchMembersDetails();
     }
     // triggerFetchCurrentUser();
-  }, [ensemble, shouldFetch]);
+  }, [ensemble]);
 
   return (
     <div>
