@@ -1,22 +1,40 @@
+import { useEffect, useState } from "react";
 import Button from "../components/atoms/Button";
 import TextHeadline from "../components/atoms/TextHeadline";
-// import { Dropdown } from "../components/molecules/Dropdown";
+import { Dropdown } from "../components/molecules/Dropdown";
+import { DropdownWithTags } from "../components/molecules/DropdownWithTags";
+import { getUserIdFromCookie } from "../hooks/getCookies";
+import { useFetch } from "../hooks/use-fetch";
+import { useStore } from "../store/useStore";
+import { InstrumentType } from "../types/InstrumentType";
+import { musicGenresOptions } from "../utilities/musicGenresOptions";
 
 export default function AddInstrumentPage() {
+  const { user } = useStore();
+  const { userId } = getUserIdFromCookie();
+  const instrumentsFetch = useFetch<InstrumentType[]>([], "/instruments", "GET");
+  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+  const [selectedInstrument, setSelectedInstrument] = useState<string>("");
+
+  useEffect(() => {
+    if (instrumentsFetch.data.length === 0) {
+      instrumentsFetch.triggerFetch();
+    }
+  }, [instrumentsFetch]);
+  const handleGenreChange = (genres: string[]) => {
+    setSelectedGenres(genres);
+  };
   return (
     <div className="edit-page-wrapper flex flex-col gap-6 p-6 ">
       <div className="back-button-wrapper flex flex-col items-start">
         <Button
-          onClick={() => {
-            // go back to profile/profileId page
-            window.history.back();
-          }}
+          to={`/profile/${userId}`}
+          params={{ userId }}
           buttonVariant="secondary"
           iconPosition="none"
           className="w-fit"
-        >
-          Back
-        </Button>
+          buttonLabel="Back"
+        ></Button>
       </div>
       <TextHeadline variant="h2" size="sm">
         Add Instrument
@@ -25,12 +43,14 @@ export default function AddInstrumentPage() {
         <TextHeadline variant="h3" size="sm">
           Name
         </TextHeadline>
-        {/* <Dropdown
-          dropdownOptions={["guitar", "bass", "drums", "vocals", "keyboard"]}
-          dropdownValue=""
-          dropdownLabel="Instrument"
-          dropdownOnChange={(value) => console.log(value)}
-        /> */}
+        <Dropdown
+          initialSelectedLabel="Choose an instrument"
+          options={instrumentsFetch.data.map((instrument) => instrument.name)}
+          selectedOption={selectedInstrument}
+          onSelect={(value) => setSelectedInstrument(value)}
+          className="w-auto"
+        />
+
         <div>
           <TextHeadline variant="h3" size="sm">
             How experienced are you?
@@ -48,12 +68,11 @@ export default function AddInstrumentPage() {
           <TextHeadline variant="h3" size="sm">
             Genre
           </TextHeadline>
-          {/* <Dropdown
-                dropdownOptions={["rock", "pop", "jazz", "metal", "punk"]}
-                dropdownValue=""
-                dropdownLabel="Genre"
-                dropdownOnChange={(value) => console.log(value)}
-            /> */}
+          <DropdownWithTags
+            options={musicGenresOptions}
+            selectedTags={selectedGenres}
+            onTagChange={handleGenreChange}
+          />
         </div>
         <div className="w-full h-full">
           <Button

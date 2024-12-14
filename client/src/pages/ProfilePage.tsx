@@ -65,7 +65,11 @@ export default function ProfilePage() {
 
   // console.log("userInstruments", userInstrument);
 
-  const { data: userEnsembles, triggerFetch: fetchUserEnsembles } = useFetch<EnsembleType[] | null>(null, userId ? `/ensembles/user/${userId}` : null, "GET");
+  const { data: userEnsembles, triggerFetch: fetchUserEnsembles } = useFetch<EnsembleType[] | null>(
+    null,
+    userId ? `/ensembles/user/${userId}` : null,
+    "GET"
+  );
   useEffect(() => {
     if (userId) {
       fetchUserEnsembles();
@@ -84,22 +88,46 @@ export default function ProfilePage() {
       <div className="profile-base-wrapper p-4 border-y-solid border-y-gray-400 border-y-1px">
         <div className="flex flex-row gap-4 pb-4">
           {/*TO DO: have to add that the user image is the src if there is */}
-          {user?.image ? <Image src={user?.image} alt="Profile Image" className="rounded-full h-24 w-24" /> : <Icon name={ICON_NAMES.profile_placeholder} height={91} width={91} viewBox="0 0 91 91" className="rounded-full" />}
+          {user?.image ? (
+            <Image src={user?.image} alt="Profile Image" className="rounded-full h-24 w-24" />
+          ) : (
+            <Icon
+              name={ICON_NAMES.profile_placeholder}
+              height={91}
+              width={91}
+              viewBox="0 0 91 91"
+              className="rounded-full"
+            />
+          )}
 
           <div className="flex flex-col">
             <div className="flex flex-row gap-4 items-center">
               <TextHeadline variant="h1" size="sm">
                 {fullName}
               </TextHeadline>
-              {user?.isAvailable && <ProfileBadge ProfileBadgeLabel="Seeking" ProfileBadgeSize="sm" />}
+              {user?.isAvailable && (
+                <ProfileBadge ProfileBadgeLabel="Seeking" ProfileBadgeSize="sm" />
+              )}
             </div>
             <TextBody>{formatDate(user.createdAt)}</TextBody>
             <TextBody>{formatDate(user.lastLoggedIn)}</TextBody>
           </div>
         </div>
         <div className="flex flex-row gap-4">
-          <Button buttonVariant="secondary" to="/profile/$profileId/edit" params={{ profileId: userId }} iconPosition="none" buttonLabel="Edit Profile" className="no-underline"></Button>
-          <Button buttonVariant="secondary" onClick={() => console.log("Settings")} iconPosition="none" buttonLabel="Settings"></Button>
+          <Button
+            buttonVariant="secondary"
+            to="/profile/$profileId/edit"
+            params={{ profileId: userId }}
+            iconPosition="none"
+            buttonLabel="Edit Profile"
+            className="no-underline"
+          ></Button>
+          <Button
+            buttonVariant="secondary"
+            onClick={() => console.log("Settings")}
+            iconPosition="none"
+            buttonLabel="Settings"
+          ></Button>
         </div>
       </div>
       <div className="profile-description-wrapper flex flex-col p-4 border-y-solid border-y-gray-400 border-y-1px gap-6">
@@ -108,7 +136,12 @@ export default function ProfilePage() {
             Description
           </TextHeadline>
           <div className="flex-0">
-            <Button buttonVariant="secondary" onClick={() => console.log("Edit description")} iconPosition="none" buttonLabel="Edit"></Button>
+            <Button
+              buttonVariant="secondary"
+              onClick={() => console.log("Edit description")}
+              iconPosition="none"
+              buttonLabel="Edit"
+            ></Button>
           </div>
         </div>
         <TextBody size="lg">{user?.description}</TextBody>
@@ -119,7 +152,13 @@ export default function ProfilePage() {
             My Instruments
           </TextHeadline>
           <div>
-            <Button buttonVariant="secondary" onClick={() => (window.location.href = "/profile/$profileId/instruments/edit")} iconPosition="none" buttonLabel="Edit"></Button>
+            <Button
+              buttonVariant="secondary"
+              to="/profile/$profileId/instruments/edit"
+              params={{ profileId: userId }}
+              iconPosition="none"
+              buttonLabel="Edit"
+            ></Button>
           </div>
         </div>
         {/* TO DO: map through logged in user's instruments for now it is static insturment */}
@@ -155,7 +194,12 @@ export default function ProfilePage() {
             My Posts
           </TextHeadline>
           <div>
-            <Button buttonVariant="secondary" onClick={() => console.log("Create Post")} iconPosition="none" buttonLabel="Create"></Button>
+            <Button
+              buttonVariant="secondary"
+              onClick={() => console.log("Create Post")}
+              iconPosition="none"
+              buttonLabel="Create"
+            ></Button>
           </div>
         </div>
         {/* TO DO: map through logged in user's posts for now it is static posts */}
