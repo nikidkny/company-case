@@ -42,7 +42,8 @@ export class UsersController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    // Empty endpoint to delete a user
+  async remove(@Param('id') id: string) {
+    await this.usersService.remove(id);
+    return { message: 'User deleted successfully' };
   }
 }

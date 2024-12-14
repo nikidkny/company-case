@@ -1,41 +1,114 @@
-import { useState } from "react";
-import mockUsers from "../../../server/src/seeder/mockUsers";
+import { useEffect, useState } from "react";
+import { useStore } from "../store/useStore";
+import { getUserIdFromCookie } from "../hooks/getCookies";
 import Button from "../components/atoms/Button";
 import Checkbox from "../components/atoms/Checkbox";
 import TextHeadline from "../components/atoms/TextHeadline";
 import TextInput from "../components/atoms/TextInput";
+import { useFetch } from "../hooks/use-fetch";
+import { useNavigate } from "@tanstack/react-router";
 
 export default function ProfileSettingsPage() {
+  const { user } = useStore();
+  const { userId } = getUserIdFromCookie();
+  const navigate = useNavigate();
+  const [hasChanges, setHasChanges] = useState(false);
   const [showPasswordFields, setShowPasswordFields] = useState(false);
-  // TO DO: Replace this with the actual user id from the logged-in user from the store
-  const userId = mockUsers[0]._id.toString();
   // TO DO: Define state variables for form inputs (password, and newsletter opt-in)
-  // TO DO: Implement state management (store?) to manage the user's settings
+  const [currentPassword, setCurrentPassword] = useState(user.password);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [newsletter, setNewsletter] = useState(user.isNewsletter || false);
 
-  const handleChangePassword = () => {
-    // TO DO: Add validation for password fields (match confirmation password, and add the same rules as the sign-up form has)
-    // TO DO: Call the API to update the user's password with useFetch Post request
-    console.log("Password change logic goes here");
+  const userData = {
+    currentPassword,
+    newPassword,
+    newsletter,
+  };
+
+  useEffect(() => {
+    if (user) {
+      setNewsletter(user.isNewsletter || false);
+    }
+  }, [user]);
+
+  const { data: updateData, triggerFetch: triggerUpdate } = useFetch(
+    null,
+    `/auth/update-password`,
+    "POST",
+    {
+      "Content-Type": "application/json",
+    },
+    userData
+  );
+  const { data: updateNewsletter, triggerFetch: triggerNewsletter } = useFetch(
+    null,
+    `/users/${userId}`,
+    "PUT",
+    {
+      "Content-Type": "application/json",
+    },
+    { isNewsletter: newsletter }
+  );
+  const { triggerFetch: triggerDelete } = useFetch(null, `/users/${userId}`, "DELETE");
+
+  const { triggerFetch: triggerLogout } = useFetch(
+    null,
+    `/auth/logout`,
+    "POST",
+    {
+      "Content-Type": "application/json",
+    },
+    null
+  );
+  const handleSaveSettings = () => {
+    // Determine if password fields are empty
+    const isPasswordFieldsEmpty =
+      !currentPassword?.trim() && !newPassword.trim() && !confirmNewPassword.trim();
+
+    if (!isPasswordFieldsEmpty) {
+      if (newPassword !== confirmNewPassword) {
+        alert("New passwords do not match!");
+        return;
+      }
+      // Trigger password update only if password fields are not empty
+      triggerUpdate();
+      setHasChanges(false);
+    } else if (newsletter !== user.isNewsletter) {
+      triggerNewsletter();
+      setHasChanges(false);
+    } else {
+      alert("No changes to save!");
+    }
+  };
+
+  const handleBackButtonClick = () => {
+    if (hasChanges) {
+      if (window.confirm("You have unsaved changes. Are you sure you want to go back?")) {
+        navigate({ to: `/profile/${userId}` });
+      }
+    } else {
+      navigate({ to: `/profile/${userId}` });
+    }
   };
 
   const handleDeleteProfile = () => {
-    // TO DO: Add a confirmation prompt (a modal) to confirm deletion
-    // TO DO: If confirmed, call the API to delete the user's profile with useFetch Delete request
-    console.log("Profile deletion logic goes here");
+    const confirmed = window.confirm("Are you sure you want to delete your profile?");
+    if (confirmed) {
+      triggerDelete();
+      triggerLogout();
+      navigate({ to: "/" });
+    }
   };
 
-  const handleSaveSettings = () => {
-    // TO DO: Collect all settings changes ( password, newsletter opt-in)
-    handleChangePassword();
-    // TO DO: Call the API to save the updated user settings with useFetch Put request
-    console.log("Save settings logic goes here");
-  };
+  useEffect(() => {
+    if (updateData) alert("Settings updated successfully!");
+  }, [updateData, navigate, triggerLogout]);
   return (
     <div className="settings-page-wrapper flex flex-col gap-6 p-6 ">
       <div className="back-button-wrapper flex flex-col items-start">
         <Button
-          to="/profile/$profileId"
-          params={{ profileId: userId }}
+          onClick={handleBackButtonClick}
           buttonVariant="secondary"
           iconPosition="none"
           className="w-fit"
@@ -49,8 +122,6 @@ export default function ProfileSettingsPage() {
         <TextHeadline variant="h3" size="sm">
           Password
         </TextHeadline>
-        {/* TO DO: Update state variable on change */}
-        {/* TO DO: Bind value to a state variable */}
         {!showPasswordFields && (
           <Button
             buttonVariant="secondary"
@@ -64,19 +135,33 @@ export default function ProfileSettingsPage() {
           <div className="flex flex-col gap-4">
             <TextInput
               inputType="password"
-              id="password"
-              name="password"
-              placeholder="Password"
-              value=""
-              onChange={() => {}}
+              id="currentPassword"
+              name="currentPassword"
+              placeholder="Current Password"
+              value={currentPassword || ""}
+              onChange={(value) => setCurrentPassword(value)}
             />
             <TextInput
               inputType="password"
-              placeholder="Confirm Password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value=""
-              onChange={() => {}}
+              id="newPassword"
+              name="newPassword"
+              placeholder="New Password"
+              value={newPassword}
+              onChange={(value) => {
+                setNewPassword(value);
+                setHasChanges(true);
+              }}
+            />
+            <TextInput
+              inputType="password"
+              placeholder="Confirm New Password"
+              id="confirmNewPassword"
+              name="confirmNewPassword"
+              value={confirmNewPassword}
+              onChange={(value) => {
+                setConfirmNewPassword(value);
+                setHasChanges(true);
+              }}
             />
           </div>
         )}
@@ -86,12 +171,14 @@ export default function ProfileSettingsPage() {
           Newsletter
         </TextHeadline>
         <div className="flex flex-row gap-4 items-center">
-          {/* TO DO: Update newsletter state*/}
           <Checkbox
             name="newsletter"
             label="Sign up for the DAOS newsletter"
-            onChange={() => {}}
-            required={false}
+            onChange={() => {
+              setNewsletter(!newsletter);
+              setHasChanges(true);
+            }}
+            checked={newsletter}
           />
         </div>
       </div>
@@ -111,7 +198,7 @@ export default function ProfileSettingsPage() {
       </div>
       <div className="w-full h-full">
         <Button buttonVariant="primary" iconPosition="none" size="lg" onClick={handleSaveSettings}>
-          Save settings
+          Save changes
         </Button>
       </div>
     </div>
