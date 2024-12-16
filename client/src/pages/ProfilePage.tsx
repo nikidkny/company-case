@@ -159,10 +159,10 @@ export default function ProfilePage() {
           <div>
             <Button
               buttonVariant="secondary"
-              to="/profile/$profileId/instruments/edit"
+              to="/profile/$profileId/instruments/add"
               params={{ profileId: userId }}
               iconPosition="none"
-              buttonLabel="Edit"
+              buttonLabel="Add"
               className="no-underline"
             ></Button>
           </div>

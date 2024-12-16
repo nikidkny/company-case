@@ -28,15 +28,14 @@ export default function AddInstrumentPage() {
   };
 
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
-  const [selectedInstrument, setSelectedInstrument] = useState<string>("");
-
+  const [selectedInstrument, setSelectedInstrument] = useState<InstrumentType | null>(null);
   const instrumentData = {
     userId,
-    name: selectedInstrument,
+    instrumentId: selectedInstrument?._id.toString(),
     levelOfExperience: level.toString(),
     genres: selectedGenres,
   };
-
+  console.log(selectedInstrument);
   const { triggerFetch: userFetchTrigger } = useFetch<Partial<User> | null>(
     null,
     "/userInstruments",
@@ -79,12 +78,18 @@ export default function AddInstrumentPage() {
         </TextHeadline>
         <Dropdown
           initialSelectedLabel="Choose an instrument"
-          options={instrumentsFetch.data.map((instrument) => instrument.name)}
-          selectedOption={selectedInstrument}
-          onSelect={(value) => setSelectedInstrument(value)}
+          options={instrumentsFetch.data.map((instrument) => instrument.name)} // Map to names for display
+          selectedOption={selectedInstrument ? selectedInstrument.name : ""} // Display the name of the selected instrument
+          onSelect={(value) => {
+            const selectedInstrumentObj = instrumentsFetch.data.find(
+              (instrument) => instrument.name === value
+            );
+            if (selectedInstrumentObj) {
+              setSelectedInstrument(selectedInstrumentObj); // Store the full instrument object
+            }
+          }}
           className="w-auto"
         />
-
         <div>
           <TextHeadline variant="h3" size="sm">
             How experienced are you?
