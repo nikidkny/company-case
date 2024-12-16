@@ -33,7 +33,11 @@ export default function ProfileSettingsPage() {
     }
   }, [user]);
 
-  const { data: updateData, triggerFetch: triggerUpdate } = useFetch(
+  const {
+    data: updateData,
+    error: updateError,
+    triggerFetch: triggerUpdate,
+  } = useFetch(
     null,
     `/auth/update-password`,
     "POST",
@@ -42,7 +46,7 @@ export default function ProfileSettingsPage() {
     },
     userData
   );
-  const { data: updateNewsletter, triggerFetch: triggerNewsletter } = useFetch(
+  const { triggerFetch: triggerNewsletter } = useFetch(
     null,
     `/users/${userId}`,
     "PUT",
@@ -75,10 +79,6 @@ export default function ProfileSettingsPage() {
       // Trigger password update only if password fields are not empty
       triggerUpdate();
       setHasChanges(false);
-      // Reset password fields
-      setCurrentPassword("");
-      setNewPassword("");
-      setConfirmNewPassword("");
     } else if (newsletter !== user.isNewsletter) {
       triggerNewsletter();
       setHasChanges(false);
@@ -86,6 +86,25 @@ export default function ProfileSettingsPage() {
       alert("No changes to save!");
     }
   };
+  useEffect(() => {
+    // Clear password fields and show alert after update is successful
+    if (updateData) {
+      alert("Settings updated successfully!");
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmNewPassword("");
+      setShowPasswordFields(false);
+    }
+    // Show alert if there is an error updating the password
+    // TO DO: add more specific error messages, and change error type to {message: string}
+    if (updateError) {
+      if (updateError.includes("Current password is incorrect")) {
+        alert("The current password you entered is incorrect. Please try again.");
+      } else {
+        alert("Error updating password. Please try again.");
+      }
+    }
+  }, [updateData, updateError]);
 
   const handleBackButtonClick = () => {
     if (hasChanges) {
@@ -106,9 +125,6 @@ export default function ProfileSettingsPage() {
     }
   };
 
-  useEffect(() => {
-    if (updateData) alert("Settings updated successfully!");
-  }, [updateData, navigate, triggerLogout]);
   return (
     <div className="settings-page-wrapper flex flex-col gap-6 p-6 ">
       <div className="back-button-wrapper flex flex-col items-start">
