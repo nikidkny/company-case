@@ -81,6 +81,7 @@ export default function ProfileSettingsPage() {
       setHasChanges(false);
     } else if (newsletter !== user.isNewsletter) {
       triggerNewsletter();
+      alert("Newsletter settings updated successfully!");
       setHasChanges(false);
     } else {
       alert("No changes to save!");
