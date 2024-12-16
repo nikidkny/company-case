@@ -11,7 +11,8 @@ import { Icon } from "../components/atoms/Icon/Icon";
 import EnsembleCard from "../components/molecules/EnsembleCard";
 import { EnsembleType } from "../types/EnsembleType";
 import { getUserIdFromCookie } from "../hooks/getCookies";
-
+import InstrumentCard from "../components/molecules/InstrumentCard"; // Import InstrumentCard component
+import { InstrumentType } from "../types/InstrumentType";
 export default function ProfilePage() {
   const { user } = useStore();
   const { userId } = getUserIdFromCookie();
@@ -70,14 +71,19 @@ export default function ProfilePage() {
     userId ? `/ensembles/user/${userId}` : null,
     "GET"
   );
+  const { data: userInstruments, triggerFetch: fetchUserInstruments } = useFetch<
+    InstrumentType[] | null
+  >(null, userId ? `/userInstruments/user/${userId}` : null, "GET");
+
   useEffect(() => {
     if (userId) {
       fetchUserEnsembles();
+      fetchUserInstruments();
     }
-  }, [userId, fetchUserEnsembles]);
+  }, [userId, fetchUserEnsembles, fetchUserInstruments]);
 
   // console.log("userEnsembles", userEnsembles);
-
+  console.log("userInstruments", userInstruments);
   const fullName = `${user?.firstName || ""} ${user?.lastName || ""}`;
   // const ensembles = mockEnsembles.filter(
   //   (ensemble) =>
@@ -87,7 +93,6 @@ export default function ProfilePage() {
     <div className="flex flex-col gap-6">
       <div className="profile-base-wrapper p-4 border-y-solid border-y-gray-400 border-y-1px">
         <div className="flex flex-row gap-4 pb-4">
-          {/*TO DO: have to add that the user image is the src if there is */}
           {user?.image ? (
             <Image src={user?.image} alt="Profile Image" className="rounded-full h-24 w-24" />
           ) : (
@@ -158,17 +163,17 @@ export default function ProfilePage() {
               params={{ profileId: userId }}
               iconPosition="none"
               buttonLabel="Edit"
+              className="no-underline"
             ></Button>
           </div>
         </div>
-        {/* TO DO: map through logged in user's instruments for now it is static insturment */}
-        {/* {Object.values(instruments).length > 0 ? (
-          Object.values(instruments).map((instrument, index) => (
+        {userInstruments && userInstruments.length > 0 ? (
+          userInstruments.map((instrument, index) => (
             <InstrumentCard key={index} instrument={instrument} />
           ))
         ) : (
           <div>No instruments available</div>
-        )} */}
+        )}
       </div>
       <div className="profile-ensembles-wrapper flex flex-col p-4 border-y-solid border-y-gray-400 border-y-1px gap-6">
         <div className="flex flex-row gap-6 justify-between">
