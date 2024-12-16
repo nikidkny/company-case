@@ -23,9 +23,9 @@ export class AuthController {
     @Body() body: { email: string, password: string },
     @Res() res: Response,
     @Req() req: Request,) {
-
+      console.log(req.cookies['refreshToken']);
+      
     await this.authService.handleLogin(body.email, body.password, req, res);
-    return res.json({ message: 'Login successful' });
   }
 
   @UseGuards(JwtAuthGuard)

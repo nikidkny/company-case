@@ -76,43 +76,26 @@ export class AuthService {
     // Check if the user is already logged in by verifying the refresh token
     const existingRefreshToken = req.cookies['refreshToken'];
 
+    // Check if the user is already logged in
     if (existingRefreshToken) {
       try {
-        //TODO: add test if invalid token and logout users
-        // Try to verify the refresh token
         jwt.verify(existingRefreshToken, process.env.JWT_REFRESH_SECRET);
+        await this.validateLoggedInUser(email, password);
 
-        // check if already logged in 
-        await this.alreadyLoggedIn(email, password);
-
-        // If valid refresh token return 204 No Content:the request was successful, but there is no additional content to send in the response.
-        return res.status(HttpStatus.OK).json({
-          message: 'User is already logged',
-        });
+        // User is already logged in
+        return res.status(HttpStatus.OK).json({ message: 'User is already logged in' });
       } catch (e) {
-        // Check if the error message is "Invalid credentials from logged in user"
         if (e.message === 'Invalid credentials from logged in user') {
-          // Clear the cookies if the error is related to invalid credentials from a logged-in user
-          res.clearCookie('accessToken'); // Clear the access token cookie
-          res.clearCookie('refreshToken'); // Clear the refresh token cookie
-
-          return res.status(HttpStatus.BAD_REQUEST).json({
-            message: 'Invalid credentials from logged in user, cookies cleared',
+          // Clear cookies for invalid credentials
+          res.clearCookie('accessToken');
+          res.clearCookie('refreshToken');
+          return res.status(HttpStatus.UNAUTHORIZED).json({
+            message: 'Invalid credentials from logged-in user, cookies cleared',
           });
         }
-
-        // If refresh token is invalid, expired, or credentials don't match
-        if (e instanceof NotFoundException || e instanceof BadRequestException) {
-          // Send specific error messages in case of invalid credentials
-          return res.status(HttpStatus.BAD_REQUEST).json({
-            message: e.message || 'Invalid credentials',
-          });
-        }
-
-        // Handle any other unexpected errors
-        console.log('Error during login check:', e);
-        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-          message: 'An unexpected error occurred',
+        // For other errors, return a bad request
+        return res.status(HttpStatus.BAD_REQUEST).json({
+          message: e.message || 'Invalid token',
         });
       }
     }
@@ -120,9 +103,13 @@ export class AuthService {
     // If no valid refresh token, proceed with normal login
     try {
       await this.login(email, password, res);
-      return res.json({ message: 'Login successful' });
+      return;
     } catch (error) {
       console.error('Error during login:', error);
+      // Send appropriate error message
+      if (error instanceof NotFoundException || error instanceof BadRequestException) {
+        return res.status(HttpStatus.BAD_REQUEST).json({ message: error.message });
+      }
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         message: 'An unexpected error occurred during login',
       });
@@ -131,7 +118,6 @@ export class AuthService {
 
   async login(email: string, password: string, res: Response) {
     try {
-      // Check if email and password are provided
       // Check if email and password are provided
       if (!email && !password) {
         throw new BadRequestException('Credentials must not be empty');
@@ -187,9 +173,8 @@ export class AuthService {
         sameSite: 'strict', // Prevents cross-site requests
       });
 
-      return {
-        message: 'Login successful',
-      };
+      // Send response directly
+      res.status(HttpStatus.OK).json({ message: 'Login successful' });
     } catch (error) {
       console.error('Error during login', error);
       if (
@@ -203,17 +188,13 @@ export class AuthService {
     }
   }
 
-  async alreadyLoggedIn(email: string, password: string) {
+  async validateLoggedInUser(email: string, password: string) {
     const userFound = await this.userModel.findOne({ email });
     if (!userFound) {
       throw new NotFoundException('User not found');
     }
 
-    // Compare the provided password with the hashed password
-    const isPasswordValid = await bcrypt.compare(
-      password,
-      userFound.password,
-    );
+    const isPasswordValid = await bcrypt.compare(password, userFound.password);
     if (!isPasswordValid) {
       throw new BadRequestException('Invalid credentials from logged in user');
     }
