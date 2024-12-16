@@ -9,12 +9,13 @@ import { useFetch } from "../hooks/use-fetch";
 import { useNavigate } from "@tanstack/react-router";
 
 export default function ProfileSettingsPage() {
+  // TO DO: validation for password fields - like login/signup
+  // TO DO: hash password before sending to server
   const { user } = useStore();
   const { userId } = getUserIdFromCookie();
   const navigate = useNavigate();
   const [hasChanges, setHasChanges] = useState(false);
   const [showPasswordFields, setShowPasswordFields] = useState(false);
-  // TO DO: Define state variables for form inputs (password, and newsletter opt-in)
   const [currentPassword, setCurrentPassword] = useState(user.password);
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
@@ -74,6 +75,10 @@ export default function ProfileSettingsPage() {
       // Trigger password update only if password fields are not empty
       triggerUpdate();
       setHasChanges(false);
+      // Reset password fields
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmNewPassword("");
     } else if (newsletter !== user.isNewsletter) {
       triggerNewsletter();
       setHasChanges(false);
