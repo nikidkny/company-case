@@ -20,6 +20,7 @@ function AccountsPage() {
   const { setUser, setLoginStatus } = useStore();
   const { data: fetchedUser, triggerFetch: userFetchTrigger } = useFetch<User>({ _id: "" }, userId !== null ? `/users/${userId}` : null, "GET");
 
+  //TODO: hash password
   // State to hold validation error messages for the signup form
   const [validationErrors, setValidationErrors] = useState<string | string[]>([]);
   const [loginError, setLoginError] = useState<string | string[]>([]);
