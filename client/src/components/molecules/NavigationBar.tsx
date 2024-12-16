@@ -4,18 +4,35 @@ import Button from "../atoms/Button";
 import { ICON_NAMES } from "../atoms/Icon/IconNames";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useStore } from "../../store/useStore";
-import { logoutUser } from "../../hooks/userLogout";
+import { useState } from "react";
+import { useFetch } from "../../hooks/use-fetch";
 
 export default function NavigationBar() {
   const { isMenuOpen, setIsMenuOpen, setPopUp, setLoginStatus, resetUser, loginStatus, user } = useStore();
   const navigate = useNavigate(); // To handle redirection
+  const [logoutError, setLogoutError] = useState<string | null>(null);
 
-  //TODO: 
-  // - call backend endpoint
-  const handleLogout = () => {
-    logoutUser(setLoginStatus, resetUser);
-    toggleMenu();
-    navigate({ to: "/" });
+  const { triggerFetch, data: logoutResponse, error: logoutFetchError } = useFetch(
+    { message: '' },
+    "/auth/logout",
+    "POST"
+  );
+
+  // Handle the logout process
+  const handleLogout = async () => {
+    setLogoutError(null); // Reset any previous errors
+
+    // Trigger the fetch for the logout request
+    triggerFetch();
+    
+    if (logoutResponse) {
+      setLoginStatus(false); // Update login status
+      resetUser(); // Reset user data
+      toggleMenu();
+      navigate({ to: "/" });
+    } else if (logoutFetchError) {
+      setLogoutError(logoutFetchError.join(", "));
+    }
   };
 
   const isAuthenticated = document.cookie.includes("accessToken");
@@ -129,6 +146,7 @@ export default function NavigationBar() {
       )}
 
       {isMenuOpen && <div className="fixed inset-0 bg-black bg-opacity-50 z-10" onClick={toggleMenu}></div>}
+      {logoutError && <TextBody className="text-red-500 text-sm mt-1">{logoutError}</TextBody>}
     </div>
   );
 }

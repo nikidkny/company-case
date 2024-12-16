@@ -28,8 +28,19 @@ export class AuthController {
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   async logout(@Res() res: Response) {
-    // Call the logout method from the service
-    return this.authService.logout(res);
+    try {
+      // Call the logout method from the service
+      this.authService.logout(res);
+  
+      // Send a response back indicating logout was successful
+      return res.status(HttpStatus.OK).json({
+        message: 'Logout successful, cookies cleared',
+      });
+    } catch (error) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: 'Logout failed',
+      });
+    }
   }
 
   //TODO:

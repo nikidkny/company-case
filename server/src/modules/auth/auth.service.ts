@@ -86,10 +86,8 @@ export class AuthService {
 
         if (error.message === 'Invalid credentials' || error.message === 'User not found') {
           console.error(error);
-          // TODO: call the logout function.
           // Clear cookies for invalid credentials
-          res.clearCookie('accessToken');
-          res.clearCookie('refreshToken');
+          this.logout(res);
           return res.status(HttpStatus.UNAUTHORIZED).json({
             message: 'Invalid credentials from logged-in user, cookies cleared',
           });
@@ -205,10 +203,6 @@ export class AuthService {
 
     res.clearCookie('accessToken', cookieOptions);
     res.clearCookie('refreshToken', cookieOptions);
-
-    return res.status(200).json({
-      message: 'Logout successful, cookies cleared',
-    });
   }
 
   async refreshToken(refreshToken: string, res: Response): Promise<{ accessToken: string }> {
