@@ -29,19 +29,8 @@ export class AuthController {
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   async logout(@Res() res: Response) {
-    // TODO: move the logic in the service so that can be reusable
-    // Clear both the accessToken and refreshToken cookies
-    res.clearCookie('accessToken', {
-      httpOnly: process.env.NODE_ENV === 'production' ? true : false,
-      secure: process.env.NODE_ENV === 'production' ? true : false
-    });
-    res.clearCookie('refreshToken', {
-      httpOnly: process.env.NODE_ENV === 'production' ? true : false,
-      secure: process.env.NODE_ENV === 'production' ? true : false
-    });
-    return res.status(HttpStatus.OK).json({
-      message: 'Logout successful, cookies cleared',
-    });
+    // Call the logout method from the service
+    return this.authService.logout(res);
   }
 
   //TODO:

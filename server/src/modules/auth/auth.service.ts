@@ -139,20 +139,21 @@ export class AuthService {
         secret: process.env.JWT_REFRESH_SECRET,
         expiresIn: '1d',
       });
+      // Define common cookie options for both accessToken and refreshToken
+      const cookieOptions = {
+        httpOnly: process.env.NODE_ENV === 'production',  
+        secure: process.env.NODE_ENV === 'production', 
+        sameSite: 'strict' as 'strict' | 'lax' | 'none', // Explicitly typing sameSite to the correct string literals
+      };
 
-      // Set cookies with HTTP-only, Secure (optional for HTTPS), and SameSite for better security
       res.cookie('accessToken', accessToken, {
         maxAge: 60 * 60 * 1000, // 1 hour
-        httpOnly: false, // Ensures the cookie is not accessible via JavaScript
-        secure: process.env.NODE_ENV === 'production' ? true : false,
-        sameSite: 'strict', // Prevents cross-site requests
+        ...cookieOptions, // Spread the common options
       });
 
       res.cookie('refreshToken', refreshToken, {
         maxAge: 24 * 60 * 60 * 1000, // 1 day
-        httpOnly: false, // Ensures the cookie is not accessible via JavaScript
-        secure: process.env.NODE_ENV === 'production' ? true : false,
-        sameSite: 'strict', // Prevents cross-site requests
+        ...cookieOptions, // Spread the common options
       });
 
       // Send response directly
@@ -193,6 +194,21 @@ export class AuthService {
     }
 
     return user;
+  }
+
+  logout(res: Response) {
+    // Clear both the accessToken and refreshToken cookies
+    const cookieOptions = {
+      httpOnly: process.env.NODE_ENV === 'production',
+      secure: process.env.NODE_ENV === 'production',
+    };
+
+    res.clearCookie('accessToken', cookieOptions);
+    res.clearCookie('refreshToken', cookieOptions);
+
+    return res.status(200).json({
+      message: 'Logout successful, cookies cleared',
+    });
   }
 
   async refreshToken(refreshToken: string, res: Response): Promise<{ accessToken: string }> {
