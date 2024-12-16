@@ -25,7 +25,6 @@ export class UserEnsembleService {
             throw new ConflictException('User is already a member of this ensemble.');
         }
     
-        //TODO: fix, before check if enseble exists and then add it to the collection
         try {
     
             // Retrieve the ensemble to check its current state

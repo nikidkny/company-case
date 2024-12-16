@@ -15,26 +15,32 @@ export class AuthController {
     return this.authService.signup(createUserDto);
   }
 
-  //TODO: 
-  // - check if the user is already logged in before loggin in again and before  issuing new tokens.
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(
     @Body() body: { email: string, password: string },
     @Res() res: Response,
     @Req() req: Request,) {
-      console.log(req.cookies['refreshToken']);
-      
+    console.log(req.cookies['refreshToken']);
+
     await this.authService.handleLogin(body.email, body.password, req, res);
   }
+
 
   @UseGuards(JwtAuthGuard)
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   async logout(@Res() res: Response) {
+    // TODO: move the logic in the service so that can be reusable
     // Clear both the accessToken and refreshToken cookies
-    res.clearCookie('accessToken', { httpOnly: false, secure: process.env.NODE_ENV === 'production' ? true : false, });
-    res.clearCookie('refreshToken', { httpOnly: false, secure: process.env.NODE_ENV === 'production' ? true : false, });
+    res.clearCookie('accessToken', {
+      httpOnly: process.env.NODE_ENV === 'production' ? true : false,
+      secure: process.env.NODE_ENV === 'production' ? true : false
+    });
+    res.clearCookie('refreshToken', {
+      httpOnly: process.env.NODE_ENV === 'production' ? true : false,
+      secure: process.env.NODE_ENV === 'production' ? true : false
+    });
     return res.status(HttpStatus.OK).json({
       message: 'Logout successful, cookies cleared',
     });

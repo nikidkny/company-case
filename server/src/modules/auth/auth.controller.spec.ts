@@ -14,6 +14,7 @@ import * as jwt from 'jsonwebtoken';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
+// TODO: fix tests.
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
   let authService: AuthService;

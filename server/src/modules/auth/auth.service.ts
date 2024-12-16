@@ -69,23 +69,26 @@ export class AuthService {
     }
   }
 
+  //TODO: 
+  // - test and clean for useless stuff
   async handleLogin(email: string, password: string, req: Request, res: Response) {
-    //TODO: 
-    // - check if the user is already logged in before loggin in again and before issuing new tokens.
-
-    // Check if the user is already logged in by verifying the refresh token
     const existingRefreshToken = req.cookies['refreshToken'];
 
     // Check if the user is already logged in
     if (existingRefreshToken) {
       try {
         jwt.verify(existingRefreshToken, process.env.JWT_REFRESH_SECRET);
-        await this.validateLoggedInUser(email, password);
+        await this.validateUser(email, password);
 
         // User is already logged in
         return res.status(HttpStatus.OK).json({ message: 'User is already logged in' });
-      } catch (e) {
-        if (e.message === 'Invalid credentials from logged in user') {
+        
+      } catch (error) {
+        console.error(error)
+
+        if (error.message === 'Invalid credentials' || error.message === 'User not found') {
+          console.error(error);
+          // TODO: call the logout function.
           // Clear cookies for invalid credentials
           res.clearCookie('accessToken');
           res.clearCookie('refreshToken');
@@ -95,7 +98,7 @@ export class AuthService {
         }
         // For other errors, return a bad request
         return res.status(HttpStatus.BAD_REQUEST).json({
-          message: e.message || 'Invalid token',
+          message: error.message,
         });
       }
     }
@@ -103,7 +106,6 @@ export class AuthService {
     // If no valid refresh token, proceed with normal login
     try {
       await this.login(email, password, res);
-      return;
     } catch (error) {
       console.error('Error during login:', error);
       // Send appropriate error message
@@ -118,31 +120,8 @@ export class AuthService {
 
   async login(email: string, password: string, res: Response) {
     try {
-      // Check if email and password are provided
-      if (!email && !password) {
-        throw new BadRequestException('Credentials must not be empty');
-      }
-      if (!email) {
-        throw new BadRequestException('Email must not be empty');
-      }
-      if (!password) {
-        throw new BadRequestException('Password must not be empty');
-      }
-
-      //Check if user exists
-      const userFound = await this.userModel.findOne({ email });
-      if (!userFound) {
-        throw new NotFoundException('User not found');
-      }
-
-      // Compare the provided password with the hashed password
-      const isPasswordValid = await bcrypt.compare(
-        password,
-        userFound.password,
-      );
-      if (!isPasswordValid) {
-        throw new BadRequestException('Invalid credentials');
-      }
+      // Validate user credentials
+      const userFound = await this.validateUser(email, password);
 
       // Create the payload for the JW
       const payload = { email: userFound.email, id: userFound._id };
@@ -176,28 +155,38 @@ export class AuthService {
       // Send response directly
       res.status(HttpStatus.OK).json({ message: 'Login successful' });
     } catch (error) {
-      console.error('Error during login', error);
       if (
         error instanceof NotFoundException ||
         error instanceof BadRequestException
       ) {
-        console.error(error);
         throw error;
       }
       throw new InternalServerErrorException('An unexpected error occurred');
     }
   }
 
-  async validateLoggedInUser(email: string, password: string) {
-    const userFound = await this.userModel.findOne({ email });
-    if (!userFound) {
+  async validateUser(email: string, password: string) {
+    if (!email && !password) {
+      throw new BadRequestException('Credentials must not be empty');
+    }
+    if (!email) {
+      throw new BadRequestException('Email must not be empty');
+    }
+    if (!password) {
+      throw new BadRequestException('Password must not be empty');
+    }
+  
+    const user = await this.userModel.findOne({ email });
+    if (!user) {
       throw new NotFoundException('User not found');
     }
-
-    const isPasswordValid = await bcrypt.compare(password, userFound.password);
+  
+    const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      throw new BadRequestException('Invalid credentials from logged in user');
+      throw new BadRequestException('Invalid credentials');
     }
+  
+    return user;
   }
 
   async refreshToken(refreshToken: string, res: Response): Promise<{ accessToken: string }> {
