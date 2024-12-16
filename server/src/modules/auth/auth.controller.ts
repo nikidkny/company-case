@@ -24,7 +24,6 @@ export class AuthController {
     await this.authService.handleLogin(body.email, body.password, req, res);
   }
 
-
   @UseGuards(JwtAuthGuard)
   @Post('logout')
   @HttpCode(HttpStatus.OK)

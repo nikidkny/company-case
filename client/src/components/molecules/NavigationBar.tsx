@@ -10,6 +10,8 @@ export default function NavigationBar() {
   const { isMenuOpen, setIsMenuOpen, setPopUp, setLoginStatus, resetUser, loginStatus, user } = useStore();
   const navigate = useNavigate(); // To handle redirection
 
+  //TODO: 
+  // - call backend endpoint
   const handleLogout = () => {
     logoutUser(setLoginStatus, resetUser);
     toggleMenu();

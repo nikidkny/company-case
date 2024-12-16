@@ -253,11 +253,6 @@ function AccountsPage() {
       alert("Login successful! You will be riderected to the home page :)");
       navigate({ to: "/" });
     } else if (loginFetch.error) {
-      console.log(loginFetch.error);
-
-      if (loginFetch.error.includes("cookies cleared")) {
-        console.log("SHOULD BE LOGGEDOUT");
-      }
       setLoginError(loginFetch.error);
     }
   }, [loginFetch.data, loginFetch.error, navigate, fetchedUser]);
