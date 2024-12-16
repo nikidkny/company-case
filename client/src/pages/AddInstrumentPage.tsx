@@ -5,11 +5,11 @@ import { Dropdown } from "../components/molecules/Dropdown";
 import { DropdownWithTags } from "../components/molecules/DropdownWithTags";
 import { getUserIdFromCookie } from "../hooks/getCookies";
 import { useFetch } from "../hooks/use-fetch";
-// import { useStore } from "../store/useStore";
 import { InstrumentType } from "../types/InstrumentType";
 import { musicGenresOptions } from "../utilities/musicGenresOptions";
 import TextBody from "../components/atoms/TextBody";
 import { User } from "../types/UserType";
+import { levelDescriptions } from "../utilities/levelDescriptions";
 
 export default function AddInstrumentPage() {
   const { userId } = getUserIdFromCookie();
@@ -21,22 +21,10 @@ export default function AddInstrumentPage() {
   }, [instrumentsFetch]);
 
   const [level, setLevel] = useState(1);
-  const descriptions: { [key: number]: string } = {
-    1: "Passer til en musiker der har spillet under 1 år og kan spille efter simple/forsimplede noder.",
-    2: "Passer til en musiker der har spillet 1-2 år og kan spille efter simple/forsimplede noder.",
-    3: "Passer til en musiker der har spillet 2-4 år og kan spille efter lettere komplekse noder.",
-    4: "Passer til en musiker der har spillet 4-6 år og kan spille efter lettere komplekse noder.",
-    5: "Passer til en musiker der har spillet 6-10 år og kan spille efter komplekse noder.",
-    6: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut.",
-    7: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut.",
-    8: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut.",
-    9: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut.",
-    10: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut.",
-  };
 
   // Function to get the description based on the level
   const getDescription = (level: number) => {
-    return descriptions[level];
+    return levelDescriptions[level];
   };
 
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
