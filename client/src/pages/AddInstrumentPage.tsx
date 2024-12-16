@@ -35,7 +35,7 @@ export default function AddInstrumentPage() {
 
   const instrumentData: UserInstrumentType = {
     userId,
-    instrumentId: selectedInstrument?._id.toString(),
+    instrumentId: selectedInstrument?._id,
     levelOfExperience: level.toString(),
     genres: selectedGenres,
     name: selectedInstrument?.name || "",
@@ -87,7 +87,7 @@ export default function AddInstrumentPage() {
   const availableInstruments = instrumentsFetch.data.filter(
     (instrument) =>
       !userInstrumentsFetch.data.some(
-        (userInstrument) => userInstrument.instrumentId === instrument._id.toString()
+        (userInstrument) => userInstrument.instrumentId === instrument._id
       )
   );
 

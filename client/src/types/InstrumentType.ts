@@ -1,6 +1,4 @@
-import { ObjectId } from "mongoose";
-
 export type InstrumentType = {
-  _id: ObjectId;
+  _id: string;
   name: string;
 };
