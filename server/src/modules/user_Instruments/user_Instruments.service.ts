@@ -39,36 +39,38 @@ export class User_InstrumentsService {
   }
   // Find instruments by user ID
   async findInstrumentsByUserId(userId: string): Promise<any[]> {
-    // Step 1: Find all user_instruments for the given userId
-    const userInstruments = await this.userInstrumentModel
-      .find({ userId })
+    const result = await this.userInstrumentModel
+      .aggregate([
+        { $match: { userId: userId } }, // Match user-specific instruments
+        {
+          $addFields: {
+            instrumentIdAsObjectId: { $toObjectId: '$instrumentId' }, // Convert instrumentId to ObjectId
+          },
+        },
+        {
+          $lookup: {
+            from: 'instruments', // The name of the collection for Instrument
+            localField: 'instrumentIdAsObjectId', // The field in the User_Instrument collection
+            foreignField: '_id', // The field in the Instrument collection
+            as: 'instrumentDetails', // The name of the array to store the lookup results
+          },
+        },
+        { $unwind: '$instrumentDetails' }, // Flatten the lookup array
+        {
+          $project: {
+            userId: 1, // Include the user ID
+            instrumentId: 1, // Include the instrument ID
+            levelOfExperience: 1, // Include the level of experience
+            genres: 1, // Include the genres
+            name: '$instrumentDetails.name', // Include the instrument name
+          },
+        },
+      ])
       .exec();
 
-    if (!userInstruments || userInstruments.length === 0) {
-      return []; // Return empty array if no instruments found
-    }
-
-    // Step 2: Extract all instrument IDs
-    const instrumentIds = userInstruments.map((ui) => ui.instrumentId);
-
-    // Step 3: Fetch instruments by IDs
-    const instruments = await this.instrumentModel
-      .find({ _id: { $in: instrumentIds } })
-      .exec();
-
-    // Step 4: Combine instrument details with user_instrument data
-    return userInstruments.map((ui) => {
-      const instrument = instruments.find(
-        (inst) => inst._id.toString() === ui.instrumentId.toString(),
-      );
-      return {
-        instrumentId: ui.instrumentId,
-        name: instrument?.name || 'Unknown',
-        levelOfExperience: ui.levelOfExperience,
-        genres: ui.genres,
-      };
-    });
+    return result;
   }
+
   update(id: number, updateUser_InstrumentDto: UpdateUser_InstrumentDto) {
     return `This action updates a #${id} userInstrument`;
   }
