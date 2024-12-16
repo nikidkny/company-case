@@ -14,17 +14,26 @@ import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { Response, Request } from 'express';
 import * as jwt from 'jsonwebtoken';
+import { UpdatePasswordDto } from './dto/update-password.dto';
+
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     private jwtService: JwtService,
-  ) { }
+  ) {}
 
   async signup(createUserDto: CreateUserDto): Promise<{ message: string }> {
-    const { firstName, lastName, email, password, confirmPassword, birthdate, isAvailable } =
-      createUserDto;
+    const {
+      firstName,
+      lastName,
+      email,
+      password,
+      confirmPassword,
+      birthdate,
+      isAvailable,
+    } = createUserDto;
 
     try {
       // Check if passwords match
@@ -240,5 +249,34 @@ export class AuthService {
       }
       throw new UnauthorizedException('Invalid or expired refresh token');
     }
+  }
+
+  async updatePassword(id: string, updatePasswordDto: UpdatePasswordDto) {
+    const { currentPassword, newPassword } = updatePasswordDto;
+
+    // Retrieve the user from the database
+    const user = await this.userModel.findById(id);
+    if (!user) {
+      console.error('No user found with ID:', id);
+      throw new NotFoundException('User not found');
+    }
+
+    // Compare the provided current password with the stored password
+    const isPasswordValid = await bcrypt.compare(
+      currentPassword,
+      user.password,
+    );
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Current password is incorrect');
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update the password in the database
+    user.password = hashedPassword;
+    await user.save();
+
+    return { message: 'Password updated successfully' };
   }
 }

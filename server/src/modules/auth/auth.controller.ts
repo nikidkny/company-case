@@ -1,13 +1,23 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Req, Res, UnauthorizedException, UseGuards } from "@nestjs/common";
-import { AuthService } from "./auth.service";
-import { CreateUserDto } from "../users/dto/create-user.dto";
-import { JwtAuthGuard } from "./jwt-auth.guard";
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+  UnauthorizedException
+} from '@nestjs/common';
+import { AuthService } from './auth.service';
+import { CreateUserDto } from '../users/dto/create-user.dto';
+import { JwtAuthGuard } from './jwt-auth.guard';
 import { Response, Request } from 'express';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @Controller('auth')
 export class AuthController {
-
-  constructor(private readonly authService: AuthService) { };
+  constructor(private readonly authService: AuthService) {}
 
   @Post('signup')
   @HttpCode(HttpStatus.CREATED)
@@ -70,4 +80,17 @@ export class AuthController {
     return res.json({ message: 'Access token refreshed' });
   }
 
+  @UseGuards(JwtAuthGuard) // Protect the route
+  @Post('update-password')
+  @HttpCode(HttpStatus.OK)
+  async updatePassword(
+    @Body() updatePasswordDto: UpdatePasswordDto,
+    @Req() req: Request, // Extract user information from the JWT payload
+  ) {
+    const userId = req.user['userId']; // JWT payload contains the user ID
+    console.log('REQ:', req.user);
+    await this.authService.updatePassword(userId, updatePasswordDto);
+    console.log('Extracted user ID:', userId);
+    return { message: 'Password updated successfully' };
+  }
 }
