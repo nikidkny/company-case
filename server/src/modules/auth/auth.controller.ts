@@ -35,7 +35,9 @@ export class AuthController {
     // Clear both the accessToken and refreshToken cookies
     res.clearCookie('accessToken', { httpOnly: false, secure: process.env.NODE_ENV === 'production' ? true : false, });
     res.clearCookie('refreshToken', { httpOnly: false, secure: process.env.NODE_ENV === 'production' ? true : false, });
-    return res.json({ message: 'Logout successful' });
+    return res.status(HttpStatus.OK).json({
+      message: 'Logout successful, cookies cleared',
+    });
   }
 
   //TODO:
