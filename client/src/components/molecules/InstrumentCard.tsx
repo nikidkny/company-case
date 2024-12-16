@@ -1,11 +1,11 @@
+import { UserInstrumentType } from "../../types/userInstrumentType";
 import ProfileBadge from "../atoms/ProfileBadge";
 import Tag from "../atoms/Tag";
 import TextBody from "../atoms/TextBody";
 import TextHeadline from "../atoms/TextHeadline";
-import { InstrumentType } from "../../types/InstrumentType";
 
 interface Props {
-  instrument: InstrumentType;
+  instrument: UserInstrumentType;
   key: number;
 }
 
