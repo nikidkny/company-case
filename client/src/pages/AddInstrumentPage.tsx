@@ -12,6 +12,9 @@ import { User } from "../types/UserType";
 import { levelDescriptions } from "../utilities/levelDescriptions";
 
 export default function AddInstrumentPage() {
+  // TO DO: Add validation
+  // TO DO: Add error handling
+  // TO DO: Add feedback to user
   const { userId } = getUserIdFromCookie();
   const instrumentsFetch = useFetch<InstrumentType[]>([], "/instruments", "GET");
   useEffect(() => {
