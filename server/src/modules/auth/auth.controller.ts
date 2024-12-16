@@ -7,6 +7,7 @@ import {
   Req,
   Res,
   UseGuards,
+  UnauthorizedException
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
@@ -27,55 +28,54 @@ export class AuthController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(
-    @Body() body: { email: string; password: string },
+    @Body() body: { email: string, password: string },
     @Res() res: Response,
-    @Req() req: Request,
-  ) {
-    // Check if the user already has a refresh token (i.e., already logged in)
-    const refreshToken = req.cookies['refreshCode'];
-
-    if (refreshToken) {
-      console.log('Already loggedin');
-
-      // If a refresh token exists, return a message and do nothing
-      return res.json({ message: 'User already logged in' });
-    }
-
-    await this.authService.login(body.email, body.password, res);
-    return res.json({ message: 'Login successful' });
+    @Req() req: Request,) {
+    await this.authService.handleLogin(body.email, body.password, req, res);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   async logout(@Res() res: Response) {
-    // Clear both the accessToken and refreshToken cookies
-    res.clearCookie('accessToken', {
-      httpOnly: false,
-      secure: process.env.NODE_ENV === 'production' ? true : false,
-    });
-    res.clearCookie('refreshToken', {
-      httpOnly: false,
-      secure: process.env.NODE_ENV === 'production' ? true : false,
-    });
-
-    return res.json({ message: 'Logout successful' });
+    try {
+      // Call the logout method from the service
+      this.authService.logout(res);
+  
+      // Send a response back indicating logout was successful
+      return res.status(HttpStatus.OK).json({
+        message: 'Logout successful, cookies cleared',
+      });
+    } catch (error) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: 'Logout failed',
+      });
+    }
   }
 
-  //TODO: implement in the client-side to detect '401 unauthorised' and call te refresh endpoint
+  //TODO:
+  // - implement in the client-side to detect '401 unauthorised' and call te refresh endpoint
   @Post('refresh')
-  @HttpCode(HttpStatus.OK)
-  async refresh(
-    @Body('refreshToken') refreshToken: string,
-    @Res() res: Response,
-  ) {
-    const { accessToken } = await this.authService.refreshToken(refreshToken);
+  @HttpCode(HttpStatus.CREATED)
+  async refresh(@Req() req: Request, @Res() res: Response) {
+    // Ensure the cookie header exists
+    const refreshTokenRaw = req.headers.cookie || '';
 
-    // Set the new access token as an HTTP-only cookie
-    res.cookie('accessToken', accessToken, {
-      httpOnly: false,
-      secure: process.env.NODE_ENV === 'production' ? true : false,
-    });
+    // Split the cookie string into an array of individual cookies
+    const cookies = refreshTokenRaw.split(';').map(cookie => cookie.trim());
+
+    // Find the refreshToken cookie
+    const refreshTokenCookie = cookies.find(cookie => cookie.startsWith('refreshToken='));
+
+    // Extract the value of the refreshToken
+    const refreshToken = refreshTokenCookie?.split('=')[1];
+
+    if (!refreshToken) {
+      throw new UnauthorizedException('Refresh token is missing');
+    }
+
+    // Delegate the token refresh logic to the service
+    const { accessToken } = await this.authService.refreshToken(refreshToken, res);
 
     return res.json({ message: 'Access token refreshed' });
   }
@@ -92,14 +92,5 @@ export class AuthController {
     await this.authService.updatePassword(userId, updatePasswordDto);
     console.log('Extracted user ID:', userId);
     return { message: 'Password updated successfully' };
-  }
-
-  /* Example on how to use guard:*/
-  // This route is protected by the JwtAuthGuard
-  @UseGuards(JwtAuthGuard)
-  @Post('protected')
-  @HttpCode(HttpStatus.OK)
-  async protectedRoute(@Body() body) {
-    return { message: 'You have access to this route' };
   }
 }

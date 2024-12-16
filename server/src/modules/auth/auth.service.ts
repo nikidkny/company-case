@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  HttpStatus,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -11,8 +12,10 @@ import { Model } from 'mongoose';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
-import { Response } from 'express';
+import { Response, Request } from 'express';
+import * as jwt from 'jsonwebtoken';
 import { UpdatePasswordDto } from './dto/update-password.dto';
+
 
 @Injectable()
 export class AuthService {
@@ -75,33 +78,60 @@ export class AuthService {
     }
   }
 
+  async handleLogin(email: string, password: string, req: Request, res: Response) {
+    const existingRefreshToken = req.cookies?.['refreshToken'];
+
+    // Check if the user is already logged in
+    if (existingRefreshToken) {
+      try {
+        jwt.verify(existingRefreshToken, process.env.JWT_REFRESH_SECRET);
+        await this.validateUser(email, password);
+
+        // User is already logged in
+        return res.status(HttpStatus.OK).json({ message: 'User is already logged in' });
+
+      } catch (error) {
+        console.error(error)
+
+        if (error.message === 'Invalid credentials' || error.message === 'User not found') {
+          console.error(error);
+          // Clear cookies for invalid credentials
+          this.logout(res);
+          return res.status(HttpStatus.UNAUTHORIZED).json({
+            message: 'Invalid credentials from logged-in user, cookies cleared',
+          });
+        }
+        // For other errors, return a bad request
+        return res.status(HttpStatus.BAD_REQUEST).json({
+          message: error.message,
+        });
+      }
+    }
+
+    // If no valid refresh token, proceed with normal login
+    try {
+      await this.login(email, password, res);
+    } catch (error) {
+      console.error('Error during login:', error);
+      // Send appropriate error message
+      if (error instanceof NotFoundException) {
+        return res.status(HttpStatus.NOT_FOUND).json({ message: error.message });
+      }
+
+      if (error instanceof BadRequestException) {
+        return res.status(HttpStatus.BAD_REQUEST).json({ message: error.message });
+      }
+
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: 'An unexpected error occurred during login',
+      });
+    }
+  }
+
   async login(email: string, password: string, res: Response) {
     try {
-      // Check if email and password are provided
-      if (!email && !password) {
-        throw new BadRequestException('Credentials must not be empty');
-      }
-      if (!email) {
-        throw new BadRequestException('Email must not be empty');
-      }
-      if (!password) {
-        throw new BadRequestException('Password must not be empty');
-      }
-
-      //Check if user exists
-      const userFound = await this.userModel.findOne({ email });
-      if (!userFound) {
-        throw new NotFoundException('User not found');
-      }
-
-      // Compare the provided password with the hashed password
-      const isPasswordValid = await bcrypt.compare(
-        password,
-        userFound.password,
-      );
-      if (!isPasswordValid) {
-        throw new BadRequestException('Invalid credentials');
-      }
+      // Validate user credentials
+      const userFound = await this.validateUser(email, password);
 
       // Create the payload for the JW
       const payload = { email: userFound.email, id: userFound._id };
@@ -116,27 +146,26 @@ export class AuthService {
         secret: process.env.JWT_REFRESH_SECRET,
         expiresIn: '1d',
       });
+      // Define common cookie options for both accessToken and refreshToken
+      const cookieOptions = {
+        httpOnly: process.env.NODE_ENV === 'production',  
+        secure: process.env.NODE_ENV === 'production', 
+        sameSite: 'strict' as 'strict' | 'lax' | 'none', // Explicitly typing sameSite to the correct string literals
+      };
 
-      // Set cookies with HTTP-only, Secure (optional for HTTPS), and SameSite for better security
       res.cookie('accessToken', accessToken, {
         maxAge: 60 * 60 * 1000, // 1 hour
-        httpOnly: false, // Ensures the cookie is not accessible via JavaScript
-        secure: process.env.NODE_ENV === 'production' ? true : false,
-        sameSite: 'strict', // Prevents cross-site requests
+        ...cookieOptions, // Spread the common options
       });
 
-      res.cookie('refreshCode', refreshToken, {
+      res.cookie('refreshToken', refreshToken, {
         maxAge: 24 * 60 * 60 * 1000, // 1 day
-        httpOnly: false, // Ensures the cookie is not accessible via JavaScript
-        secure: process.env.NODE_ENV === 'production' ? true : false,
-        sameSite: 'strict', // Prevents cross-site requests
+        ...cookieOptions, // Spread the common options
       });
 
-      return {
-        message: 'Login successful',
-      };
+      // Send response directly
+      res.status(HttpStatus.OK).json({ message: 'Login successful' });
     } catch (error) {
-      console.error('Error during login', error);
       if (
         error instanceof NotFoundException ||
         error instanceof BadRequestException
@@ -147,28 +176,77 @@ export class AuthService {
     }
   }
 
-  async refreshToken(refreshToken: string) {
+  async validateUser(email: string, password: string) {
+    if (!email && !password) {
+      throw new BadRequestException('Credentials must not be empty');
+    }
+    if (!email) {
+      throw new BadRequestException('Email must not be empty');
+    }
+    if (!password) {
+      throw new BadRequestException('Password must not be empty');
+    }
+
+    const user = await this.userModel.findOne({ email });
+    if (!user) {
+      console.log("Should print");
+
+      throw new NotFoundException('User not found');
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      console.log("Should NOT print");
+      throw new BadRequestException('Invalid credentials');
+    }
+
+    return user;
+  }
+
+  logout(res: Response) {
+    // Clear both the accessToken and refreshToken cookies
+    const cookieOptions = {
+      httpOnly: process.env.NODE_ENV === 'production',
+      secure: process.env.NODE_ENV === 'production',
+    };
+
+    res.clearCookie('accessToken', cookieOptions);
+    res.clearCookie('refreshToken', cookieOptions);
+  }
+
+  async refreshToken(refreshToken: string, res: Response): Promise<{ accessToken: string }> {
     try {
-      //Verify refresh token
+      // Validate refresh token
       const payload = this.jwtService.verify(refreshToken, {
         secret: process.env.JWT_REFRESH_SECRET,
       });
 
+      // Find user by ID (stored in the payload)
       const user = await this.userModel.findById(payload.id);
+      if (!user) {
+        console.error("USER NOT FOUND")
+        throw new NotFoundException('User not found');
+      }
 
-      //Generate new acess token
-      const newAccessToken = this.jwtService.sign(
-        { email: user.email, id: user.id },
-        {
-          secret: process.env.JWT_SECRET,
-          expiresIn: '60m',
-        },
+      // Issue a new access token
+      const accessToken = this.jwtService.sign(
+        { id: user.id, email: user.email },
+        { secret: process.env.JWT_ACCESS_SECRET, expiresIn: '1h' },
       );
 
-      return {
-        accessToken: newAccessToken,
-      };
+      // Set the new access token in the response cookie
+      res.cookie('accessToken', accessToken, {
+        httpOnly: false, // Accessible by frontend
+        secure: process.env.NODE_ENV === 'production', // Only sent over HTTPS in production
+        maxAge: 60 * 60 * 1000, // 1 hour
+      });
+
+      return { accessToken };
     } catch (error) {
+      console.error(error);
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException('User not found');
+      }
       throw new UnauthorizedException('Invalid or expired refresh token');
     }
   }
