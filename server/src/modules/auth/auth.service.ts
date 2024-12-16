@@ -70,7 +70,7 @@ export class AuthService {
   }
 
   async handleLogin(email: string, password: string, req: Request, res: Response) {
-    const existingRefreshToken = req.cookies['refreshToken'];
+    const existingRefreshToken = req.cookies?.['refreshToken'];
 
     // Check if the user is already logged in
     if (existingRefreshToken) {
@@ -80,7 +80,7 @@ export class AuthService {
 
         // User is already logged in
         return res.status(HttpStatus.OK).json({ message: 'User is already logged in' });
-        
+
       } catch (error) {
         console.error(error)
 
@@ -107,9 +107,14 @@ export class AuthService {
     } catch (error) {
       console.error('Error during login:', error);
       // Send appropriate error message
-      if (error instanceof NotFoundException || error instanceof BadRequestException) {
+      if (error instanceof NotFoundException) {
+        return res.status(HttpStatus.NOT_FOUND).json({ message: error.message });
+      }
+
+      if (error instanceof BadRequestException) {
         return res.status(HttpStatus.BAD_REQUEST).json({ message: error.message });
       }
+
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         message: 'An unexpected error occurred during login',
       });
@@ -173,17 +178,20 @@ export class AuthService {
     if (!password) {
       throw new BadRequestException('Password must not be empty');
     }
-  
+
     const user = await this.userModel.findOne({ email });
     if (!user) {
+      console.log("Should print");
+
       throw new NotFoundException('User not found');
     }
-  
+
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
+      console.log("Should NOT print");
       throw new BadRequestException('Invalid credentials');
     }
-  
+
     return user;
   }
 

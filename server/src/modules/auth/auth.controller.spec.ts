@@ -58,7 +58,7 @@ describe('AuthController (e2e)', () => {
     userModel = moduleFixture.get(getModelToken(User.name));
   });
 
-  /*Signup*/
+  // *Signup*
   it('should create a new user (signup)', async () => {
     // Define a sample user DTO with unique data for the test
     const createUserDto = {
@@ -82,7 +82,7 @@ describe('AuthController (e2e)', () => {
     expect(response.body.message).toBe('User registered successfully');
   });
 
-  /*Login existing user*/
+  // *Login existing user*
   it('should login an existing user and return a JWT token', async () => {
     // Check if the user exists in the database
     //POST request. IMPORTANT: Keep same credentials as the test for signup
@@ -121,7 +121,7 @@ describe('AuthController (e2e)', () => {
     expect(decodedToken).toHaveProperty('email', mockUserEmail); // Ensure email matches
   });
 
-  /*Login not existing user expecting not found*/
+  // *Login not existing user expecting not found*
   it('should login an non existing user and get a not found exception', async () => {
     const loginResponse = await request(app.getHttpServer())
       .post('/auth/login')
@@ -132,7 +132,7 @@ describe('AuthController (e2e)', () => {
       .expect(HttpStatus.NOT_FOUND);
   })
 
-  /*Accessing protected route with not logged in user*/
+  // *Accessing protected route with not logged in user*
   it('should return 401 if cookies are not present', async () => {
     const response = await request(app.getHttpServer())
       .post('/auth/logout')
@@ -141,7 +141,7 @@ describe('AuthController (e2e)', () => {
     expect(response.body.message).toBe('Unauthorized');
   });
 
-  /*Login existing user with wrong credentials expecting 400*/
+  // *Login existing user with wrong credentials expecting 400*
   it('should return 400 if login with wrong credentials', async () => {
     const response = await request(app.getHttpServer())
       .post('/auth/login')
@@ -152,7 +152,7 @@ describe('AuthController (e2e)', () => {
       .expect(HttpStatus.BAD_REQUEST);
   });
 
-  /*Refresh Token using valid refresh token*/
+  // *Refresh Token using valid refresh token*
   it('should refresh the access token successfully', async () => {
 
     // First, log in to get a valid refresh token
@@ -201,7 +201,7 @@ describe('AuthController (e2e)', () => {
     expect(decodedToken).toHaveProperty('email', mockUserEmail); // Ensure email matches
   });
 
-  /* Refresh Token using invalid refresh token */
+  // *Refresh Token using invalid refresh token*
   it('should return UNAUTHORIZED for an invalid refresh token', async () => {
     const invalidRefreshToken = 'someInvalidToken123';
 
@@ -232,7 +232,7 @@ describe('AuthController (e2e)', () => {
 
     const validRefreshToken = refreshTokenCookie?.split(';')[0].split('=')[1];
     const decodedRefreshToken = jwt.decode(validRefreshToken) as any;
-    
+
     // Manually expire the refresh token
     const expiredRefreshToken = jwt.sign(
       { id: decodedRefreshToken.id, email: decodedRefreshToken.email },
@@ -248,6 +248,7 @@ describe('AuthController (e2e)', () => {
 
     expect(refreshResponse.body.message).toBe('Invalid or expired refresh token');
   });
+
 
   afterAll(async () => {
     try {
