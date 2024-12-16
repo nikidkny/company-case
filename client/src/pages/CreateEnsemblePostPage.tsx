@@ -13,8 +13,10 @@ import { useEffect } from "react";
 import { PostType } from "../types/PostType";
 import { InstrumentType } from "../types/InstrumentType";
 import { EnsembleType } from "../types/EnsembleType";
+import { levelDescriptions } from "../utilities/levelDescriptions";
 
 export default function CreateEnsemblePostPage() {
+  //const [level, setLevel] = useState(1);
   const { ensemblesId } = useParams({ strict: false });
   const {
     user,
@@ -29,7 +31,7 @@ export default function CreateEnsemblePostPage() {
     setPostGenres,
     removePostGenre,
     experienceRequired,
-    //setExperienceRequired,
+    setExperienceRequired,
     resetPostData,
     postInstrument,
     setPostInstrument,
@@ -102,7 +104,6 @@ export default function CreateEnsemblePostPage() {
 
     setTimeout(() => {
       triggerFetch();
-      console.log("createdPost INSIDE", createdPost);
       if (createdPost) {
         alert("The post has been created! You will be redirected to your profile");
         navigate({
@@ -179,13 +180,18 @@ export default function CreateEnsemblePostPage() {
     });
   };
 
+  const handleDecrease = () => setExperienceRequired(Math.max(experienceRequired - 1, 1));
+  const handleIncrease = () => setExperienceRequired(Math.min(experienceRequired + 1, 10));
+
+  const getDescription = (level: number) => levelDescriptions[level];
+
   return (
     <>
       <div className="p-6 flex flex-col justify-around gap-6 bg-gray-300">
         <TextHeadline variant="h3" size="lg">
           Create post {selectedEnsembleOption.label ? `for ${selectedEnsembleOption.label}` : null}
         </TextHeadline>
-
+        //TODO: add validation on the form inputs
         <form onSubmit={handleSubmit} className="flex flex-col justify-around gap-6">
           <TextInput inputType="text" value={postTitle} onChange={(value) => setPostTitle(value)} placeholder={"Title"} id="postTitle" name="postTitle" className="w-auto" />
 
@@ -203,12 +209,42 @@ export default function CreateEnsemblePostPage() {
             </TextBody>
             <Dropdown initialSelectedLabel="Choose an instrument" options={instrumentsDropdownOptions} selectedOption={postInstrument} onSelect={(value) => setPostInstrument(value as DropdownOptionType)} className="w-auto" />
           </div>
-          {/* location */}
+          {/* minimum experience level */}
           <div className="flex flex-col gap-3">
             <TextBody variant="strong" size="md" className="text-blue-500">
               Minimum experience required
             </TextBody>
-            <div className="flex flex-row gap-3">//TODO: ADD experience required here</div>
+
+            <div>
+              <div className="border-solid border-1px border-gray-300 p-4 rounded-md shadow-base bg-white flex flex-col gap-6">
+                <div className="flex flex-row justify-between">
+                  <TextHeadline variant="h3" size="sm">
+                    Level {experienceRequired}
+                  </TextHeadline>
+                  <div className="flex items-center">
+                    <button
+                      type="button"
+                      onClick={handleDecrease}
+                      disabled={experienceRequired === 1}
+                      className={`cursor-pointer border-solid border-1px border-gray-300 bg-transparent px-2 py-1 rounded-l-sm hover:bg-gray-200 ${experienceRequired === 1 ? "opacity-50 cursor-not-allowed text-gray-300" : "text-red-500"}`}
+                    >
+                      -
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleIncrease}
+                      disabled={experienceRequired === 10}
+                      className={`cursor-pointer border-solid border-1px border-l-none border-gray-300 bg-transparent px-2 py-1 rounded-r-sm hover:bg-gray-200 ${experienceRequired === 10 ? "opacity-50 cursor-not-allowed text-gray-300" : "text-red-500"}`}
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+                <TextBody variant="p" size="md" className="mb-6">
+                  {getDescription(experienceRequired)}
+                </TextBody>
+              </div>
+            </div>
           </div>
 
           {/* music genre */}

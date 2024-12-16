@@ -157,6 +157,7 @@ export function CreateEnsemblePage() {
         <TextHeadline variant="h3" size="lg">
           Create an ensemble
         </TextHeadline>
+        //TODO: add validation on the form inputs
         <form onSubmit={handleSubmit} className="flex flex-col justify-around gap-6">
           <TextInput inputType="text" value={name} onChange={(value) => setName(value)} placeholder={"Ensemble's name"} id="ensembleName" name="ensembleName" className="w-auto" />
 

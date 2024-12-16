@@ -9,20 +9,19 @@ import mockEnsembles from "../../../../server/src/seeder/mockEnsembles";
 interface PostProps {
   _id: Types.ObjectId | string;
   title: string;
-  city: string;
-  zip: string;
+  city?: string;
+  zip?: string;
   description: string;
-  type: string;
   createdBy: Types.ObjectId | string;
-  isReported: boolean;
+  isReported?: boolean;
   //should be insturment type
   instrument: string;
-  experienceRequired: string;
-  webPage: string;
-  createdAt: Date;
-  deletedAt: Date | null;
-  updatedAt: Date;
-  genre: string;
+  experienceRequired?: number;
+  webPage?: string;
+  createdAt: string;
+  deletedAt?: string | null;
+  updatedAt?: string;
+  genres: string[];
 }
 
 interface Props {
@@ -49,7 +48,8 @@ export default function PostCard({ post }: Props) {
           <Icon name={ICON_NAMES.instruments} height={32} width={36} viewBox={"0 0 36 32"} className="text-blue-500" />
         </div>
       </div>
-      <div className="px-6 py-4">
+
+      <div className="flex flex-col p-6">
         <div>
           <TextBody size="md" className="font-bold">
             {post.title}
@@ -60,10 +60,12 @@ export default function PostCard({ post }: Props) {
           <TextHeadline variant="h3" size="sm">
             {post.instrument}
           </TextHeadline>
-          <div className="flex flex-row items-center gap-2">
-            <TextBody size="sm">Experience</TextBody>
-            <Tag number={post.experienceRequired} />
-          </div>
+          {post.experienceRequired && (
+            <div className="flex flex-row items-center gap-2">
+              <TextBody size="sm">Experience</TextBody>
+              <Tag number={post.experienceRequired.toString()} />
+            </div>
+          )}
         </div>
       </div>
     </div>

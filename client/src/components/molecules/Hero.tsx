@@ -30,7 +30,7 @@ export default function Hero() {
         <div className="flex flex-row items-center justify-between gap-3 w-full items-stretch text-blue-500">
           <Button
             buttonState="default"
-            buttonLabel="Find posts"
+            buttonLabel="Find musicians"
             buttonVariant="secondary"
             iconPosition="top"
             icon={ICON_NAMES.author_icon}

@@ -28,7 +28,7 @@ export default function InstrumentCard({ instrument }: Props) {
       </div>
       <div className="flex flex-row gap-2 flex-wrap">
         {instrument.genres.map((genre, index) => (
-          <ProfileBadge key={index} ProfileBageLabel={genre} ProfileBadgeSize="sm" />
+          <ProfileBadge key={index} ProfileBadgeLabel={genre} ProfileBadgeSize="sm" />
         ))}
       </div>
     </div>

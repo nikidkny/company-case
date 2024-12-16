@@ -11,7 +11,7 @@ export class CreatePostDto {
   @IsNotEmpty()
   location: string;
   webpage: string;
-  experienceRequired: string;
+  experienceRequired: number;
   genres: string[];
   @IsString()
   createdBy: string;

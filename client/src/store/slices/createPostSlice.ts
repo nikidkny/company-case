@@ -12,7 +12,7 @@ export interface CreatePostState {
   postTitle: string;
   postDescription: string;
   postInstrument: DropdownOptionType;
-  experienceRequired: string;
+  experienceRequired: number;
   postGenres: string[];
   posts: PostType[];
   setPosts: (posts: PostType | PostType[]) => void;
@@ -22,7 +22,7 @@ export interface CreatePostState {
   setPostTitle: (postTitle: string) => void;
   setPostDescription: (postDescription: string) => void;
   setPostInstrument: (postInstrument: DropdownOptionType) => void;
-  setExperienceRequired: (experienceRequired: string) => void;
+  setExperienceRequired: (experienceRequired: number) => void;
   setPostGenres: (postGenre: string) => void;
   removePostGenre: (postGenre: string) => void;
   resetPostData: () => void;
@@ -35,7 +35,7 @@ export const createPostSlice: StateCreator<CreatePostState, [], [], CreatePostSt
   postTitle: "",
   postDescription: "",
   postInstrument: { value: "", label: "" },
-  experienceRequired: "",
+  experienceRequired: 1,
   postGenres: [],
 
   // Actions
@@ -72,7 +72,7 @@ export const createPostSlice: StateCreator<CreatePostState, [], [], CreatePostSt
       postTitle: "",
       postDescription: "",
       postInstrument: { value: "", label: "" },
-      experienceRequired: "",
+      experienceRequired: 1,
       postGenres: [],
     })),
 });

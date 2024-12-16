@@ -26,7 +26,7 @@ export class Post {
   @Prop({ required: true })
   instrument: string;
   @Prop()
-  experienceRequired: string;
+  experienceRequired: number;
   @Prop()
   genre: string;
   @Prop()
