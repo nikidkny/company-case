@@ -69,8 +69,6 @@ export class AuthService {
     }
   }
 
-  //TODO: 
-  // - test and clean for useless stuff
   async handleLogin(email: string, password: string, req: Request, res: Response) {
     const existingRefreshToken = req.cookies['refreshToken'];
 
