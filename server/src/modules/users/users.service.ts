@@ -6,7 +6,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { GetMembersDetailsDto } from './dto/get-members-details.dto';
 
-
 @Injectable()
 export class UsersService {
   //injecting the user model based on the schema we made
@@ -30,6 +29,11 @@ export class UsersService {
       .exec();
   }
 
+  async updatePassword(id: string, hashedPassword: string): Promise<void> {
+    await this.userModel.findByIdAndUpdate(id, {
+      password: hashedPassword,
+    });
+  }
   //takes an array of userIds and finds each user + creator
   async getMembersDetails({
     membersIds,
@@ -48,5 +52,7 @@ export class UsersService {
     return foundResults;
   }
 
-  remove(id: string) {}
+  async remove(id: string): Promise<void> {
+    await this.userModel.findByIdAndDelete(id).exec();
+  }
 }

@@ -93,6 +93,7 @@ export default function ProfilePage() {
     <div className="flex flex-col gap-6">
       <div className="profile-base-wrapper p-4 border-y-solid border-y-gray-400 border-y-1px">
         <div className="flex flex-row gap-4 pb-4">
+          {/*TO DO: have to add that the user image is the src if there is */}
           {user?.image ? (
             <Image src={user?.image} alt="Profile Image" className="rounded-full h-24 w-24" />
           ) : (
@@ -129,9 +130,11 @@ export default function ProfilePage() {
           ></Button>
           <Button
             buttonVariant="secondary"
-            onClick={() => console.log("Settings")}
+            to="/profile/$profileId/settings"
+            params={{ profileId: userId }}
             iconPosition="none"
             buttonLabel="Settings"
+            className="no-underline"
           ></Button>
         </div>
       </div>
