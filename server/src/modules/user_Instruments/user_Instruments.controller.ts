@@ -31,7 +31,10 @@ export class User_InstrumentsController {
   findOne(@Param('id') id: string) {
     return this.user_InstrumentsService.findOne(+id);
   }
-
+  @Get('user/:userId')
+  async getInstrumentsByUser(@Param('userId') userId: string) {
+    return await this.user_InstrumentsService.findInstrumentsByUserId(userId);
+  }
   @Patch(':id')
   update(
     @Param('id') id: string,

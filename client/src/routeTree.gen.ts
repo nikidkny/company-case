@@ -39,8 +39,8 @@ const ProfileProfileIdSettingsLazyImport = createFileRoute(
 const ProfileProfileIdEditLazyImport = createFileRoute(
   '/profile/$profileId/edit',
 )()
-const ProfileProfileIdInstrumentsEditLazyImport = createFileRoute(
-  '/profile/$profileId/instruments/edit',
+const ProfileProfileIdInstrumentsAddLazyImport = createFileRoute(
+  '/profile/$profileId/instruments/add',
 )()
 
 // Create/Update Routes
@@ -154,13 +154,13 @@ const ProfileProfileIdEditLazyRoute = ProfileProfileIdEditLazyImport.update({
   import('./routes/profile/$profileId/edit.lazy').then((d) => d.Route),
 )
 
-const ProfileProfileIdInstrumentsEditLazyRoute =
-  ProfileProfileIdInstrumentsEditLazyImport.update({
-    id: '/profile/$profileId/instruments/edit',
-    path: '/profile/$profileId/instruments/edit',
+const ProfileProfileIdInstrumentsAddLazyRoute =
+  ProfileProfileIdInstrumentsAddLazyImport.update({
+    id: '/profile/$profileId/instruments/add',
+    path: '/profile/$profileId/instruments/add',
     getParentRoute: () => rootRoute,
   } as any).lazy(() =>
-    import('./routes/profile/$profileId/instruments.edit.lazy').then(
+    import('./routes/profile/$profileId/instruments.add.lazy').then(
       (d) => d.Route,
     ),
   )
@@ -274,11 +274,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileProfileIdIndexLazyImport
       parentRoute: typeof rootRoute
     }
-    '/profile/$profileId/instruments/edit': {
-      id: '/profile/$profileId/instruments/edit'
-      path: '/profile/$profileId/instruments/edit'
-      fullPath: '/profile/$profileId/instruments/edit'
-      preLoaderRoute: typeof ProfileProfileIdInstrumentsEditLazyImport
+    '/profile/$profileId/instruments/add': {
+      id: '/profile/$profileId/instruments/add'
+      path: '/profile/$profileId/instruments/add'
+      fullPath: '/profile/$profileId/instruments/add'
+      preLoaderRoute: typeof ProfileProfileIdInstrumentsAddLazyImport
       parentRoute: typeof rootRoute
     }
   }
@@ -314,7 +314,7 @@ export interface FileRoutesByFullPath {
   '/profile/$profileId/edit': typeof ProfileProfileIdEditLazyRoute
   '/profile/$profileId/settings': typeof ProfileProfileIdSettingsLazyRoute
   '/profile/$profileId': typeof ProfileProfileIdIndexLazyRoute
-  '/profile/$profileId/instruments/edit': typeof ProfileProfileIdInstrumentsEditLazyRoute
+  '/profile/$profileId/instruments/add': typeof ProfileProfileIdInstrumentsAddLazyRoute
 }
 
 export interface FileRoutesByTo {
@@ -332,7 +332,7 @@ export interface FileRoutesByTo {
   '/profile/$profileId/edit': typeof ProfileProfileIdEditLazyRoute
   '/profile/$profileId/settings': typeof ProfileProfileIdSettingsLazyRoute
   '/profile/$profileId': typeof ProfileProfileIdIndexLazyRoute
-  '/profile/$profileId/instruments/edit': typeof ProfileProfileIdInstrumentsEditLazyRoute
+  '/profile/$profileId/instruments/add': typeof ProfileProfileIdInstrumentsAddLazyRoute
 }
 
 export interface FileRoutesById {
@@ -352,7 +352,7 @@ export interface FileRoutesById {
   '/profile/$profileId/edit': typeof ProfileProfileIdEditLazyRoute
   '/profile/$profileId/settings': typeof ProfileProfileIdSettingsLazyRoute
   '/profile/$profileId/': typeof ProfileProfileIdIndexLazyRoute
-  '/profile/$profileId/instruments/edit': typeof ProfileProfileIdInstrumentsEditLazyRoute
+  '/profile/$profileId/instruments/add': typeof ProfileProfileIdInstrumentsAddLazyRoute
 }
 
 export interface FileRouteTypes {
@@ -373,7 +373,7 @@ export interface FileRouteTypes {
     | '/profile/$profileId/edit'
     | '/profile/$profileId/settings'
     | '/profile/$profileId'
-    | '/profile/$profileId/instruments/edit'
+    | '/profile/$profileId/instruments/add'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -390,7 +390,7 @@ export interface FileRouteTypes {
     | '/profile/$profileId/edit'
     | '/profile/$profileId/settings'
     | '/profile/$profileId'
-    | '/profile/$profileId/instruments/edit'
+    | '/profile/$profileId/instruments/add'
   id:
     | '__root__'
     | '/'
@@ -408,7 +408,7 @@ export interface FileRouteTypes {
     | '/profile/$profileId/edit'
     | '/profile/$profileId/settings'
     | '/profile/$profileId/'
-    | '/profile/$profileId/instruments/edit'
+    | '/profile/$profileId/instruments/add'
   fileRoutesById: FileRoutesById
 }
 
@@ -427,7 +427,7 @@ export interface RootRouteChildren {
   ProfileProfileIdEditLazyRoute: typeof ProfileProfileIdEditLazyRoute
   ProfileProfileIdSettingsLazyRoute: typeof ProfileProfileIdSettingsLazyRoute
   ProfileProfileIdIndexLazyRoute: typeof ProfileProfileIdIndexLazyRoute
-  ProfileProfileIdInstrumentsEditLazyRoute: typeof ProfileProfileIdInstrumentsEditLazyRoute
+  ProfileProfileIdInstrumentsAddLazyRoute: typeof ProfileProfileIdInstrumentsAddLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -445,8 +445,8 @@ const rootRouteChildren: RootRouteChildren = {
   ProfileProfileIdEditLazyRoute: ProfileProfileIdEditLazyRoute,
   ProfileProfileIdSettingsLazyRoute: ProfileProfileIdSettingsLazyRoute,
   ProfileProfileIdIndexLazyRoute: ProfileProfileIdIndexLazyRoute,
-  ProfileProfileIdInstrumentsEditLazyRoute:
-    ProfileProfileIdInstrumentsEditLazyRoute,
+  ProfileProfileIdInstrumentsAddLazyRoute:
+    ProfileProfileIdInstrumentsAddLazyRoute,
 }
 
 export const routeTree = rootRoute
@@ -473,7 +473,7 @@ export const routeTree = rootRoute
         "/profile/$profileId/edit",
         "/profile/$profileId/settings",
         "/profile/$profileId/",
-        "/profile/$profileId/instruments/edit"
+        "/profile/$profileId/instruments/add"
       ]
     },
     "/": {
@@ -525,8 +525,8 @@ export const routeTree = rootRoute
     "/profile/$profileId/": {
       "filePath": "profile/$profileId/index.lazy.tsx"
     },
-    "/profile/$profileId/instruments/edit": {
-      "filePath": "profile/$profileId/instruments.edit.lazy.tsx"
+    "/profile/$profileId/instruments/add": {
+      "filePath": "profile/$profileId/instruments.add.lazy.tsx"
     }
   }
 }
