@@ -15,13 +15,14 @@ import { JwtService } from '@nestjs/jwt';
 import { Response, Request } from 'express';
 import * as jwt from 'jsonwebtoken';
 import { UpdatePasswordDto } from './dto/update-password.dto';
+import { UsersService } from '../users/users.service';
 
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
-    private jwtService: JwtService,
+    private jwtService: JwtService
   ) {}
 
   async signup(createUserDto: CreateUserDto): Promise<{ message: string }> {
@@ -283,5 +284,12 @@ export class AuthService {
     await user.save();
 
     return { message: 'Password updated successfully' };
+  }
+
+  async deleteUser(id:string) {
+    //TODO: check password
+    // - implement password request in frontend
+    await this.userModel.findByIdAndDelete(id).exec();
+    return { message: 'User deleted successfully' };
   }
 }

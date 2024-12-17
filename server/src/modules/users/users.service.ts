@@ -51,8 +51,4 @@ export class UsersService {
     console.log('foundResults', foundResults);
     return foundResults;
   }
-
-  async remove(id: string): Promise<void> {
-    await this.userModel.findByIdAndDelete(id).exec();
-  }
 }

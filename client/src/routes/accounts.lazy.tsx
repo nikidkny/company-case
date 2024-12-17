@@ -6,7 +6,6 @@ import SignupForm from "../components/molecules/SignupForm";
 import { useFetch } from "../hooks/use-fetch";
 import { getUserIdFromCookie } from "../hooks/getCookies";
 import { User } from "../types/UserType";
-import CryptoJS from "crypto-js"
 import { hashPassword } from "../utilities/auth";
 
 export const Route = createLazyFileRoute("/accounts")({

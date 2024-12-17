@@ -40,10 +40,4 @@ export class UsersController {
     const { membersIds, creatorId } = getMembersDetailsDto;
     return this.usersService.getMembersDetails({ membersIds, creatorId });
   }
-  // TODO: Move delete to auth controller and add password validation before delete, add guard to it
-  @Delete(':id')
-  async remove(@Param('id') id: string) {
-    await this.usersService.remove(id);
-    return { message: 'User deleted successfully' };
-  }
 }

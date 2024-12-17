@@ -20,6 +20,9 @@ export default function ProfileSettingsPage() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [newsletter, setNewsletter] = useState(user.isNewsletter || false);
+  // State for delete password popup
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteUserPassword, setDeleteUserPassword] = useState("");
 
   const userData = {
     currentPassword,
@@ -55,7 +58,8 @@ export default function ProfileSettingsPage() {
     },
     { isNewsletter: newsletter }
   );
-  const { triggerFetch: triggerDelete } = useFetch(null, `/users/${userId}`, "DELETE");
+
+  const { triggerFetch: triggerDelete } = useFetch(null, `/auth/${userId}`, "DELETE");
 
   const { triggerFetch: triggerLogout } = useFetch(
     null,
@@ -117,13 +121,30 @@ export default function ProfileSettingsPage() {
     }
   };
 
+  //TODO: test for any error and go thorught the logic slowly and implemente backend validation
   const handleDeleteProfile = () => {
+    setShowDeleteModal(true); // Open delete profile modal
+  };
+
+  const handleDeleteSubmit = async () => {
+    if (!deleteUserPassword.trim()) {
+      alert("Please enter your password to confirm.");
+      return;
+    }
+
     const confirmed = window.confirm("Are you sure you want to delete your profile?");
     if (confirmed) {
       triggerDelete();
       triggerLogout();
       navigate({ to: "/" });
+      setShowDeleteModal(false); // Close modal after profile deletion
+      alert("Profile deleted successfully!");
     }
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false); // Close modal if user cancels
+    setDeleteUserPassword(""); // Clear the password input field
   };
 
   return (
@@ -208,6 +229,7 @@ export default function ProfileSettingsPage() {
         <TextHeadline variant="h3" size="sm">
           Profile
         </TextHeadline>
+
         <div>
           <Button
             buttonVariant="tertiary"
@@ -216,6 +238,41 @@ export default function ProfileSettingsPage() {
             size="lg"
             buttonLabel="Delete profile"
           ></Button>
+
+          {/* Delete Profile Modal */}
+          {showDeleteModal && (
+            <div className="modal-overlay">
+              <div className="modal-content">
+                <TextHeadline variant="h3" size="sm">
+                  Confirm Deletion
+                </TextHeadline>
+                <TextInput
+                  inputType="password"
+                  id="deletePassword"
+                  name="deletePassword"
+                  placeholder="Enter your password"
+                  value={deleteUserPassword}
+                  onChange={(value) => setDeleteUserPassword(value)}
+                />
+                <div className="modal-actions flex gap-4 pt-2">
+                  <Button
+                    buttonVariant="primary"
+                    size="lg"
+                    iconPosition="none"
+                    onClick={handleDeleteSubmit}
+                    buttonLabel="Confirm"
+                  />
+                  <Button
+                    buttonVariant="secondary"
+                    size="lg"
+                    iconPosition="none"
+                    onClick={handleDeleteCancel}
+                    buttonLabel="Cancel"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
       <div className="w-full h-full">

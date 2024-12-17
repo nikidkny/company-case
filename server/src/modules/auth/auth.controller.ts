@@ -7,17 +7,20 @@ import {
   Req,
   Res,
   UseGuards,
-  UnauthorizedException
+  UnauthorizedException,
+  Delete,
+  Param
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { Response, Request } from 'express';
 import { UpdatePasswordDto } from './dto/update-password.dto';
+import { UsersService } from '../users/users.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Post('signup')
   @HttpCode(HttpStatus.CREATED)
@@ -41,7 +44,7 @@ export class AuthController {
     try {
       // Call the logout method from the service
       this.authService.logout(res);
-  
+
       // Send a response back indicating logout was successful
       return res.status(HttpStatus.OK).json({
         message: 'Logout successful, cookies cleared',
@@ -80,7 +83,7 @@ export class AuthController {
     return res.json({ message: 'Access token refreshed' });
   }
 
-  @UseGuards(JwtAuthGuard) // Protect the route
+  @UseGuards(JwtAuthGuard)
   @Post('update-password')
   @HttpCode(HttpStatus.OK)
   async updatePassword(
@@ -92,5 +95,13 @@ export class AuthController {
     await this.authService.updatePassword(userId, updatePasswordDto);
     console.log('Extracted user ID:', userId);
     return { message: 'Password updated successfully' };
+  }
+
+  // TODO: add password validation before delete, find user before deliting it
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  @HttpCode(HttpStatus.OK)
+  async remove(@Param('id') id: string) {
+    await this.authService.deleteUser(id);
   }
 }
