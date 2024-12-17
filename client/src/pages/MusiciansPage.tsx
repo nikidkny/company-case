@@ -26,12 +26,11 @@ export default function MusiciansPage() {
     "/users",
     "GET"
   );
-  // Fetch all musicians' instruments expect the logged in user
+  // Fetch all musicians' instruments except the logged-in user
   const { data: allMusicianInstruments, triggerFetch: fetchMusicianInstruments } = useFetch<
     UserInstrumentType[]
   >([], `/userInstruments/excludeUser/${userId}`, "GET");
 
-  //
   useEffect(() => {
     // Reset filter option on page load
     setFilterOption(null);
@@ -47,7 +46,7 @@ export default function MusiciansPage() {
     }
   }, [fetchAllMusicians, instrumentsFetch, fetchMusicianInstruments]);
 
-  // filter instruments for musicians
+  // Filter instruments for musicians
   const filteredMusiciansWithInstruments =
     allMusicians?.map((musician) => ({
       ...musician,
@@ -56,13 +55,22 @@ export default function MusiciansPage() {
       ),
     })) || [];
 
+  // Apply filtering based on the selected instrument from the dropdown
+  const displayedMusicians = filterOption
+    ? filteredMusiciansWithInstruments.filter((musician) =>
+        musician.instruments.some(
+          (instrument) => instrument.name.toLowerCase() === filterOption.toLowerCase()
+        )
+      )
+    : filteredMusiciansWithInstruments;
+
   return (
     <div className="flex flex-col gap-6">
       <div className="p-6 flex flex-col gap-6 border-b-gray-400 border-b-1px border-b-solid">
         <TextHeadline variant="h3" size="lg">
           Find musicians
         </TextHeadline>
-        <TextBody variant="span">{allMusicians?.length} results found</TextBody>
+        <TextBody variant="span">{displayedMusicians.length} results found</TextBody>
         <Dropdown
           initialSelectedLabel="Choose an instrument"
           options={instrumentsFetch.data.map((instrument) => instrument.name)}
@@ -82,7 +90,6 @@ export default function MusiciansPage() {
             iconViewbox={"0 0 23.887 17.887"}
             className="no-underline w-full py-2"
           />
-          {/* {filterOption && ( */}
           <Button
             buttonState="default"
             buttonLabel="Clear filter options"
@@ -91,13 +98,22 @@ export default function MusiciansPage() {
             className="no-underline w-full py-2"
             onClick={() => setFilterOption(null)}
           />
-          {/* )} */}
         </div>
       </div>
       <div className="flex flex-col gap-6 p-6">
-        {filteredMusiciansWithInstruments.map((musician) => (
-          <MusicianCard key={musician._id} musician={musician} instruments={musician.instruments} />
-        ))}
+        {displayedMusicians.length > 0 ? (
+          displayedMusicians.map((musician) => (
+            <MusicianCard
+              key={musician._id}
+              musician={musician}
+              instruments={musician.instruments}
+            />
+          ))
+        ) : (
+          <TextHeadline variant="h3" size="lg">
+            No musicians found
+          </TextHeadline>
+        )}
       </div>
     </div>
   );
