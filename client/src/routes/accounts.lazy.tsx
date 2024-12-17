@@ -7,6 +7,7 @@ import { useFetch } from "../hooks/use-fetch";
 import { getUserIdFromCookie } from "../hooks/getCookies";
 import { User } from "../types/UserType";
 import CryptoJS from "crypto-js"
+import { hashPassword } from "../utilities/auth";
 
 export const Route = createLazyFileRoute("/accounts")({
   component: AccountsPage,
@@ -31,11 +32,6 @@ function AccountsPage() {
       navigate({ to: "/" });
     }
   }, [userId, navigate]);
-
-  // Function to hash the password using SHA256
-  const hashPassword = (password: string): string => {
-    return CryptoJS.SHA256(password).toString();
-  };
 
   // TODO:
   // - Maybe create a utils for validating forms with all the function. Wait to implement more valdiation.
