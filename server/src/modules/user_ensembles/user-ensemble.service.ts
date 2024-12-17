@@ -26,12 +26,6 @@ export class UserEnsembleService {
         }
     
         try {
-            // Add to user_ensemble collection
-            await this.userEnsembleModel.create({
-                user_id: userId,
-                ensemble_id: ensembleId,
-                joined_at: joinedAt,
-            });
     
             // Retrieve the ensemble to check its current state
             const ensemble = await this.ensembleModel.findById(ensembleId);
@@ -48,6 +42,13 @@ export class UserEnsembleService {
     
             // Check and update the member_list
             ensemble.memberList.push(userId);
+             // Add to user_ensemble collection
+             await this.userEnsembleModel.create({
+                user_id: userId,
+                ensemble_id: ensembleId,
+                joined_at: joinedAt,
+            });
+            
             await ensemble.save(); // Save the updated ensemble document
     
         } catch (error) {

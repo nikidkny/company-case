@@ -1,7 +1,6 @@
 import { Type } from 'class-transformer';
 import { IsNotEmpty, IsEmail, IsDate, IsBoolean, IsString, MinLength } from 'class-validator';
 
-
 //this is what the data the user will need to fill in when creating their profile.
 export class CreateUserDto {
   @IsNotEmpty({ message: 'First name should not be empty' })

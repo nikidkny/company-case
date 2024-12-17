@@ -21,7 +21,7 @@ interface SignupFormProps {
     password: string;
     confirmPassword: string;
     birthdate: string;
-    isAvailable: boolean
+    isAvailable: boolean;
   }) => void;
   errorMessages: string[] | null;
 }
@@ -37,10 +37,12 @@ export default function SignupForm({
     onSubmit(formData); // Pass formData to parent component's handler
   };
 
-
   return (
     <div className="flex flex-col">
-      <form onSubmit={handleSubmit} className="flex flex-col w-[80vw] p-4 space-y-4 bg-white rounded-md">
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col w-[80vw] p-4 space-y-4 bg-white rounded-md"
+      >
         <TextInput
           inputType="text"
           value={formData.firstName}
@@ -48,8 +50,8 @@ export default function SignupForm({
           placeholder="First Name"
           id="firstName"
           name="firstName"
-          isValid={!getFieldErrorMessage(errorMessages, 'First name')}
-          validityMsg={getFieldErrorMessage(errorMessages, 'First name') || undefined}
+          isValid={!getFieldErrorMessage(errorMessages, "First name")}
+          validityMsg={getFieldErrorMessage(errorMessages, "First name") || undefined}
           required={true}
         />
 
@@ -60,21 +62,20 @@ export default function SignupForm({
           placeholder="Last Name"
           id="lastName"
           name="lastName"
-          isValid={!getFieldErrorMessage(errorMessages, 'Last name')}
-          validityMsg={getFieldErrorMessage(errorMessages, 'Last name') || undefined}
+          isValid={!getFieldErrorMessage(errorMessages, "Last name")}
+          validityMsg={getFieldErrorMessage(errorMessages, "Last name") || undefined}
           required={true}
         />
 
         <TextInput
           inputType="email"
           value={formData.email}
-          onChange={(value) =>
-            onChange("email", value)}
+          onChange={(value) => onChange("email", value)}
           placeholder="Email"
           id="email"
           name="email"
-          isValid={!getFieldErrorMessage(errorMessages, 'Email')}
-          validityMsg={getFieldErrorMessage(errorMessages, 'Email') || undefined}
+          isValid={!getFieldErrorMessage(errorMessages, "Email")}
+          validityMsg={getFieldErrorMessage(errorMessages, "Email") || undefined}
           required={true}
         />
 
@@ -85,8 +86,8 @@ export default function SignupForm({
           placeholder="Password"
           id="password"
           name="password"
-          isValid={!getFieldErrorMessage(errorMessages, 'Password')}
-          validityMsg={getFieldErrorMessage(errorMessages, 'Password') || undefined}
+          isValid={!getFieldErrorMessage(errorMessages, "Password")}
+          validityMsg={getFieldErrorMessage(errorMessages, "Password") || undefined}
           required={true}
         />
 
@@ -97,8 +98,12 @@ export default function SignupForm({
           placeholder="Confirm Password"
           id="confirmPassword"
           name="confirmPassword"
-          isValid={!getFieldErrorMessage(errorMessages, 'Confirm')}
-          validityMsg={getFieldErrorMessage(errorMessages, 'match') || getFieldErrorMessage(errorMessages, 'Confirm') || undefined}
+          isValid={!getFieldErrorMessage(errorMessages, "Confirm")}
+          validityMsg={
+            getFieldErrorMessage(errorMessages, "match") ||
+            getFieldErrorMessage(errorMessages, "Confirm") ||
+            undefined
+          }
           required={true}
         />
 
@@ -109,8 +114,8 @@ export default function SignupForm({
           placeholder="Birthdate"
           id="birthdate"
           name="birthdate"
-          isValid={!getFieldErrorMessage(errorMessages, 'Birthdate') }
-          validityMsg={getFieldErrorMessage(errorMessages, 'Birthdate') || undefined}
+          isValid={!getFieldErrorMessage(errorMessages, "Birthdate")}
+          validityMsg={getFieldErrorMessage(errorMessages, "Birthdate") || undefined}
           required={true}
         />
 
@@ -119,12 +124,16 @@ export default function SignupForm({
           label="Available for contact"
           checked={formData.isAvailable}
           onChange={(checked) => onChange("isAvailable", checked)}
-          required={false} 
+          required={false}
           shouldValidate={false}
         />
 
-
-        <Button buttonState="default" buttonVariant="primary" buttonLabel="Sign Up" iconPosition="none" />
+        <Button
+          buttonState="default"
+          buttonVariant="primary"
+          buttonLabel="Sign Up"
+          iconPosition="none"
+        />
       </form>
     </div>
   );

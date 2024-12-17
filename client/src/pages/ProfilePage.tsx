@@ -11,7 +11,8 @@ import { Icon } from "../components/atoms/Icon/Icon";
 import EnsembleCard from "../components/molecules/EnsembleCard";
 import { EnsembleType } from "../types/EnsembleType";
 import { getUserIdFromCookie } from "../hooks/getCookies";
-
+import InstrumentCard from "../components/molecules/InstrumentCard"; // Import InstrumentCard component
+import { InstrumentType } from "../types/InstrumentType";
 export default function ProfilePage() {
   const { user } = useStore();
   const { userId } = getUserIdFromCookie();
@@ -65,15 +66,24 @@ export default function ProfilePage() {
 
   // console.log("userInstruments", userInstrument);
 
-  const { data: userEnsembles, triggerFetch: fetchUserEnsembles } = useFetch<EnsembleType[] | null>(null, userId ? `/ensembles/user/${userId}` : null, "GET");
+  const { data: userEnsembles, triggerFetch: fetchUserEnsembles } = useFetch<EnsembleType[] | null>(
+    null,
+    userId ? `/ensembles/user/${userId}` : null,
+    "GET"
+  );
+  const { data: userInstruments, triggerFetch: fetchUserInstruments } = useFetch<
+    InstrumentType[] | null
+  >(null, userId ? `/userInstruments/user/${userId}` : null, "GET");
+
   useEffect(() => {
     if (userId) {
       fetchUserEnsembles();
+      fetchUserInstruments();
     }
-  }, [userId, fetchUserEnsembles]);
+  }, [userId, fetchUserEnsembles, fetchUserInstruments]);
 
   // console.log("userEnsembles", userEnsembles);
-
+  console.log("userInstruments", userInstruments);
   const fullName = `${user?.firstName || ""} ${user?.lastName || ""}`;
   // const ensembles = mockEnsembles.filter(
   //   (ensemble) =>
@@ -84,22 +94,48 @@ export default function ProfilePage() {
       <div className="profile-base-wrapper p-4 border-y-solid border-y-gray-400 border-y-1px">
         <div className="flex flex-row gap-4 pb-4">
           {/*TO DO: have to add that the user image is the src if there is */}
-          {user?.image ? <Image src={user?.image} alt="Profile Image" className="rounded-full h-24 w-24" /> : <Icon name={ICON_NAMES.profile_placeholder} height={91} width={91} viewBox="0 0 91 91" className="rounded-full" />}
+          {user?.image ? (
+            <Image src={user?.image} alt="Profile Image" className="rounded-full h-24 w-24" />
+          ) : (
+            <Icon
+              name={ICON_NAMES.profile_placeholder}
+              height={91}
+              width={91}
+              viewBox="0 0 91 91"
+              className="rounded-full"
+            />
+          )}
 
           <div className="flex flex-col">
             <div className="flex flex-row gap-4 items-center">
               <TextHeadline variant="h1" size="sm">
                 {fullName}
               </TextHeadline>
-              {user?.isAvailable && <ProfileBadge ProfileBadgeLabel="Seeking" ProfileBadgeSize="sm" />}
+              {user?.isAvailable && (
+                <ProfileBadge ProfileBadgeLabel="Seeking" ProfileBadgeSize="sm" />
+              )}
             </div>
             <TextBody>{formatDate(user.createdAt)}</TextBody>
             <TextBody>{formatDate(user.lastLoggedIn)}</TextBody>
           </div>
         </div>
         <div className="flex flex-row gap-4">
-          <Button buttonVariant="secondary" to="/profile/$profileId/edit" params={{ profileId: userId }} iconPosition="none" buttonLabel="Edit Profile" className="no-underline"></Button>
-          <Button buttonVariant="secondary" onClick={() => console.log("Settings")} iconPosition="none" buttonLabel="Settings"></Button>
+          <Button
+            buttonVariant="secondary"
+            to="/profile/$profileId/edit"
+            params={{ profileId: userId }}
+            iconPosition="none"
+            buttonLabel="Edit Profile"
+            className="no-underline"
+          ></Button>
+          <Button
+            buttonVariant="secondary"
+            to="/profile/$profileId/settings"
+            params={{ profileId: userId }}
+            iconPosition="none"
+            buttonLabel="Settings"
+            className="no-underline"
+          ></Button>
         </div>
       </div>
       <div className="profile-description-wrapper flex flex-col p-4 border-y-solid border-y-gray-400 border-y-1px gap-6">
@@ -108,7 +144,12 @@ export default function ProfilePage() {
             Description
           </TextHeadline>
           <div className="flex-0">
-            <Button buttonVariant="secondary" onClick={() => console.log("Edit description")} iconPosition="none" buttonLabel="Edit"></Button>
+            <Button
+              buttonVariant="secondary"
+              onClick={() => console.log("Edit description")}
+              iconPosition="none"
+              buttonLabel="Edit"
+            ></Button>
           </div>
         </div>
         <TextBody size="lg">{user?.description}</TextBody>
@@ -119,17 +160,23 @@ export default function ProfilePage() {
             My Instruments
           </TextHeadline>
           <div>
-            <Button buttonVariant="secondary" onClick={() => (window.location.href = "/profile/$profileId/instruments/edit")} iconPosition="none" buttonLabel="Edit"></Button>
+            <Button
+              buttonVariant="secondary"
+              to="/profile/$profileId/instruments/add"
+              params={{ profileId: userId }}
+              iconPosition="none"
+              buttonLabel="Add"
+              className="no-underline"
+            ></Button>
           </div>
         </div>
-        {/* TO DO: map through logged in user's instruments for now it is static insturment */}
-        {/* {Object.values(instruments).length > 0 ? (
-          Object.values(instruments).map((instrument, index) => (
+        {userInstruments && userInstruments.length > 0 ? (
+          userInstruments.map((instrument, index) => (
             <InstrumentCard key={index} instrument={instrument} />
           ))
         ) : (
           <div>No instruments available</div>
-        )} */}
+        )}
       </div>
       <div className="profile-ensembles-wrapper flex flex-col p-4 border-y-solid border-y-gray-400 border-y-1px gap-6">
         <div className="flex flex-row gap-6 justify-between">
@@ -155,7 +202,9 @@ export default function ProfilePage() {
             My Posts
           </TextHeadline>
           <div>
+
             <Button buttonVariant="secondary" to="/posts/create/" iconPosition="none" buttonLabel="Create" className="no-underline"></Button>
+
           </div>
         </div>
         {/* TO DO: map through logged in user's posts for now it is static posts */}

@@ -20,9 +20,20 @@ function AccountsPage() {
   const { setUser, setLoginStatus } = useStore();
   const { data: fetchedUser, triggerFetch: userFetchTrigger } = useFetch<User>({ _id: "" }, userId !== null ? `/users/${userId}` : null, "GET");
 
+  //TODO: hash password
   // State to hold validation error messages for the signup form
   const [validationErrors, setValidationErrors] = useState<string | string[]>([]);
-  const [loginError, setLoginError] = useState<string | string[]>([]); 
+  const [loginError, setLoginError] = useState<string | string[]>([]);
+
+  // Redirect to home if user is logged in
+  useEffect(() => {
+    if (userId) {
+      navigate({ to: "/" });
+    }
+  }, [userId, navigate]);
+
+  // TODO:
+  // - Maybe create a utils for validating forms with all the function. Wait to implement more valdiation.
 
   // Function to validate signup form data
   const validateForm = (signupFormData: typeof signupData) => {
@@ -221,7 +232,7 @@ function AccountsPage() {
 
   // Handle effects for login API response
   useEffect(() => {
-   if (loginFetch.data && fetchedUser) {
+    if (loginFetch.data && fetchedUser) {
       setUser({
         _id: fetchedUser._id,
         firstName: fetchedUser.firstName ? fetchedUser.firstName.charAt(0).toUpperCase() + fetchedUser.firstName.slice(1).toLowerCase() : "",
@@ -248,7 +259,7 @@ function AccountsPage() {
     } else if (loginFetch.error) {
       setLoginError(loginFetch.error);
     }
-  }, [loginFetch.data, loginFetch.error, navigate,fetchedUser]);
+  }, [loginFetch.data, loginFetch.error, navigate, fetchedUser]);
 
   // Combine frontend and backend errors
   const combinedErrors = [
@@ -276,7 +287,7 @@ function AccountsPage() {
 
     setValidationErrors([]); // Clear any validation errors
     setLoginError([]);
-  }, [location, intent]); 
+  }, [location, intent]);
 
   return (
     <div>
