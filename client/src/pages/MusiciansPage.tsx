@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { getUserIdFromCookie } from "../hooks/getCookies";
 import { useFetch } from "../hooks/use-fetch";
-// import { useStore } from "../store/useStore";
+import { useStore } from "../store/useStore";
 import { User } from "../types/UserType";
 import { InstrumentType } from "../types/InstrumentType";
+import { UserInstrumentType } from "../types/userInstrumentType";
 import { Dropdown } from "../components/molecules/Dropdown";
-import { useStore } from "../store/useStore";
 import Button from "../components/atoms/Button";
 import { ICON_NAMES } from "../components/atoms/Icon/IconNames";
 import TextHeadline from "../components/atoms/TextHeadline";
@@ -13,37 +13,56 @@ import TextBody from "../components/atoms/TextBody";
 import MusicianCard from "../components/molecules/MusicianCard";
 
 export default function MusiciansPage() {
-  //   const { user } = useStore();
+  // States
   const { filterOption, setFilterOption } = useStore();
   const { userId } = getUserIdFromCookie();
-  console.log("userId", userId);
 
+  // Instrument fetch
   const instrumentsFetch = useFetch<InstrumentType[]>([], "/instruments", "GET");
-  //resets the filterOption when coming back to the page
-  useEffect(() => {
-    setFilterOption(null);
-  }, [setFilterOption]);
-  const { data: musicians, triggerFetch: musiciansTrigger } = useFetch<Partial<User>[] | null>(
+
+  // Fetch musicians
+  const { data: allMusicians, triggerFetch: fetchAllMusicians } = useFetch<Partial<User>[] | null>(
     null,
     "/users",
     "GET"
   );
+  // Fetch all musicians' instruments expect the logged in user
+  const { data: allMusicianInstruments, triggerFetch: fetchMusicianInstruments } = useFetch<
+    UserInstrumentType[]
+  >([], `/userInstruments/excludeUser/${userId}`, "GET");
+
+  //
+  useEffect(() => {
+    // Reset filter option on page load
+    setFilterOption(null);
+  }, [setFilterOption]);
 
   useEffect(() => {
-    musiciansTrigger();
+    // Fetch data on page load
+    fetchAllMusicians();
+    fetchMusicianInstruments();
+
     if (instrumentsFetch.data.length === 0) {
       instrumentsFetch.triggerFetch();
     }
-  }, [musiciansTrigger, instrumentsFetch]);
+  }, [fetchAllMusicians, instrumentsFetch, fetchMusicianInstruments]);
 
-  console.log("users", musicians);
+  // filter instruments for musicians
+  const filteredMusiciansWithInstruments =
+    allMusicians?.map((musician) => ({
+      ...musician,
+      instruments: allMusicianInstruments.filter(
+        (instrument) => instrument.userId === musician._id
+      ),
+    })) || [];
+
   return (
     <div className="flex flex-col gap-6">
       <div className="p-6 flex flex-col gap-6 border-b-gray-400 border-b-1px border-b-solid">
         <TextHeadline variant="h3" size="lg">
           Find musicians
         </TextHeadline>
-        <TextBody variant="span">{musicians?.length} results found</TextBody>
+        <TextBody variant="span">{allMusicians?.length} results found</TextBody>
         <Dropdown
           initialSelectedLabel="Choose an instrument"
           options={instrumentsFetch.data.map((instrument) => instrument.name)}
@@ -76,10 +95,9 @@ export default function MusiciansPage() {
         </div>
       </div>
       <div className="flex flex-col gap-6 p-6">
-        {musicians &&
-          musicians.map((musician) => (
-            <MusicianCard key={musician._id} musician={musician}></MusicianCard>
-          ))}
+        {filteredMusiciansWithInstruments.map((musician) => (
+          <MusicianCard key={musician._id} musician={musician} instruments={musician.instruments} />
+        ))}
       </div>
     </div>
   );

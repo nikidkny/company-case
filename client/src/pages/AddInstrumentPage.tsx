@@ -35,13 +35,13 @@ export default function AddInstrumentPage() {
 
   const instrumentData: UserInstrumentType = {
     userId,
-    instrumentId: selectedInstrument?._id,
+    instrumentId: selectedInstrument?._id || "",
     levelOfExperience: level.toString(),
     genres: selectedGenres,
     name: selectedInstrument?.name || "",
   };
 
-  const { triggerFetch: userFetchTrigger } = useFetch<Partial<User> | null>(
+  const { triggerFetch: fetchUserInstrumentsTrigger } = useFetch<Partial<User> | null>(
     null,
     "/userInstruments",
     "POST",
@@ -69,7 +69,7 @@ export default function AddInstrumentPage() {
   const handleDecrease = () => setLevel((prev) => Math.max(prev - 1, 1));
 
   const handleAddInstrument = () => {
-    userFetchTrigger();
+    fetchUserInstrumentsTrigger();
     alert(`Instrument added to your profile`);
     navigate({ to: `/profile/${userId}` });
   };

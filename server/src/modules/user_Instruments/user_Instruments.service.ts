@@ -37,6 +37,7 @@ export class User_InstrumentsService {
   findOne(id: number) {
     return `This action returns a #${id} userInstrument`;
   }
+
   // Find instruments by user ID
   async findInstrumentsByUserId(userId: string): Promise<any[]> {
     const result = await this.userInstrumentModel
@@ -70,7 +71,39 @@ export class User_InstrumentsService {
 
     return result;
   }
+  // Find instruments for all users except the specified user ID
+  async findInstrumentsForAllExceptUser(userId: string): Promise<any[]> {
+    const result = await this.userInstrumentModel
+      .aggregate([
+        { $match: { userId: { $ne: userId } } }, // Exclude the logged-in user's instruments
+        {
+          $addFields: {
+            instrumentIdAsObjectId: { $toObjectId: '$instrumentId' }, // Convert instrumentId to ObjectId
+          },
+        },
+        {
+          $lookup: {
+            from: 'instruments', // Collection name for Instrument
+            localField: 'instrumentIdAsObjectId', // Field to join on
+            foreignField: '_id', // Match with _id in instruments collection
+            as: 'instrumentDetails',
+          },
+        },
+        { $unwind: '$instrumentDetails' }, // Flatten the lookup array
+        {
+          $project: {
+            userId: 1,
+            instrumentId: 1,
+            levelOfExperience: 1,
+            genres: 1,
+            name: '$instrumentDetails.name', // Include the instrument name
+          },
+        },
+      ])
+      .exec();
 
+    return result;
+  }
   update(id: number, updateUser_InstrumentDto: UpdateUser_InstrumentDto) {
     return `This action updates a #${id} userInstrument`;
   }

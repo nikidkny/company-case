@@ -12,7 +12,8 @@ import EnsembleCard from "../components/molecules/EnsembleCard";
 import { EnsembleType } from "../types/EnsembleType";
 import { getUserIdFromCookie } from "../hooks/getCookies";
 import InstrumentCard from "../components/molecules/InstrumentCard"; // Import InstrumentCard component
-import { InstrumentType } from "../types/InstrumentType";
+import { UserInstrumentType } from "../types/userInstrumentType";
+
 export default function ProfilePage() {
   const { user } = useStore();
   const { userId } = getUserIdFromCookie();
@@ -72,7 +73,7 @@ export default function ProfilePage() {
     "GET"
   );
   const { data: userInstruments, triggerFetch: fetchUserInstruments } = useFetch<
-    InstrumentType[] | null
+    UserInstrumentType[] | null
   >(null, userId ? `/userInstruments/user/${userId}` : null, "GET");
 
   useEffect(() => {
@@ -171,8 +172,8 @@ export default function ProfilePage() {
           </div>
         </div>
         {userInstruments && userInstruments.length > 0 ? (
-          userInstruments.map((instrument, index) => (
-            <InstrumentCard key={index} instrument={instrument} />
+          userInstruments.map((instrument) => (
+            <InstrumentCard key={instrument.instrumentId} instrument={instrument} />
           ))
         ) : (
           <div>No instruments available</div>

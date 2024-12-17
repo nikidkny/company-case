@@ -11,6 +11,8 @@ import { useParams } from "@tanstack/react-router";
 import ProfileBadge from "../components/atoms/ProfileBadge";
 import { User } from "../types/UserType";
 import Button from "../components/atoms/Button";
+import InstrumentCard from "../components/molecules/InstrumentCard";
+import { UserInstrumentType } from "../types/userInstrumentType";
 
 export default function UserDetails() {
   const { userId } = useParams({ from: "/musicians/$userId" });
@@ -26,6 +28,10 @@ export default function UserDetails() {
     "GET"
   );
 
+  const { data: userInstruments, triggerFetch: fetchUserInstruments } = useFetch<
+    UserInstrumentType[] | null
+  >(null, userId ? `/userInstruments/user/${userId}` : null, "GET");
+  console.log("userInstruments", userInstruments);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleContactClick = () => {
@@ -40,8 +46,9 @@ export default function UserDetails() {
     if (userId) {
       fetchUser();
       fetchUserEnsembles();
+      fetchUserInstruments();
     }
-  }, [userId, fetchUser, fetchUserEnsembles]);
+  }, [userId, fetchUser, fetchUserEnsembles, fetchUserInstruments]);
 
   const formatDate = (date?: Date | string): string => {
     if (!date) return "N/A";
@@ -54,7 +61,7 @@ export default function UserDetails() {
   return (
     <div className="flex flex-col gap-6">
       <Button
-        to="/users"
+        to="/musicians"
         buttonVariant="secondary"
         iconPosition="none"
         className="w-fit no-underline"
@@ -106,6 +113,14 @@ export default function UserDetails() {
           My Ensembles
         </TextHeadline>
         {userEnsembles?.map((ensemble, index) => <EnsembleCard key={index} ensemble={ensemble} />)}
+      </div>
+      <div className="profile-instruments-wrapper flex flex-col p-4 border-y-solid border-y-gray-400 border-y-1px gap-6">
+        <TextHeadline variant="h3" size="sm">
+          My Instruments
+        </TextHeadline>
+        {userInstruments?.map((instrument) => (
+          <InstrumentCard key={instrument.instrumentId} instrument={instrument} />
+        ))}
       </div>
       {isModalOpen && (
         <div className="fixed inset-0  flex items-center justify-center bg-black bg-opacity-50">
