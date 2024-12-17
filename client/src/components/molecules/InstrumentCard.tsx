@@ -1,16 +1,11 @@
+import { UserInstrumentType } from "../../types/userInstrumentType";
 import ProfileBadge from "../atoms/ProfileBadge";
 import Tag from "../atoms/Tag";
 import TextBody from "../atoms/TextBody";
 import TextHeadline from "../atoms/TextHeadline";
 
-interface Instrument {
-  name: string;
-  level: string;
-  genres: string[];
-}
-
 interface Props {
-  instrument: Instrument;
+  instrument: UserInstrumentType;
   key: number;
 }
 
@@ -23,12 +18,12 @@ export default function InstrumentCard({ instrument }: Props) {
         </TextHeadline>
         <div className="flex flex-row items-center gap-2">
           <TextBody size="sm">level</TextBody>
-          <Tag number={instrument.level} />
+          <Tag number={instrument.levelOfExperience ?? ""} />
         </div>
       </div>
       <div className="flex flex-row gap-2 flex-wrap">
-        {instrument.genres.map((genre, index) => (
-          <ProfileBadge key={index} ProfileBageLabel={genre} ProfileBadgeSize="sm" />
+        {instrument.genres?.map((genre, index) => (
+          <ProfileBadge key={index} ProfileBadgeLabel={genre} ProfileBadgeSize="sm" />
         ))}
       </div>
     </div>
