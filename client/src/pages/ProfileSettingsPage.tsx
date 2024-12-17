@@ -7,10 +7,12 @@ import TextHeadline from "../components/atoms/TextHeadline";
 import TextInput from "../components/atoms/TextInput";
 import { useFetch } from "../hooks/use-fetch";
 import { useNavigate } from "@tanstack/react-router";
+import { hashPassword } from "../utilities/auth";
 
 export default function ProfileSettingsPage() {
   // TODO: validation for password fields - like login/signup
-  // TODO: hash password before sending to server
+  // TODO: do not show the userId in the url
+
   const { user } = useStore();
   const { userId } = getUserIdFromCookie();
   const navigate = useNavigate();
@@ -21,8 +23,12 @@ export default function ProfileSettingsPage() {
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [newsletter, setNewsletter] = useState(user.isNewsletter || false);
   // State for delete password popup
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteUserPassword, setDeleteUserPassword] = useState("");
+  // Define the state for sending the data
+  const [deleteUserPasswordToSend, setDeleteUserPasswordToSend] = useState({
+    password: "",
+  });
 
   const userData = {
     currentPassword,
@@ -59,17 +65,6 @@ export default function ProfileSettingsPage() {
     { isNewsletter: newsletter }
   );
 
-  const { triggerFetch: triggerDelete } = useFetch(null, `/auth/${userId}`, "DELETE");
-
-  const { triggerFetch: triggerLogout } = useFetch(
-    null,
-    `/auth/logout`,
-    "POST",
-    {
-      "Content-Type": "application/json",
-    },
-    null
-  );
   const handleSaveSettings = () => {
     // Determine if password fields are empty
     const isPasswordFieldsEmpty =
@@ -101,7 +96,7 @@ export default function ProfileSettingsPage() {
       setShowPasswordFields(false);
     }
     // Show alert if there is an error updating the password
-    // TODO: add more specific error messages, and change error type to {message: string}
+    //current TODO: error like login/signup in displaying error with isValidityMsg
     if (updateError) {
       if (updateError.includes("Current password is incorrect")) {
         alert("The current password you entered is incorrect. Please try again.");
@@ -121,31 +116,65 @@ export default function ProfileSettingsPage() {
     }
   };
 
-  //TODO: test for any error and go thorught the logic slowly and implemente backend validation
+  // *Delete Profile*
+  const deleteFetch = useFetch(null, `/auth/${userId}`, "DELETE", {
+    "Content-Type": "application/json",
+  }, deleteUserPasswordToSend);
+
+
   const handleDeleteProfile = () => {
-    setShowDeleteModal(true); // Open delete profile modal
+    setIsModalOpen(true);
   };
 
-  const handleDeleteSubmit = async () => {
+  const handleDeleteSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+
     if (!deleteUserPassword.trim()) {
+      //current TODO: error like login/signup in displaying error with isValidityMsg
       alert("Please enter your password to confirm.");
       return;
     }
 
     const confirmed = window.confirm("Are you sure you want to delete your profile?");
+    // Add debug logging to confirm flow
     if (confirmed) {
-      triggerDelete();
-      triggerLogout();
-      navigate({ to: "/" });
-      setShowDeleteModal(false); // Close modal after profile deletion
-      alert("Profile deleted successfully!");
+      deleteFetch.triggerFetch();
     }
+    //TODO:else do something to fix the warnin i press the cancel button
   };
 
   const handleDeleteCancel = () => {
-    setShowDeleteModal(false); // Close modal if user cancels
+    setIsModalOpen(false); // Close modal if user cancels
     setDeleteUserPassword(""); // Clear the password input field
+    setDeleteUserPasswordToSend({ password: "" }); // Clear the password to send
   };
+
+  //TODO: more comments
+  useEffect(() => {
+    // Automatically hash and set deleteUserPasswordToSend whenever deleteUserPassword changes
+    if (deleteUserPassword.trim()) {
+      setDeleteUserPasswordToSend({ password: hashPassword(deleteUserPassword.trim()) });
+    } else {
+      setDeleteUserPasswordToSend({ password: "" });
+    }
+  }, [deleteUserPassword]);
+
+  // handles delte user api response
+  useEffect(() => {
+    if (deleteFetch.error) {
+      // current TODO: error like login/signup in displaying error with isValidityMsg
+      console.log("error:", deleteFetch.error);
+    }
+  
+    if (deleteFetch.data) {
+      setDeleteUserPassword("")
+      setDeleteUserPasswordToSend({ password: "" })
+      setIsModalOpen(false); // Close modal after profile deletion
+      alert("Profile deleted successfully!");
+      navigate({ to: "/" });
+
+    }
+  }, [deleteFetch.data, deleteFetch.error])
 
   return (
     <div className="settings-page-wrapper flex flex-col gap-6 p-6 ">
@@ -240,36 +269,40 @@ export default function ProfileSettingsPage() {
           ></Button>
 
           {/* Delete Profile Modal */}
-          {showDeleteModal && (
-            <div className="modal-overlay">
-              <div className="modal-content">
+          {isModalOpen && (
+            <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-50">
+              <div className="flex flex-col gap-6 items-center bg-white p-6 rounded-lg shadow-lg w-80">
                 <TextHeadline variant="h3" size="sm">
                   Confirm Deletion
                 </TextHeadline>
-                <TextInput
-                  inputType="password"
-                  id="deletePassword"
-                  name="deletePassword"
-                  placeholder="Enter your password"
-                  value={deleteUserPassword}
-                  onChange={(value) => setDeleteUserPassword(value)}
-                />
-                <div className="modal-actions flex gap-4 pt-2">
-                  <Button
-                    buttonVariant="primary"
-                    size="lg"
-                    iconPosition="none"
-                    onClick={handleDeleteSubmit}
-                    buttonLabel="Confirm"
+
+                {/* Form for Deleting Profile */}
+                <form onSubmit={handleDeleteSubmit}>
+                  <TextInput
+                    inputType="password"
+                    id="deletePassword"
+                    name="deletePassword"
+                    placeholder="Enter your password"
+                    value={deleteUserPassword}
+                    onChange={(value) => setDeleteUserPassword(value)}
                   />
-                  <Button
-                    buttonVariant="secondary"
-                    size="lg"
-                    iconPosition="none"
-                    onClick={handleDeleteCancel}
-                    buttonLabel="Cancel"
-                  />
-                </div>
+                  <div className="modal-actions flex gap-4 pt-2">
+                    <Button
+                      buttonVariant="primary"
+                      size="lg"
+                      iconPosition="none"
+                      type="submit"
+                      buttonLabel="Confirm"
+                    />
+                    <Button
+                      buttonVariant="secondary"
+                      size="lg"
+                      iconPosition="none"
+                      onClick={handleDeleteCancel}
+                      buttonLabel="Cancel"
+                    />
+                  </div>
+                </form>
               </div>
             </div>
           )}

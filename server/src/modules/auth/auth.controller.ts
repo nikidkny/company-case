@@ -56,6 +56,36 @@ export class AuthController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Post('update-password')
+  @HttpCode(HttpStatus.OK)
+  async updatePassword(
+    @Body() updatePasswordDto: UpdatePasswordDto,
+    @Req() req: Request, 
+  ) {
+    const userId = req.user['userId']; // JWT payload contains the user ID
+    console.log('REQ:', req.user);
+    await this.authService.updatePassword(userId, updatePasswordDto);
+    console.log('Extracted user ID:', userId);
+    return { message: 'Password updated successfully' };
+  }
+
+  // TODO: add password validation before delete, find user before deliting it
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  @HttpCode(HttpStatus.OK)
+  async remove(
+    @Param('id') id: string,
+    @Body() body: { password: string },
+    @Req() req: Request,
+    @Res() res: Response
+  ) {
+    await this.authService.deleteUser(id, body.password, req, res);
+    return res.status(HttpStatus.OK).json({
+      message: 'User deleted successfully, cookies cleared',
+    });
+  }
+
   //TODO:
   // - implement in the client-side to detect '401 unauthorised' and call te refresh endpoint
   @Post('refresh')
@@ -81,27 +111,5 @@ export class AuthController {
     const { accessToken } = await this.authService.refreshToken(refreshToken, res);
 
     return res.json({ message: 'Access token refreshed' });
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Post('update-password')
-  @HttpCode(HttpStatus.OK)
-  async updatePassword(
-    @Body() updatePasswordDto: UpdatePasswordDto,
-    @Req() req: Request, // Extract user information from the JWT payload
-  ) {
-    const userId = req.user['userId']; // JWT payload contains the user ID
-    console.log('REQ:', req.user);
-    await this.authService.updatePassword(userId, updatePasswordDto);
-    console.log('Extracted user ID:', userId);
-    return { message: 'Password updated successfully' };
-  }
-
-  // TODO: add password validation before delete, find user before deliting it
-  @UseGuards(JwtAuthGuard)
-  @Delete(':id')
-  @HttpCode(HttpStatus.OK)
-  async remove(@Param('id') id: string) {
-    await this.authService.deleteUser(id);
   }
 }

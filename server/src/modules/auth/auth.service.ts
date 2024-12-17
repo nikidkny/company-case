@@ -194,15 +194,13 @@ export class AuthService {
     }
 
     const user = await this.userModel.findOne({ email });
-    if (!user) {
-      console.log("Should print");
 
+    if (!user) {
       throw new NotFoundException('User not found');
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      console.log("Should NOT print");
       throw new BadRequestException('Invalid credentials');
     }
 
@@ -218,6 +216,44 @@ export class AuthService {
 
     res.clearCookie('accessToken', cookieOptions);
     res.clearCookie('refreshToken', cookieOptions);
+  }
+
+  async updatePassword(id: string, updatePasswordDto: UpdatePasswordDto) {
+    const { currentPassword, newPassword } = updatePasswordDto;
+
+    // Retrieve the user from the database
+    const user = await this.userModel.findById(id);
+    if (!user) {
+      console.error('No user found with ID:', id);
+      throw new NotFoundException('User not found');
+    }
+
+    // Compare the provided current password with the stored password
+    const isPasswordValid = await bcrypt.compare(
+      currentPassword,
+      user.password,
+    );
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Current password is incorrect');
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update the password in the database
+    user.password = hashedPassword;
+    await user.save();
+
+    return { message: 'Password updated successfully' };
+  }
+
+  async deleteUser(id:string, password: string, req: Request, res) {
+    const email = req.user['email'];
+    await this.validateUser(email, password);
+  
+    await this.logout(res)
+    await this.userModel.findByIdAndDelete(id).exec();
+    return { message: 'User deleted successfully' };
   }
 
   async refreshToken(refreshToken: string, res: Response): Promise<{ accessToken: string }> {
@@ -255,41 +291,5 @@ export class AuthService {
       }
       throw new UnauthorizedException('Invalid or expired refresh token');
     }
-  }
-
-  async updatePassword(id: string, updatePasswordDto: UpdatePasswordDto) {
-    const { currentPassword, newPassword } = updatePasswordDto;
-
-    // Retrieve the user from the database
-    const user = await this.userModel.findById(id);
-    if (!user) {
-      console.error('No user found with ID:', id);
-      throw new NotFoundException('User not found');
-    }
-
-    // Compare the provided current password with the stored password
-    const isPasswordValid = await bcrypt.compare(
-      currentPassword,
-      user.password,
-    );
-    if (!isPasswordValid) {
-      throw new UnauthorizedException('Current password is incorrect');
-    }
-
-    // Hash the new password
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-
-    // Update the password in the database
-    user.password = hashedPassword;
-    await user.save();
-
-    return { message: 'Password updated successfully' };
-  }
-
-  async deleteUser(id:string) {
-    //TODO: check password
-    // - implement password request in frontend
-    await this.userModel.findByIdAndDelete(id).exec();
-    return { message: 'User deleted successfully' };
   }
 }
