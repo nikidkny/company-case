@@ -219,11 +219,7 @@ export function CreateEnsemblePage() {
               className="w-auto"
               selectedOption={activeMusicians}
               onSelect={(value) => {
-                if (typeof value === "string") {
-                  setActiveMusicians(value);
-                } else {
-                  setActiveMusicians(value.label);
-                }
+                setActiveMusicians(value);
               }}
             />
           </div>
@@ -238,11 +234,7 @@ export function CreateEnsemblePage() {
               options={musicSessionsFrequencyOptions}
               selectedOption={sessionFrequency}
               onSelect={(value) => {
-                if (typeof value === "string") {
-                  setSessionFrequency(value);
-                } else {
-                  setSessionFrequency(value.label);
-                }
+                setSessionFrequency(value);
               }}
               className="w-auto"
             />

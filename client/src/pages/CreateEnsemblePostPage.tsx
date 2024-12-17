@@ -4,7 +4,7 @@ import { useStore } from "../store/useStore";
 import TextInput from "../components/atoms/TextInput";
 import TextBody from "../components/atoms/TextBody";
 import Textarea from "../components/atoms/Textarea";
-import { Dropdown, DropdownOptionType } from "../components/molecules/Dropdown";
+import { Dropdown } from "../components/molecules/Dropdown";
 import { DropdownWithTags } from "../components/molecules/DropdownWithTags";
 import Button from "../components/atoms/Button";
 import { musicGenresOptions } from "../utilities/musicGenresOptions";
@@ -16,7 +16,6 @@ import { EnsembleType } from "../types/EnsembleType";
 import { levelDescriptions } from "../utilities/levelDescriptions";
 
 export default function CreateEnsemblePostPage() {
-  //const [level, setLevel] = useState(1);
   const { ensemblesId } = useParams({ strict: false });
   const {
     user,
@@ -71,8 +70,6 @@ export default function CreateEnsemblePostPage() {
     }
     if (ensemblesId) {
       triggerFetchEnsembleDetails();
-      // setObjectData(null);
-      // console.log("empty object data?", objectData);
     }
   }, [instruments, ensemblesId]);
 
@@ -83,14 +80,23 @@ export default function CreateEnsemblePostPage() {
     }
   }, [fetchedInstruments]);
 
+  //  const instrumentData: UserInstrumentType = {
+  //     userId,
+  //     instrumentId: selectedInstrument?._id,
+  //     levelOfExperience: level.toString(),
+  //     genres: selectedGenres,
+  //     name: selectedInstrument?.name || "",
+  //   };
+
   // console.log("selectedEnsembleOption", selectedEnsembleOption);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const postData = {
       title: postTitle,
       description: postDescription,
-      instrument: postInstrument.label,
+      instrument: postInstrument.name,
       experienceRequired,
       genres: postGenres,
       createdAt: new Date().toLocaleString(),
@@ -117,14 +123,6 @@ export default function CreateEnsemblePostPage() {
     }, 2000);
   };
 
-  // // Reset form on component unmount
-  // useEffect(() => {
-  //   return () => {
-  //     // Reset when navigating away
-  //     resetPostData();
-  //   };
-  // }, [resetPostData]);
-
   const {
     data: createdPost,
     error,
@@ -142,29 +140,38 @@ export default function CreateEnsemblePostPage() {
     objectData
   );
 
+  const postEnsembleData = {
+    ensembleId: ensemble._id,
+    userId: user._id,
+    postId: createdPost[0]?._id,
+  };
+
+  const createPostEnsemble = useFetch(
+    null,
+    "/postEnsembles",
+    "POST",
+    {
+      "Content-Type": "application/json",
+    },
+    postEnsembleData
+  );
+
   useEffect(() => {
     console.log("Updated objectData:", objectData);
   }, [objectData]);
 
   console.log("createdPost", createdPost);
-  //console.log("all instruments", instruments);
 
   useEffect(() => {
     if (createdPost && createdPost.length >= 1) {
       console.log("Post created:", createdPost);
+      createPostEnsemble.triggerFetch();
       setPosts(createdPost);
     } else {
       console.log("errors", error);
       return;
     }
   }, [createdPost, error, shouldFetch]);
-
-  //normalising the intruments array into dropdown options
-  const instrumentsDropdownOptions =
-    instruments?.map((instrument) => ({
-      value: instrument._id,
-      label: instrument.name,
-    })) || [];
 
   const handleTagChange = (tags: string[]) => {
     const currentTags = new Set(postGenres);
@@ -207,7 +214,18 @@ export default function CreateEnsemblePostPage() {
             <TextBody variant="strong" size="md" className="text-blue-500">
               Instrument
             </TextBody>
-            <Dropdown initialSelectedLabel="Choose an instrument" options={instrumentsDropdownOptions} selectedOption={postInstrument} onSelect={(value) => setPostInstrument(value as DropdownOptionType)} className="w-auto" />
+            <Dropdown
+              initialSelectedLabel="Choose an instrument"
+              options={instruments.map((instrument) => instrument.name)}
+              selectedOption={postInstrument ? postInstrument.name : ""}
+              onSelect={(value) => {
+                const selectedInstrumentObj = instruments.find((instrument) => instrument.name === value);
+                if (selectedInstrumentObj) {
+                  setPostInstrument(selectedInstrumentObj);
+                }
+              }}
+              className="w-auto"
+            />
           </div>
           {/* minimum experience level */}
           <div className="flex flex-col gap-3">

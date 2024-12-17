@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import Button from "../components/atoms/Button";
 import TextBody from "../components/atoms/TextBody";
 import TextHeadline from "../components/atoms/TextHeadline";
-import { Dropdown, DropdownOptionType } from "../components/molecules/Dropdown";
+import { Dropdown } from "../components/molecules/Dropdown";
 import { getUserIdFromCookie } from "../hooks/getCookies";
 import { useFetch } from "../hooks/use-fetch";
 import { useStore } from "../store/useStore";
@@ -42,7 +42,7 @@ export default function CreatePostPage() {
   }, [resetPostData, location]);
 
   console.log("ensemblesDropdownOptions", ensemblesDropdownOptions);
-  console.log("selectedPostEnsemble", selectedEnsembleOption);
+  console.log("selectedEnsembleOption", selectedEnsembleOption);
 
   return (
     <>
@@ -66,11 +66,14 @@ export default function CreatePostPage() {
               </TextBody>
               <Dropdown
                 initialSelectedLabel="Choose an ensemble"
-                options={ensemblesDropdownOptions}
+                options={ensemblesDropdownOptions.map((ensemble) => ensemble.label)}
                 className="w-auto"
-                selectedOption={selectedEnsembleOption}
+                selectedOption={selectedEnsembleOption ? selectedEnsembleOption.label : ""}
                 onSelect={(value) => {
-                  setSelectedEnsembleOption(value as DropdownOptionType);
+                  const selectedEnsembleObj = ensemblesDropdownOptions.find((ensemble) => ensemble.label === value);
+                  if (selectedEnsembleObj) {
+                    setSelectedEnsembleOption(selectedEnsembleObj);
+                  }
                 }}
               />
             </>

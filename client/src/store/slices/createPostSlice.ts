@@ -1,27 +1,27 @@
 import { StateCreator } from "zustand";
-import { DropdownOptionType } from "../../components/molecules/Dropdown";
 import { PostType } from "../../types/PostType";
+import { InstrumentType } from "../../types/InstrumentType";
 
-// export interface selectedEnsembleOption {
-//   value: string;
-//   label: string;
-// }
+export interface selectedEnsembleOption {
+  value: string;
+  label: string;
+}
 
 export interface CreatePostState {
-  selectedEnsembleOption: DropdownOptionType;
+  selectedEnsembleOption: selectedEnsembleOption;
   postTitle: string;
   postDescription: string;
-  postInstrument: DropdownOptionType;
+  postInstrument: InstrumentType;
   experienceRequired: number;
   postGenres: string[];
   posts: PostType[];
   setPosts: (posts: PostType | PostType[]) => void;
 
   // Actions
-  setSelectedEnsembleOption: (selectedEnsembleOption: DropdownOptionType) => void;
+  setSelectedEnsembleOption: (selectedEnsembleOption: selectedEnsembleOption) => void;
   setPostTitle: (postTitle: string) => void;
   setPostDescription: (postDescription: string) => void;
-  setPostInstrument: (postInstrument: DropdownOptionType) => void;
+  setPostInstrument: (postInstrument: InstrumentType) => void;
   setExperienceRequired: (experienceRequired: number) => void;
   setPostGenres: (postGenre: string) => void;
   removePostGenre: (postGenre: string) => void;
@@ -34,7 +34,7 @@ export const createPostSlice: StateCreator<CreatePostState, [], [], CreatePostSt
   selectedEnsembleOption: { value: "", label: "" },
   postTitle: "",
   postDescription: "",
-  postInstrument: { value: "", label: "" },
+  postInstrument: { _id: "", name: "" },
   experienceRequired: 1,
   postGenres: [],
 
@@ -71,7 +71,7 @@ export const createPostSlice: StateCreator<CreatePostState, [], [], CreatePostSt
       selectedEnsembleOption: { value: "", label: "" },
       postTitle: "",
       postDescription: "",
-      postInstrument: { value: "", label: "" },
+      postInstrument: { _id: "", name: "" },
       experienceRequired: 1,
       postGenres: [],
     })),
