@@ -8,352 +8,426 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from '@tanstack/react-router'
 
 // Import Routes
 
-import { Route as rootRoute } from "./routes/__root";
+import { Route as rootRoute } from './routes/__root'
 
 // Create Virtual Routes
 
-const AssetsLazyImport = createFileRoute("/assets")();
-const AccountsLazyImport = createFileRoute("/accounts")();
-const IndexLazyImport = createFileRoute("/")();
-const PostsIndexLazyImport = createFileRoute("/posts/")();
-const EnsemblesIndexLazyImport = createFileRoute("/ensembles/")();
-const AccountsIndexLazyImport = createFileRoute("/accounts/")();
-const PostsCreateLazyImport = createFileRoute("/posts/create")();
-const PostsPostIdLazyImport = createFileRoute("/posts/$postId")();
-const EnsemblesCreateLazyImport = createFileRoute("/ensembles/create")();
-const EnsemblesEnsemblesIdLazyImport = createFileRoute("/ensembles/$ensemblesId")();
-const ProfileProfileIdIndexLazyImport = createFileRoute("/profile/$profileId/")();
-const ProfileProfileIdSettingsLazyImport = createFileRoute("/profile/$profileId/settings")();
-const ProfileProfileIdEditLazyImport = createFileRoute("/profile/$profileId/edit")();
+const AssetsLazyImport = createFileRoute('/assets')()
+const AccountsLazyImport = createFileRoute('/accounts')()
+const IndexLazyImport = createFileRoute('/')()
+const PostsIndexLazyImport = createFileRoute('/posts/')()
+const MusiciansIndexLazyImport = createFileRoute('/musicians/')()
+const EnsemblesIndexLazyImport = createFileRoute('/ensembles/')()
+const AccountsIndexLazyImport = createFileRoute('/accounts/')()
+const PostsCreateLazyImport = createFileRoute('/posts/create')()
+const PostsPostIdLazyImport = createFileRoute('/posts/$postId')()
+const MusiciansUserIdLazyImport = createFileRoute('/musicians/$userId')()
+const EnsemblesCreateLazyImport = createFileRoute('/ensembles/create')()
+const EnsemblesEnsemblesIdLazyImport = createFileRoute(
+  '/ensembles/$ensemblesId',
+)()
+const ProfileProfileIdIndexLazyImport = createFileRoute(
+  '/profile/$profileId/',
+)()
+const ProfileProfileIdSettingsLazyImport = createFileRoute(
+  '/profile/$profileId/settings',
+)()
+const ProfileProfileIdEditLazyImport = createFileRoute(
+  '/profile/$profileId/edit',
+)()
 const ProfileProfileIdInstrumentsEditLazyImport = createFileRoute(
-  "/profile/$profileId/instruments/edit"
-)();
+  '/profile/$profileId/instruments/edit',
+)()
 
 // Create/Update Routes
 
 const AssetsLazyRoute = AssetsLazyImport.update({
-  id: "/assets",
-  path: "/assets",
+  id: '/assets',
+  path: '/assets',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import("./routes/assets.lazy").then((d) => d.Route));
+} as any).lazy(() => import('./routes/assets.lazy').then((d) => d.Route))
 
 const AccountsLazyRoute = AccountsLazyImport.update({
-  id: "/accounts",
-  path: "/accounts",
+  id: '/accounts',
+  path: '/accounts',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import("./routes/accounts.lazy").then((d) => d.Route));
+} as any).lazy(() => import('./routes/accounts.lazy').then((d) => d.Route))
 
 const IndexLazyRoute = IndexLazyImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import("./routes/index.lazy").then((d) => d.Route));
+} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
 const PostsIndexLazyRoute = PostsIndexLazyImport.update({
-  id: "/posts/",
-  path: "/posts/",
+  id: '/posts/',
+  path: '/posts/',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import("./routes/posts/index.lazy").then((d) => d.Route));
+} as any).lazy(() => import('./routes/posts/index.lazy').then((d) => d.Route))
 
-const EnsemblesIndexLazyRoute = EnsemblesIndexLazyImport.update({
-  id: "/ensembles/",
-  path: "/ensembles/",
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import("./routes/ensembles/index.lazy").then((d) => d.Route));
-
-const AccountsIndexLazyRoute = AccountsIndexLazyImport.update({
-  id: "/",
-  path: "/",
-  getParentRoute: () => AccountsLazyRoute,
-} as any).lazy(() => import("./routes/accounts.index.lazy").then((d) => d.Route));
-
-const PostsCreateLazyRoute = PostsCreateLazyImport.update({
-  id: "/posts/create",
-  path: "/posts/create",
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import("./routes/posts/create.lazy").then((d) => d.Route));
-
-const PostsPostIdLazyRoute = PostsPostIdLazyImport.update({
-  id: "/posts/$postId",
-  path: "/posts/$postId",
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import("./routes/posts/$postId.lazy").then((d) => d.Route));
-
-const EnsemblesCreateLazyRoute = EnsemblesCreateLazyImport.update({
-  id: "/ensembles/create",
-  path: "/ensembles/create",
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import("./routes/ensembles/create.lazy").then((d) => d.Route));
-
-const EnsemblesEnsemblesIdLazyRoute = EnsemblesEnsemblesIdLazyImport.update({
-  id: "/ensembles/$ensemblesId",
-  path: "/ensembles/$ensemblesId",
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import("./routes/ensembles/$ensemblesId.lazy").then((d) => d.Route));
-
-const ProfileProfileIdIndexLazyRoute = ProfileProfileIdIndexLazyImport.update({
-  id: "/profile/$profileId/",
-  path: "/profile/$profileId/",
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import("./routes/profile/$profileId/index.lazy").then((d) => d.Route));
-
-const ProfileProfileIdSettingsLazyRoute = ProfileProfileIdSettingsLazyImport.update({
-  id: "/profile/$profileId/settings",
-  path: "/profile/$profileId/settings",
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import("./routes/profile/$profileId/settings.lazy").then((d) => d.Route));
-
-const ProfileProfileIdEditLazyRoute = ProfileProfileIdEditLazyImport.update({
-  id: "/profile/$profileId/edit",
-  path: "/profile/$profileId/edit",
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import("./routes/profile/$profileId/edit.lazy").then((d) => d.Route));
-
-const ProfileProfileIdInstrumentsEditLazyRoute = ProfileProfileIdInstrumentsEditLazyImport.update({
-  id: "/profile/$profileId/instruments/edit",
-  path: "/profile/$profileId/instruments/edit",
+const MusiciansIndexLazyRoute = MusiciansIndexLazyImport.update({
+  id: '/musicians/',
+  path: '/musicians/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() =>
-  import("./routes/profile/$profileId/instruments.edit.lazy").then((d) => d.Route)
-);
+  import('./routes/musicians/index.lazy').then((d) => d.Route),
+)
+
+const EnsemblesIndexLazyRoute = EnsemblesIndexLazyImport.update({
+  id: '/ensembles/',
+  path: '/ensembles/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/ensembles/index.lazy').then((d) => d.Route),
+)
+
+const AccountsIndexLazyRoute = AccountsIndexLazyImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AccountsLazyRoute,
+} as any).lazy(() =>
+  import('./routes/accounts.index.lazy').then((d) => d.Route),
+)
+
+const PostsCreateLazyRoute = PostsCreateLazyImport.update({
+  id: '/posts/create',
+  path: '/posts/create',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/posts/create.lazy').then((d) => d.Route))
+
+const PostsPostIdLazyRoute = PostsPostIdLazyImport.update({
+  id: '/posts/$postId',
+  path: '/posts/$postId',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/posts/$postId.lazy').then((d) => d.Route))
+
+const MusiciansUserIdLazyRoute = MusiciansUserIdLazyImport.update({
+  id: '/musicians/$userId',
+  path: '/musicians/$userId',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/musicians/$userId.lazy').then((d) => d.Route),
+)
+
+const EnsemblesCreateLazyRoute = EnsemblesCreateLazyImport.update({
+  id: '/ensembles/create',
+  path: '/ensembles/create',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/ensembles/create.lazy').then((d) => d.Route),
+)
+
+const EnsemblesEnsemblesIdLazyRoute = EnsemblesEnsemblesIdLazyImport.update({
+  id: '/ensembles/$ensemblesId',
+  path: '/ensembles/$ensemblesId',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/ensembles/$ensemblesId.lazy').then((d) => d.Route),
+)
+
+const ProfileProfileIdIndexLazyRoute = ProfileProfileIdIndexLazyImport.update({
+  id: '/profile/$profileId/',
+  path: '/profile/$profileId/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/profile/$profileId/index.lazy').then((d) => d.Route),
+)
+
+const ProfileProfileIdSettingsLazyRoute =
+  ProfileProfileIdSettingsLazyImport.update({
+    id: '/profile/$profileId/settings',
+    path: '/profile/$profileId/settings',
+    getParentRoute: () => rootRoute,
+  } as any).lazy(() =>
+    import('./routes/profile/$profileId/settings.lazy').then((d) => d.Route),
+  )
+
+const ProfileProfileIdEditLazyRoute = ProfileProfileIdEditLazyImport.update({
+  id: '/profile/$profileId/edit',
+  path: '/profile/$profileId/edit',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/profile/$profileId/edit.lazy').then((d) => d.Route),
+)
+
+const ProfileProfileIdInstrumentsEditLazyRoute =
+  ProfileProfileIdInstrumentsEditLazyImport.update({
+    id: '/profile/$profileId/instruments/edit',
+    path: '/profile/$profileId/instruments/edit',
+    getParentRoute: () => rootRoute,
+  } as any).lazy(() =>
+    import('./routes/profile/$profileId/instruments.edit.lazy').then(
+      (d) => d.Route,
+    ),
+  )
 
 // Populate the FileRoutesByPath interface
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    "/": {
-      id: "/";
-      path: "/";
-      fullPath: "/";
-      preLoaderRoute: typeof IndexLazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/accounts": {
-      id: "/accounts";
-      path: "/accounts";
-      fullPath: "/accounts";
-      preLoaderRoute: typeof AccountsLazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/assets": {
-      id: "/assets";
-      path: "/assets";
-      fullPath: "/assets";
-      preLoaderRoute: typeof AssetsLazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/ensembles/$ensemblesId": {
-      id: "/ensembles/$ensemblesId";
-      path: "/ensembles/$ensemblesId";
-      fullPath: "/ensembles/$ensemblesId";
-      preLoaderRoute: typeof EnsemblesEnsemblesIdLazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/ensembles/create": {
-      id: "/ensembles/create";
-      path: "/ensembles/create";
-      fullPath: "/ensembles/create";
-      preLoaderRoute: typeof EnsemblesCreateLazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/posts/$postId": {
-      id: "/posts/$postId";
-      path: "/posts/$postId";
-      fullPath: "/posts/$postId";
-      preLoaderRoute: typeof PostsPostIdLazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/posts/create": {
-      id: "/posts/create";
-      path: "/posts/create";
-      fullPath: "/posts/create";
-      preLoaderRoute: typeof PostsCreateLazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/accounts/": {
-      id: "/accounts/";
-      path: "/";
-      fullPath: "/accounts/";
-      preLoaderRoute: typeof AccountsIndexLazyImport;
-      parentRoute: typeof AccountsLazyImport;
-    };
-    "/ensembles/": {
-      id: "/ensembles/";
-      path: "/ensembles";
-      fullPath: "/ensembles";
-      preLoaderRoute: typeof EnsemblesIndexLazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/posts/": {
-      id: "/posts/";
-      path: "/posts";
-      fullPath: "/posts";
-      preLoaderRoute: typeof PostsIndexLazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/profile/$profileId/edit": {
-      id: "/profile/$profileId/edit";
-      path: "/profile/$profileId/edit";
-      fullPath: "/profile/$profileId/edit";
-      preLoaderRoute: typeof ProfileProfileIdEditLazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/profile/$profileId/settings": {
-      id: "/profile/$profileId/settings";
-      path: "/profile/$profileId/settings";
-      fullPath: "/profile/$profileId/settings";
-      preLoaderRoute: typeof ProfileProfileIdSettingsLazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/profile/$profileId/": {
-      id: "/profile/$profileId/";
-      path: "/profile/$profileId";
-      fullPath: "/profile/$profileId";
-      preLoaderRoute: typeof ProfileProfileIdIndexLazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    "/profile/$profileId/instruments/edit": {
-      id: "/profile/$profileId/instruments/edit";
-      path: "/profile/$profileId/instruments/edit";
-      fullPath: "/profile/$profileId/instruments/edit";
-      preLoaderRoute: typeof ProfileProfileIdInstrumentsEditLazyImport;
-      parentRoute: typeof rootRoute;
-    };
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/accounts': {
+      id: '/accounts'
+      path: '/accounts'
+      fullPath: '/accounts'
+      preLoaderRoute: typeof AccountsLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/assets': {
+      id: '/assets'
+      path: '/assets'
+      fullPath: '/assets'
+      preLoaderRoute: typeof AssetsLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/ensembles/$ensemblesId': {
+      id: '/ensembles/$ensemblesId'
+      path: '/ensembles/$ensemblesId'
+      fullPath: '/ensembles/$ensemblesId'
+      preLoaderRoute: typeof EnsemblesEnsemblesIdLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/ensembles/create': {
+      id: '/ensembles/create'
+      path: '/ensembles/create'
+      fullPath: '/ensembles/create'
+      preLoaderRoute: typeof EnsemblesCreateLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/musicians/$userId': {
+      id: '/musicians/$userId'
+      path: '/musicians/$userId'
+      fullPath: '/musicians/$userId'
+      preLoaderRoute: typeof MusiciansUserIdLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/posts/$postId': {
+      id: '/posts/$postId'
+      path: '/posts/$postId'
+      fullPath: '/posts/$postId'
+      preLoaderRoute: typeof PostsPostIdLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/posts/create': {
+      id: '/posts/create'
+      path: '/posts/create'
+      fullPath: '/posts/create'
+      preLoaderRoute: typeof PostsCreateLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/accounts/': {
+      id: '/accounts/'
+      path: '/'
+      fullPath: '/accounts/'
+      preLoaderRoute: typeof AccountsIndexLazyImport
+      parentRoute: typeof AccountsLazyImport
+    }
+    '/ensembles/': {
+      id: '/ensembles/'
+      path: '/ensembles'
+      fullPath: '/ensembles'
+      preLoaderRoute: typeof EnsemblesIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/musicians/': {
+      id: '/musicians/'
+      path: '/musicians'
+      fullPath: '/musicians'
+      preLoaderRoute: typeof MusiciansIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/posts/': {
+      id: '/posts/'
+      path: '/posts'
+      fullPath: '/posts'
+      preLoaderRoute: typeof PostsIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/profile/$profileId/edit': {
+      id: '/profile/$profileId/edit'
+      path: '/profile/$profileId/edit'
+      fullPath: '/profile/$profileId/edit'
+      preLoaderRoute: typeof ProfileProfileIdEditLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/profile/$profileId/settings': {
+      id: '/profile/$profileId/settings'
+      path: '/profile/$profileId/settings'
+      fullPath: '/profile/$profileId/settings'
+      preLoaderRoute: typeof ProfileProfileIdSettingsLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/profile/$profileId/': {
+      id: '/profile/$profileId/'
+      path: '/profile/$profileId'
+      fullPath: '/profile/$profileId'
+      preLoaderRoute: typeof ProfileProfileIdIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/profile/$profileId/instruments/edit': {
+      id: '/profile/$profileId/instruments/edit'
+      path: '/profile/$profileId/instruments/edit'
+      fullPath: '/profile/$profileId/instruments/edit'
+      preLoaderRoute: typeof ProfileProfileIdInstrumentsEditLazyImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
 // Create and export the route tree
 
 interface AccountsLazyRouteChildren {
-  AccountsIndexLazyRoute: typeof AccountsIndexLazyRoute;
+  AccountsIndexLazyRoute: typeof AccountsIndexLazyRoute
 }
 
 const AccountsLazyRouteChildren: AccountsLazyRouteChildren = {
   AccountsIndexLazyRoute: AccountsIndexLazyRoute,
-};
+}
 
-const AccountsLazyRouteWithChildren = AccountsLazyRoute._addFileChildren(AccountsLazyRouteChildren);
+const AccountsLazyRouteWithChildren = AccountsLazyRoute._addFileChildren(
+  AccountsLazyRouteChildren,
+)
 
 export interface FileRoutesByFullPath {
-  "/": typeof IndexLazyRoute;
-  "/accounts": typeof AccountsLazyRouteWithChildren;
-  "/assets": typeof AssetsLazyRoute;
-  "/ensembles/$ensemblesId": typeof EnsemblesEnsemblesIdLazyRoute;
-  "/ensembles/create": typeof EnsemblesCreateLazyRoute;
-  "/posts/$postId": typeof PostsPostIdLazyRoute;
-  "/posts/create": typeof PostsCreateLazyRoute;
-  "/accounts/": typeof AccountsIndexLazyRoute;
-  "/ensembles": typeof EnsemblesIndexLazyRoute;
-  "/posts": typeof PostsIndexLazyRoute;
-  "/profile/$profileId/edit": typeof ProfileProfileIdEditLazyRoute;
-  "/profile/$profileId/settings": typeof ProfileProfileIdSettingsLazyRoute;
-  "/profile/$profileId": typeof ProfileProfileIdIndexLazyRoute;
-  "/profile/$profileId/instruments/edit": typeof ProfileProfileIdInstrumentsEditLazyRoute;
+  '/': typeof IndexLazyRoute
+  '/accounts': typeof AccountsLazyRouteWithChildren
+  '/assets': typeof AssetsLazyRoute
+  '/ensembles/$ensemblesId': typeof EnsemblesEnsemblesIdLazyRoute
+  '/ensembles/create': typeof EnsemblesCreateLazyRoute
+  '/musicians/$userId': typeof MusiciansUserIdLazyRoute
+  '/posts/$postId': typeof PostsPostIdLazyRoute
+  '/posts/create': typeof PostsCreateLazyRoute
+  '/accounts/': typeof AccountsIndexLazyRoute
+  '/ensembles': typeof EnsemblesIndexLazyRoute
+  '/musicians': typeof MusiciansIndexLazyRoute
+  '/posts': typeof PostsIndexLazyRoute
+  '/profile/$profileId/edit': typeof ProfileProfileIdEditLazyRoute
+  '/profile/$profileId/settings': typeof ProfileProfileIdSettingsLazyRoute
+  '/profile/$profileId': typeof ProfileProfileIdIndexLazyRoute
+  '/profile/$profileId/instruments/edit': typeof ProfileProfileIdInstrumentsEditLazyRoute
 }
 
 export interface FileRoutesByTo {
-  "/": typeof IndexLazyRoute;
-  "/assets": typeof AssetsLazyRoute;
-  "/ensembles/$ensemblesId": typeof EnsemblesEnsemblesIdLazyRoute;
-  "/ensembles/create": typeof EnsemblesCreateLazyRoute;
-  "/posts/$postId": typeof PostsPostIdLazyRoute;
-  "/posts/create": typeof PostsCreateLazyRoute;
-  "/accounts": typeof AccountsIndexLazyRoute;
-  "/ensembles": typeof EnsemblesIndexLazyRoute;
-  "/posts": typeof PostsIndexLazyRoute;
-  "/profile/$profileId/edit": typeof ProfileProfileIdEditLazyRoute;
-  "/profile/$profileId/settings": typeof ProfileProfileIdSettingsLazyRoute;
-  "/profile/$profileId": typeof ProfileProfileIdIndexLazyRoute;
-  "/profile/$profileId/instruments/edit": typeof ProfileProfileIdInstrumentsEditLazyRoute;
+  '/': typeof IndexLazyRoute
+  '/assets': typeof AssetsLazyRoute
+  '/ensembles/$ensemblesId': typeof EnsemblesEnsemblesIdLazyRoute
+  '/ensembles/create': typeof EnsemblesCreateLazyRoute
+  '/musicians/$userId': typeof MusiciansUserIdLazyRoute
+  '/posts/$postId': typeof PostsPostIdLazyRoute
+  '/posts/create': typeof PostsCreateLazyRoute
+  '/accounts': typeof AccountsIndexLazyRoute
+  '/ensembles': typeof EnsemblesIndexLazyRoute
+  '/musicians': typeof MusiciansIndexLazyRoute
+  '/posts': typeof PostsIndexLazyRoute
+  '/profile/$profileId/edit': typeof ProfileProfileIdEditLazyRoute
+  '/profile/$profileId/settings': typeof ProfileProfileIdSettingsLazyRoute
+  '/profile/$profileId': typeof ProfileProfileIdIndexLazyRoute
+  '/profile/$profileId/instruments/edit': typeof ProfileProfileIdInstrumentsEditLazyRoute
 }
 
 export interface FileRoutesById {
-  __root__: typeof rootRoute;
-  "/": typeof IndexLazyRoute;
-  "/accounts": typeof AccountsLazyRouteWithChildren;
-  "/assets": typeof AssetsLazyRoute;
-  "/ensembles/$ensemblesId": typeof EnsemblesEnsemblesIdLazyRoute;
-  "/ensembles/create": typeof EnsemblesCreateLazyRoute;
-  "/posts/$postId": typeof PostsPostIdLazyRoute;
-  "/posts/create": typeof PostsCreateLazyRoute;
-  "/accounts/": typeof AccountsIndexLazyRoute;
-  "/ensembles/": typeof EnsemblesIndexLazyRoute;
-  "/posts/": typeof PostsIndexLazyRoute;
-  "/profile/$profileId/edit": typeof ProfileProfileIdEditLazyRoute;
-  "/profile/$profileId/settings": typeof ProfileProfileIdSettingsLazyRoute;
-  "/profile/$profileId/": typeof ProfileProfileIdIndexLazyRoute;
-  "/profile/$profileId/instruments/edit": typeof ProfileProfileIdInstrumentsEditLazyRoute;
+  __root__: typeof rootRoute
+  '/': typeof IndexLazyRoute
+  '/accounts': typeof AccountsLazyRouteWithChildren
+  '/assets': typeof AssetsLazyRoute
+  '/ensembles/$ensemblesId': typeof EnsemblesEnsemblesIdLazyRoute
+  '/ensembles/create': typeof EnsemblesCreateLazyRoute
+  '/musicians/$userId': typeof MusiciansUserIdLazyRoute
+  '/posts/$postId': typeof PostsPostIdLazyRoute
+  '/posts/create': typeof PostsCreateLazyRoute
+  '/accounts/': typeof AccountsIndexLazyRoute
+  '/ensembles/': typeof EnsemblesIndexLazyRoute
+  '/musicians/': typeof MusiciansIndexLazyRoute
+  '/posts/': typeof PostsIndexLazyRoute
+  '/profile/$profileId/edit': typeof ProfileProfileIdEditLazyRoute
+  '/profile/$profileId/settings': typeof ProfileProfileIdSettingsLazyRoute
+  '/profile/$profileId/': typeof ProfileProfileIdIndexLazyRoute
+  '/profile/$profileId/instruments/edit': typeof ProfileProfileIdInstrumentsEditLazyRoute
 }
 
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
+  fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | "/"
-    | "/accounts"
-    | "/assets"
-    | "/ensembles/$ensemblesId"
-    | "/ensembles/create"
-    | "/posts/$postId"
-    | "/posts/create"
-    | "/accounts/"
-    | "/ensembles"
-    | "/posts"
-    | "/profile/$profileId/edit"
-    | "/profile/$profileId/settings"
-    | "/profile/$profileId"
-    | "/profile/$profileId/instruments/edit";
-  fileRoutesByTo: FileRoutesByTo;
+    | '/'
+    | '/accounts'
+    | '/assets'
+    | '/ensembles/$ensemblesId'
+    | '/ensembles/create'
+    | '/musicians/$userId'
+    | '/posts/$postId'
+    | '/posts/create'
+    | '/accounts/'
+    | '/ensembles'
+    | '/musicians'
+    | '/posts'
+    | '/profile/$profileId/edit'
+    | '/profile/$profileId/settings'
+    | '/profile/$profileId'
+    | '/profile/$profileId/instruments/edit'
+  fileRoutesByTo: FileRoutesByTo
   to:
-    | "/"
-    | "/assets"
-    | "/ensembles/$ensemblesId"
-    | "/ensembles/create"
-    | "/posts/$postId"
-    | "/posts/create"
-    | "/accounts"
-    | "/ensembles"
-    | "/posts"
-    | "/profile/$profileId/edit"
-    | "/profile/$profileId/settings"
-    | "/profile/$profileId"
-    | "/profile/$profileId/instruments/edit";
+    | '/'
+    | '/assets'
+    | '/ensembles/$ensemblesId'
+    | '/ensembles/create'
+    | '/musicians/$userId'
+    | '/posts/$postId'
+    | '/posts/create'
+    | '/accounts'
+    | '/ensembles'
+    | '/musicians'
+    | '/posts'
+    | '/profile/$profileId/edit'
+    | '/profile/$profileId/settings'
+    | '/profile/$profileId'
+    | '/profile/$profileId/instruments/edit'
   id:
-    | "__root__"
-    | "/"
-    | "/accounts"
-    | "/assets"
-    | "/ensembles/$ensemblesId"
-    | "/ensembles/create"
-    | "/posts/$postId"
-    | "/posts/create"
-    | "/accounts/"
-    | "/ensembles/"
-    | "/posts/"
-    | "/profile/$profileId/edit"
-    | "/profile/$profileId/settings"
-    | "/profile/$profileId/"
-    | "/profile/$profileId/instruments/edit";
-  fileRoutesById: FileRoutesById;
+    | '__root__'
+    | '/'
+    | '/accounts'
+    | '/assets'
+    | '/ensembles/$ensemblesId'
+    | '/ensembles/create'
+    | '/musicians/$userId'
+    | '/posts/$postId'
+    | '/posts/create'
+    | '/accounts/'
+    | '/ensembles/'
+    | '/musicians/'
+    | '/posts/'
+    | '/profile/$profileId/edit'
+    | '/profile/$profileId/settings'
+    | '/profile/$profileId/'
+    | '/profile/$profileId/instruments/edit'
+  fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  IndexLazyRoute: typeof IndexLazyRoute;
-  AccountsLazyRoute: typeof AccountsLazyRouteWithChildren;
-  AssetsLazyRoute: typeof AssetsLazyRoute;
-  EnsemblesEnsemblesIdLazyRoute: typeof EnsemblesEnsemblesIdLazyRoute;
-  EnsemblesCreateLazyRoute: typeof EnsemblesCreateLazyRoute;
-  PostsPostIdLazyRoute: typeof PostsPostIdLazyRoute;
-  PostsCreateLazyRoute: typeof PostsCreateLazyRoute;
-  EnsemblesIndexLazyRoute: typeof EnsemblesIndexLazyRoute;
-  PostsIndexLazyRoute: typeof PostsIndexLazyRoute;
-  ProfileProfileIdEditLazyRoute: typeof ProfileProfileIdEditLazyRoute;
-  ProfileProfileIdSettingsLazyRoute: typeof ProfileProfileIdSettingsLazyRoute;
-  ProfileProfileIdIndexLazyRoute: typeof ProfileProfileIdIndexLazyRoute;
-  ProfileProfileIdInstrumentsEditLazyRoute: typeof ProfileProfileIdInstrumentsEditLazyRoute;
+  IndexLazyRoute: typeof IndexLazyRoute
+  AccountsLazyRoute: typeof AccountsLazyRouteWithChildren
+  AssetsLazyRoute: typeof AssetsLazyRoute
+  EnsemblesEnsemblesIdLazyRoute: typeof EnsemblesEnsemblesIdLazyRoute
+  EnsemblesCreateLazyRoute: typeof EnsemblesCreateLazyRoute
+  MusiciansUserIdLazyRoute: typeof MusiciansUserIdLazyRoute
+  PostsPostIdLazyRoute: typeof PostsPostIdLazyRoute
+  PostsCreateLazyRoute: typeof PostsCreateLazyRoute
+  EnsemblesIndexLazyRoute: typeof EnsemblesIndexLazyRoute
+  MusiciansIndexLazyRoute: typeof MusiciansIndexLazyRoute
+  PostsIndexLazyRoute: typeof PostsIndexLazyRoute
+  ProfileProfileIdEditLazyRoute: typeof ProfileProfileIdEditLazyRoute
+  ProfileProfileIdSettingsLazyRoute: typeof ProfileProfileIdSettingsLazyRoute
+  ProfileProfileIdIndexLazyRoute: typeof ProfileProfileIdIndexLazyRoute
+  ProfileProfileIdInstrumentsEditLazyRoute: typeof ProfileProfileIdInstrumentsEditLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -362,19 +436,22 @@ const rootRouteChildren: RootRouteChildren = {
   AssetsLazyRoute: AssetsLazyRoute,
   EnsemblesEnsemblesIdLazyRoute: EnsemblesEnsemblesIdLazyRoute,
   EnsemblesCreateLazyRoute: EnsemblesCreateLazyRoute,
+  MusiciansUserIdLazyRoute: MusiciansUserIdLazyRoute,
   PostsPostIdLazyRoute: PostsPostIdLazyRoute,
   PostsCreateLazyRoute: PostsCreateLazyRoute,
   EnsemblesIndexLazyRoute: EnsemblesIndexLazyRoute,
+  MusiciansIndexLazyRoute: MusiciansIndexLazyRoute,
   PostsIndexLazyRoute: PostsIndexLazyRoute,
   ProfileProfileIdEditLazyRoute: ProfileProfileIdEditLazyRoute,
   ProfileProfileIdSettingsLazyRoute: ProfileProfileIdSettingsLazyRoute,
   ProfileProfileIdIndexLazyRoute: ProfileProfileIdIndexLazyRoute,
-  ProfileProfileIdInstrumentsEditLazyRoute: ProfileProfileIdInstrumentsEditLazyRoute,
-};
+  ProfileProfileIdInstrumentsEditLazyRoute:
+    ProfileProfileIdInstrumentsEditLazyRoute,
+}
 
 export const routeTree = rootRoute
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()
 
 /* ROUTE_MANIFEST_START
 {
@@ -387,9 +464,11 @@ export const routeTree = rootRoute
         "/assets",
         "/ensembles/$ensemblesId",
         "/ensembles/create",
+        "/musicians/$userId",
         "/posts/$postId",
         "/posts/create",
         "/ensembles/",
+        "/musicians/",
         "/posts/",
         "/profile/$profileId/edit",
         "/profile/$profileId/settings",
@@ -415,6 +494,9 @@ export const routeTree = rootRoute
     "/ensembles/create": {
       "filePath": "ensembles/create.lazy.tsx"
     },
+    "/musicians/$userId": {
+      "filePath": "musicians/$userId.lazy.tsx"
+    },
     "/posts/$postId": {
       "filePath": "posts/$postId.lazy.tsx"
     },
@@ -427,6 +509,9 @@ export const routeTree = rootRoute
     },
     "/ensembles/": {
       "filePath": "ensembles/index.lazy.tsx"
+    },
+    "/musicians/": {
+      "filePath": "musicians/index.lazy.tsx"
     },
     "/posts/": {
       "filePath": "posts/index.lazy.tsx"

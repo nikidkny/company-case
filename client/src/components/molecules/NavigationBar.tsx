@@ -8,15 +8,16 @@ import { useState } from "react";
 import { useFetch } from "../../hooks/use-fetch";
 
 export default function NavigationBar() {
-  const { isMenuOpen, setIsMenuOpen, setPopUp, setLoginStatus, resetUser, loginStatus, user } = useStore();
+  const { isMenuOpen, setIsMenuOpen, setPopUp, setLoginStatus, resetUser, loginStatus, user } =
+    useStore();
   const navigate = useNavigate(); // To handle redirection
   const [logoutError, setLogoutError] = useState<string | null>(null);
 
-  const { triggerFetch, data: logoutResponse, error: logoutFetchError } = useFetch(
-    { message: '' },
-    "/auth/logout",
-    "POST"
-  );
+  const {
+    triggerFetch,
+    data: logoutResponse,
+    error: logoutFetchError,
+  } = useFetch({ message: "" }, "/auth/logout", "POST");
 
   // Handle the logout process
   const handleLogout = async () => {
@@ -24,7 +25,7 @@ export default function NavigationBar() {
 
     // Trigger the fetch for the logout request
     triggerFetch();
-    
+
     if (logoutResponse) {
       setLoginStatus(false); // Update login status
       resetUser(); // Reset user data
@@ -81,13 +82,30 @@ export default function NavigationBar() {
               </Link>
             </li>
             <li>
-              <Link onClick={() => (!loginStatus && displayPopUp(true)) || toggleMenu()} to={(loginStatus && "/posts") || "/"} className="link text-base">
+              <Link
+                onClick={() => (!loginStatus && displayPopUp(true)) || toggleMenu()}
+                to={(loginStatus && "/posts") || "/"}
+                className="link text-base"
+              >
                 See posts
               </Link>
             </li>
             <li>
-              <Link onClick={() => (!loginStatus && displayPopUp(true)) || toggleMenu()} to={(loginStatus && "/ensembles") || "/"} className="link text-base">
+              <Link
+                onClick={() => (!loginStatus && displayPopUp(true)) || toggleMenu()}
+                to={(loginStatus && "/ensembles") || "/"}
+                className="link text-base"
+              >
                 Find ensemble
+              </Link>
+            </li>
+            <li>
+              <Link
+                onClick={() => (!loginStatus && displayPopUp(true)) || toggleMenu()}
+                to={(loginStatus && "/musicians") || "/"}
+                className="link text-base"
+              >
+                Find musicians
               </Link>
             </li>
             <li className="p-b">
@@ -138,14 +156,25 @@ export default function NavigationBar() {
             )}
             {isAuthenticated && (
               <li className="p-be-8">
-                <Button size="sm" iconPosition="top" buttonState="default" buttonVariant="secondary" buttonLabel="Logout" onClick={handleLogout} to="/" className="no-underline w-auto"></Button>
+                <Button
+                  size="sm"
+                  iconPosition="top"
+                  buttonState="default"
+                  buttonVariant="secondary"
+                  buttonLabel="Logout"
+                  onClick={handleLogout}
+                  to="/"
+                  className="no-underline w-auto"
+                ></Button>
               </li>
             )}
           </ul>
         </div>
       )}
 
-      {isMenuOpen && <div className="fixed inset-0 bg-black bg-opacity-50 z-10" onClick={toggleMenu}></div>}
+      {isMenuOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-10" onClick={toggleMenu}></div>
+      )}
       {logoutError && <TextBody className="text-red-500 text-sm mt-1">{logoutError}</TextBody>}
     </div>
   );
