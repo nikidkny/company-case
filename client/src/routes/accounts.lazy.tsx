@@ -6,6 +6,7 @@ import SignupForm from "../components/molecules/SignupForm";
 import { useFetch } from "../hooks/use-fetch";
 import { getUserIdFromCookie } from "../hooks/getCookies";
 import { User } from "../types/UserType";
+import CryptoJS from "crypto-js"
 
 export const Route = createLazyFileRoute("/accounts")({
   component: AccountsPage,
@@ -20,7 +21,6 @@ function AccountsPage() {
   const { setUser, setLoginStatus } = useStore();
   const { data: fetchedUser, triggerFetch: userFetchTrigger } = useFetch<User>({ _id: "" }, userId !== null ? `/users/${userId}` : null, "GET");
 
-  //TODO: hash password
   // State to hold validation error messages for the signup form
   const [validationErrors, setValidationErrors] = useState<string | string[]>([]);
   const [loginError, setLoginError] = useState<string | string[]>([]);
@@ -31,6 +31,11 @@ function AccountsPage() {
       navigate({ to: "/" });
     }
   }, [userId, navigate]);
+
+  // Function to hash the password using SHA256
+  const hashPassword = (password: string): string => {
+    return CryptoJS.SHA256(password).toString();
+  };
 
   // TODO:
   // - Maybe create a utils for validating forms with all the function. Wait to implement more valdiation.
@@ -114,6 +119,17 @@ function AccountsPage() {
     isAvailable: false,
   });
 
+  // Define the state for sending the data
+  const [singupDataToSend, setSignupDataToSend] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    birthdate: "",
+    isAvailable: false,
+  });
+
 
   // API hooks for signup
   const signupFetch = useFetch(
@@ -123,7 +139,7 @@ function AccountsPage() {
     {
       "Content-Type": "application/json",
     },
-    signupData
+    singupDataToSend
   );
 
   // Handle signup form submission
@@ -139,8 +155,7 @@ function AccountsPage() {
     };
 
     // Validate form data
-    const errors = validateForm(trimmedData); // Assuming validateForm returns an object like { field: errorMessage }
-
+    const errors = validateForm(trimmedData);
     // Convert errors object into an array of error messages
     const errorMessages = Object.values(errors);
 
@@ -151,10 +166,19 @@ function AccountsPage() {
 
     setValidationErrors([]); // Clear previous validation errors
 
-    // Update the signupData state with trimmed values
-    setSignupData(trimmedData);
+    // Hash the password before sending
+    const hashedPassword = hashPassword(trimmedData.password);
+    const hashedConfirmPassword = hashPassword(trimmedData.confirmPassword);
+
+    // Prepare data to send to the backend
+    const dataToSend = {
+      ...trimmedData,
+      password: hashedPassword,
+      confirmPassword: hashedConfirmPassword,
+    };
 
     // Trigger fetch with the updated state
+    setSignupDataToSend(dataToSend);
     signupFetch.triggerFetch();
   };
 
@@ -177,6 +201,15 @@ function AccountsPage() {
         birthdate: "",
         isAvailable: false,
       });
+      setSignupDataToSend({
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        birthdate: "",
+        isAvailable: false,
+      })
 
       navigate({ to: "/accounts", search: { intent: "login" } });
     }
@@ -189,6 +222,13 @@ function AccountsPage() {
     password: "",
   });
 
+    // Define the state for sending the data
+    const [loginDataToSend, setLoginDataToSend] = useState({
+      email: "",
+      password: "",
+    });
+  
+
   // API hooks for login
   const loginFetch = useFetch(
     null,
@@ -197,7 +237,7 @@ function AccountsPage() {
     {
       "Content-Type": "application/json",
     },
-    loginData
+    loginDataToSend
   );
 
   // Handle login form submission
@@ -210,9 +250,16 @@ function AccountsPage() {
       password: loginData.password.trim(),
     };
 
-    // Update the state with trimmed data (optional, if you need state to reflect trimmed values)
-    setLoginData(trimmedData);
+    const hashedPassword = hashPassword(trimmedData.password);
 
+    const dataToSend = {
+      ...trimmedData,
+      password: hashedPassword
+    }
+
+    // Update the state with trimmed data (optional, if you need state to reflect trimmed values)
+    setLoginDataToSend(dataToSend);
+    
     // Trigger login fetch with the trimmed data
     loginFetch.triggerFetch();
   };
@@ -279,11 +326,25 @@ function AccountsPage() {
       birthdate: "",
       isAvailable: false,
     });
+    setSignupDataToSend({
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      birthdate: "",
+      isAvailable: false,
+    })
 
     setLoginData({
       email: "",
       password: "",
     });
+    setLoginDataToSend({
+      email: "",
+      password: "",
+    });
+    
 
     setValidationErrors([]); // Clear any validation errors
     setLoginError([]);
