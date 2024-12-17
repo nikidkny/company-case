@@ -95,8 +95,8 @@ export default function AddInstrumentPage() {
   const getDescription = (level: number) => levelDescriptions[level];
 
   return (
-    <div className="add-instrument-page-wrapper flex flex-col gap-6 p-6">
-      <div className="back-button-wrapper flex flex-col items-start">
+    <div className="flex flex-col gap-6 p-6">
+      <div className="flex flex-col items-start">
         <Button
           onClick={handleBackButtonClick}
           buttonVariant="secondary"
@@ -105,7 +105,7 @@ export default function AddInstrumentPage() {
           buttonLabel="Back"
         />
       </div>
-      <div className="instrument-wrapper flex flex-col gap-6">
+      <div className="flex flex-col gap-6">
         <TextHeadline variant="h2" size="sm">
           Add Instrument
         </TextHeadline>

@@ -67,7 +67,7 @@ export default function UserDetails() {
         className="w-fit no-underline"
         buttonLabel="Back"
       ></Button>
-      <div className="profile-base-wrapper p-4 border-y-solid border-y-gray-400 border-y-1px">
+      <div className="p-4 border-y-solid border-y-gray-400 border-y-1px">
         <div className="flex flex-row gap-4 pb-4">
           {user?.image ? (
             <Image src={user?.image} alt="Profile Image" className="rounded-full h-24 w-24" />
@@ -102,19 +102,19 @@ export default function UserDetails() {
           className="no-underline w-full"
         />
       </div>
-      <div className="profile-description-wrapper flex flex-col p-4 border-y-solid border-y-gray-400 border-y-1px gap-6">
+      <div className="flex flex-col p-4 border-y-solid border-y-gray-400 border-y-1px gap-6">
         <TextHeadline variant="h3" size="sm">
           Description
         </TextHeadline>
         <TextBody size="lg">{user?.description}</TextBody>
       </div>
-      <div className="profile-ensembles-wrapper flex flex-col p-4 border-y-solid border-y-gray-400 border-y-1px gap-6">
+      <div className="flex flex-col p-4 border-y-solid border-y-gray-400 border-y-1px gap-6">
         <TextHeadline variant="h3" size="sm">
           My Ensembles
         </TextHeadline>
         {userEnsembles?.map((ensemble, index) => <EnsembleCard key={index} ensemble={ensemble} />)}
       </div>
-      <div className="profile-instruments-wrapper flex flex-col p-4 border-y-solid border-y-gray-400 border-y-1px gap-6">
+      <div className="flex flex-col p-4 border-y-solid border-y-gray-400 border-y-1px gap-6">
         <TextHeadline variant="h3" size="sm">
           My Instruments
         </TextHeadline>
@@ -123,7 +123,7 @@ export default function UserDetails() {
         ))}
       </div>
       {isModalOpen && (
-        <div className="fixed inset-0  flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="flex flex-col gap-6 items-center bg-white p-6 rounded-lg shadow-lg w-80">
             <Icon
               name={ICON_NAMES.contact_info}

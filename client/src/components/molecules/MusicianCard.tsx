@@ -23,12 +23,14 @@ export default function MusicianCard({ musician, instruments, className }: Props
   );
   // make first name start with capital letter others are lowercase and last name only first letter and a "."
   const fullName = `${musician.firstName?.charAt(0).toUpperCase()}${musician.firstName?.slice(1).toLowerCase()} ${musician.lastName?.charAt(0).toUpperCase()}.`;
+
+  // show only 2 instruments per musician
   const MAX_VISIBLE_INSTRUMENTS = 2;
   const visibleInstruments = instruments.slice(0, MAX_VISIBLE_INSTRUMENTS);
   const remainingInstrumentsCount = instruments.length - MAX_VISIBLE_INSTRUMENTS;
   return (
     <div className={classes}>
-      <div className="profile-wrapper flex flex-row justify-between items-center rounded-t-base bg-gray-200 border-b-1px border-b-solid border-b-gray-400 px-6 py-4.5">
+      <div className="flex flex-row justify-between items-center rounded-t-base bg-gray-200 border-b-1px border-b-solid border-b-gray-400 px-6 py-4.5">
         <div className="flex flex-row gap-4 items-center">
           {musician.image ? (
             <Image src={musician.image} alt="profile image" className="rounded-md w-12 h-12" />
