@@ -12,12 +12,12 @@ import { getUserIdFromCookie } from "../hooks/getCookies";
 import { useNavigate } from "@tanstack/react-router";
 
 export default function EditProfilePage() {
-  // TO DO: validation for name fields - like sign up
-  // TO DO: validation for email field - like sign up
-  // TO DO: validation for phone number - mabye that it is 8 characters like a danish number, idk what else could be
-  // TO DO: validation for zip code - maybe that it is 4 characters like a danish zip code
-  // TO DO: validation for description - maybe that it has a max character limit and no curse words or foul language
-  // TO DO: validation for city - maybe that it is a valid city name
+  // TODO: validation for name fields - like sign up
+  // TODO: validation for email field - like sign up
+  // TODO: validation for phone number - mabye that it is 8 characters like a danish number, idk what else could be
+  // TODO: validation for zip code - maybe that it is 4 characters like a danish zip code
+  // TODO: validation for description - maybe that it has a max character limit and no curse words or foul language
+  // TODO: validation for city - maybe that it is a valid city name
   const { user } = useStore();
   const { userId } = getUserIdFromCookie();
   const navigate = useNavigate();
@@ -71,7 +71,11 @@ export default function EditProfilePage() {
       alert("Changes saved successfully!");
       setHasChanges(false);
     } catch (error) {
-      alert(`Failed to save changes: ${error.message}`);
+      if (error instanceof Error) {
+        alert(`Failed to save changes: ${error.message}`);
+      } else {
+        alert('An unknown error occurred.');
+      }
     }
   };
 

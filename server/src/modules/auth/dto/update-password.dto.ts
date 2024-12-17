@@ -1,5 +1,5 @@
 import { IsString } from 'class-validator';
-// TO DO: add actual validation
+// TODO: add actual validation
 export class UpdatePasswordDto {
   @IsString()
   // @MinLength(6)

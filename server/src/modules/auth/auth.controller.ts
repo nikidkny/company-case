@@ -31,7 +31,7 @@ export class AuthController {
     @Body() body: { email: string, password: string },
     @Res() res: Response,
     @Req() req: Request,) {
-    await this.authService.handleLogin(body.email, body.password, req, res);
+    await this.authService.validateLoginFlow(body.email, body.password, req, res);
   }
 
   @UseGuards(JwtAuthGuard)

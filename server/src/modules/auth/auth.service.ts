@@ -78,7 +78,10 @@ export class AuthService {
     }
   }
 
-  async handleLogin(email: string, password: string, req: Request, res: Response) {
+  // Checks if the user is already logged in by validating the refresh token. 
+  // If valid, it verifies the user's credentials or clears cookies on failure. 
+  // If no valid token, it proceeds with normal login.
+  async validateLoginFlow(email: string, password: string, req: Request, res: Response) {
     const existingRefreshToken = req.cookies?.['refreshToken'];
 
     // Check if the user is already logged in
@@ -128,6 +131,7 @@ export class AuthService {
     }
   }
 
+  // Handles user login by validating credentials, generating JWT tokens, and setting them as cookies in the response.
   async login(email: string, password: string, res: Response) {
     try {
       // Validate user credentials
@@ -176,6 +180,7 @@ export class AuthService {
     }
   }
 
+  // Validates the user's email and password, checking if the user exists and if the password matches the stored hash. Throws errors for invalid credentials.
   async validateUser(email: string, password: string) {
     if (!email && !password) {
       throw new BadRequestException('Credentials must not be empty');

@@ -9,8 +9,8 @@ import { useFetch } from "../hooks/use-fetch";
 import { useNavigate } from "@tanstack/react-router";
 
 export default function ProfileSettingsPage() {
-  // TO DO: validation for password fields - like login/signup
-  // TO DO: hash password before sending to server
+  // TODO: validation for password fields - like login/signup
+  // TODO: hash password before sending to server
   const { user } = useStore();
   const { userId } = getUserIdFromCookie();
   const navigate = useNavigate();
@@ -97,7 +97,7 @@ export default function ProfileSettingsPage() {
       setShowPasswordFields(false);
     }
     // Show alert if there is an error updating the password
-    // TO DO: add more specific error messages, and change error type to {message: string}
+    // TODO: add more specific error messages, and change error type to {message: string}
     if (updateError) {
       if (updateError.includes("Current password is incorrect")) {
         alert("The current password you entered is incorrect. Please try again.");
