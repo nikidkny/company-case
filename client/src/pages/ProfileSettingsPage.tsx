@@ -71,10 +71,11 @@ export default function ProfileSettingsPage() {
     }
   }, [newPassword]);
 
+  // Update Password
   const {
     data: passwordUpdateData,
     error: passwordUpdateError,
-    triggerFetch: triggerUpdate,
+    triggerFetch: triggerPasswordUpdate,
   } = useFetch(
     null,
     `/auth/password`,
@@ -84,6 +85,7 @@ export default function ProfileSettingsPage() {
     },
     userData
   );
+
   const { triggerFetch: triggerNewsletter } = useFetch(
     null,
     `/users/${userId}`,
@@ -134,20 +136,24 @@ export default function ProfileSettingsPage() {
     }
 
     if (!(!currentPassword?.trim() && !newPassword.trim() && !confirmNewPassword.trim())) {
+
+      //Check if new and current password are different
       if (newPassword.trim() === currentPassword.trim()) {
         setFrontendProfileValidationErrors(["New password cannot be the same as current password"])
         return;
       }
+
+      //Check if new and confrim new password are the same
       if (newPassword.trim() !== confirmNewPassword.trim()) {
         setFrontendProfileValidationErrors(["Password do not match"])
         return;
       }
       // Trigger password update only if password fields are not empty
-      triggerUpdate();
+      triggerPasswordUpdate();
       setHasChanges(false);
     } else if (newsletter !== user.isNewsletter) {
+      // current TODO: Call external function ??
       triggerNewsletter();
-      alert("Newsletter settings updated successfully!");
       setHasChanges(false);
     } else {
       alert("No changes to save!");
@@ -157,17 +163,8 @@ export default function ProfileSettingsPage() {
 
   useEffect(() => {
     // Show alert if there is an error updating the password
-    //current TODO: error like login/signup in displaying error with isValidityMsg
-    if (passwordUpdateError) {
-      setBackendEProfileValidationErrors(passwordUpdateData!)
-      /*
-       
-      if (passwordUpdateError.includes("Current password is incorrect")) {
-        alert("The current password you entered is incorrect. Please try again.");
-      } else {
-        alert("Error updating password. Please try again.");
-      }
-       */
+    if (passwordUpdateError) {      
+      setBackendEProfileValidationErrors(passwordUpdateError!)
     }
     // Clear password fields and show alert after update is successful
     if (passwordUpdateData) {

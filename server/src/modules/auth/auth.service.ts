@@ -218,14 +218,16 @@ export class AuthService {
     res.clearCookie('refreshToken', cookieOptions);
   }
 
-  async updatePassword(id: string, updatePasswordDto: UpdatePasswordDto) {
+  async updatePassword(id: string, updatePasswordDto: UpdatePasswordDto, res) {
     const { currentPassword, newPassword } = updatePasswordDto;
 
     // Retrieve the user from the database
     const user = await this.userModel.findById(id);
     if (!user) {
       console.error('No user found with ID:', id);
-      throw new NotFoundException('User not found');
+      return res.status(HttpStatus.NOT_FOUND).json({
+        message: 'User not found',
+      });
     }
     
     // Compare the provided current password with the stored password
@@ -234,7 +236,9 @@ export class AuthService {
       user.password,
     );
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Current password is incorrect');
+      return res.status(HttpStatus.BAD_REQUEST).json({
+        message: 'Invalid current password',
+      });
     }
 
     // Hash the new password

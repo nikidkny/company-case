@@ -62,10 +62,11 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async updatePassword(
     @Body() updatePasswordDto: UpdatePasswordDto,
-    @Req() req: Request, 
+    @Req() req: Request,
+    @Res() res: Response 
   ) {
     const userId = req.user['userId'];
-    await this.authService.updatePassword(userId, updatePasswordDto);
+    await this.authService.updatePassword(userId, updatePasswordDto, res);
     return { message: 'Password updated successfully' };
   }
 
