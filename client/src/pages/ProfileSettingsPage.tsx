@@ -25,10 +25,12 @@ export default function ProfileSettingsPage() {
   // State for delete password popup
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteUserPassword, setDeleteUserPassword] = useState("");
-  // Define the state for sending the data
   const [deleteUserPasswordToSend, setDeleteUserPasswordToSend] = useState({
     password: "",
   });
+  // State for errors
+  const [frontendProfileValidationErrors, setFrontendProfileValidationErrors] = useState<string | string[]>([]);
+  
 
   const userData = {
     currentPassword,
@@ -130,26 +132,30 @@ export default function ProfileSettingsPage() {
     event.preventDefault();
 
     if (!deleteUserPassword.trim()) {
-      //current TODO: error like login/signup in displaying error with isValidityMsg
-      alert("Please enter your password to confirm.");
       return;
     }
 
     const confirmed = window.confirm("Are you sure you want to delete your profile?");
     // Add debug logging to confirm flow
     if (confirmed) {
-      deleteFetch.triggerFetch();
+      setFrontendProfileValidationErrors([])
+      if (deleteUserPassword && deleteUserPassword.length < 8) {
+        setFrontendProfileValidationErrors(["Password must be at least 8 characters"]);
+        return;
+      } else {
+        setFrontendProfileValidationErrors([]);
+        deleteFetch.triggerFetch();
+      }
     }
-    //TODO:else do something to fix the warnin i press the cancel button
   };
 
   const handleDeleteCancel = () => {
-    setIsModalOpen(false); // Close modal if user cancels
-    setDeleteUserPassword(""); // Clear the password input field
-    setDeleteUserPasswordToSend({ password: "" }); // Clear the password to send
+    setDeleteUserPasswordToSend({ password: "" });
+    setDeleteUserPassword("");
+    setFrontendProfileValidationErrors([]);
+    setIsModalOpen(false);
   };
 
-  //TODO: more comments
   useEffect(() => {
     // Automatically hash and set deleteUserPasswordToSend whenever deleteUserPassword changes
     if (deleteUserPassword.trim()) {
@@ -161,20 +167,32 @@ export default function ProfileSettingsPage() {
 
   // handles delte user api response
   useEffect(() => {
-    if (deleteFetch.error) {
-      // current TODO: error like login/signup in displaying error with isValidityMsg
-      console.log("error:", deleteFetch.error);
-    }
-  
     if (deleteFetch.data) {
+      setFrontendProfileValidationErrors([])
       setDeleteUserPassword("")
       setDeleteUserPasswordToSend({ password: "" })
       setIsModalOpen(false); // Close modal after profile deletion
       alert("Profile deleted successfully!");
       navigate({ to: "/" });
-
     }
-  }, [deleteFetch.data, deleteFetch.error])
+  }, [deleteFetch.data, deleteFetch.error, frontendProfileValidationErrors])
+
+  // Reset form data
+  useEffect(() => {
+    setConfirmNewPassword("");
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmNewPassword("");
+    setFrontendProfileValidationErrors([]);
+    setDeleteUserPassword("");
+  }, [location]);
+
+  // Combine frontend and backend errors
+  const combinedErrors = [
+    ...frontendProfileValidationErrors,
+    ...(deleteFetch.error ? deleteFetch.error : []),
+    // ...(loginError.length ? loginError : []),  // current TODO: implement same for changing password
+  ];
 
   return (
     <div className="settings-page-wrapper flex flex-col gap-6 p-6 ">
@@ -271,7 +289,7 @@ export default function ProfileSettingsPage() {
           {/* Delete Profile Modal */}
           {isModalOpen && (
             <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-50">
-              <div className="flex flex-col gap-6 items-center bg-white p-6 rounded-lg shadow-lg w-80">
+              <div className="flex flex-col gap-6 items-center bg-white p-6 rounded-lg shadow-lg w-120">
                 <TextHeadline variant="h3" size="sm">
                   Confirm Deletion
                 </TextHeadline>
@@ -283,8 +301,12 @@ export default function ProfileSettingsPage() {
                     id="deletePassword"
                     name="deletePassword"
                     placeholder="Enter your password"
+                    className="w-80"
                     value={deleteUserPassword}
                     onChange={(value) => setDeleteUserPassword(value)}
+                    isValid={!combinedErrors}
+                    validityMsg={combinedErrors[0]}
+                    required={true}
                   />
                   <div className="modal-actions flex gap-4 pt-2">
                     <Button
@@ -293,11 +315,13 @@ export default function ProfileSettingsPage() {
                       iconPosition="none"
                       type="submit"
                       buttonLabel="Confirm"
+
                     />
                     <Button
                       buttonVariant="secondary"
                       size="lg"
                       iconPosition="none"
+                      type="button"
                       onClick={handleDeleteCancel}
                       buttonLabel="Cancel"
                     />
