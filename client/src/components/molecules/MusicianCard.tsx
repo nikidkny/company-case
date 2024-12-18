@@ -24,9 +24,12 @@ export default function MusicianCard({ musician, instruments, className }: Props
   // make first name start with capital letter others are lowercase and last name only first letter and a "."
   const fullName = `${musician.firstName?.charAt(0).toUpperCase()}${musician.firstName?.slice(1).toLowerCase()} ${musician.lastName?.charAt(0).toUpperCase()}.`;
 
+  // Sort instruments by levelOfExperience in descending order
+  const sortedInstruments = instruments.sort((a, b) => b.levelOfExperience - a.levelOfExperience);
+
   // show only 2 instruments per musician
   const MAX_VISIBLE_INSTRUMENTS = 2;
-  const visibleInstruments = instruments.slice(0, MAX_VISIBLE_INSTRUMENTS);
+  const visibleInstruments = sortedInstruments.slice(0, MAX_VISIBLE_INSTRUMENTS);
   const remainingInstrumentsCount = instruments.length - MAX_VISIBLE_INSTRUMENTS;
   return (
     <div className={classes}>

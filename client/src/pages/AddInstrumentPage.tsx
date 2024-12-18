@@ -36,7 +36,7 @@ export default function AddInstrumentPage() {
   const instrumentData: UserInstrumentType = {
     userId,
     instrumentId: selectedInstrument?._id || "",
-    levelOfExperience: level.toString(),
+    levelOfExperience: level,
     genres: selectedGenres,
     name: selectedInstrument?.name || "",
   };

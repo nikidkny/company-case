@@ -16,7 +16,7 @@ export class User_Instrument {
   @Prop({ required: true })
   name: string;
   @Prop({ required: true })
-  levelOfExperience: string;
+  levelOfExperience: number;
   @Prop({ required: true })
   genres: string[];
 }

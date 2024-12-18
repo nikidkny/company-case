@@ -31,7 +31,7 @@ export default function InstrumentCard({ instrument, variant = "default", classN
         </TextHeadline>
         <div className="flex flex-row items-center gap-2">
           <TextBody size="sm">level</TextBody>
-          <Tag number={instrument.levelOfExperience ?? ""} />
+          <Tag number={instrument.levelOfExperience} />
         </div>
       </div>
       <div className="flex flex-row gap-2 flex-wrap">

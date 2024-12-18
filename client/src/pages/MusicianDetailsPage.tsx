@@ -118,9 +118,11 @@ export default function UserDetails() {
         <TextHeadline variant="h3" size="sm">
           My Instruments
         </TextHeadline>
-        {userInstruments?.map((instrument) => (
-          <InstrumentCard key={instrument.instrumentId} instrument={instrument} />
-        ))}
+        {userInstruments
+          ?.sort((a, b) => b.levelOfExperience - a.levelOfExperience)
+          .map((instrument) => (
+            <InstrumentCard key={instrument.instrumentId} instrument={instrument} />
+          ))}
       </div>
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
