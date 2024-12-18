@@ -115,6 +115,18 @@ export default function ProfileSettingsPage() {
       errors.push("Confirm password cannot be empty");
     }
 
+    // Ensure that all passwords are at least 8 characters long
+    if (currentPassword.trim() && currentPassword.length < 8) {
+      errors.push("Current password must be at least 8 characters");
+    }
+
+    if (newPassword.trim() && newPassword.length < 8) {
+      errors.push("New password must be at least 8 characters");
+    }
+
+    if (confirmNewPassword.trim() && confirmNewPassword.length < 8) {
+      errors.push("Confirm password must be at least 8 characters");
+    }
 
     // If there are any errors, set them
     if (errors.length > 0) {

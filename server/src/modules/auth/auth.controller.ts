@@ -63,10 +63,9 @@ export class AuthController {
     @Body() updatePasswordDto: UpdatePasswordDto,
     @Req() req: Request, 
   ) {
+  
     const userId = req.user['userId']; // JWT payload contains the user ID
-    console.log('REQ:', req.user);
     await this.authService.updatePassword(userId, updatePasswordDto);
-    console.log('Extracted user ID:', userId);
     return { message: 'Password updated successfully' };
   }
 

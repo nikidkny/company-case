@@ -22,7 +22,8 @@ function AccountsPage() {
   const { data: fetchedUser, triggerFetch: userFetchTrigger } = useFetch<User>({ _id: "" }, userId !== null ? `/users/${userId}` : null, "GET");
 
   // State to hold validation error messages for the signup form
-  const [validationErrors, setValidationErrors] = useState<string | string[]>([]);
+  const [frontendAccountValidationErrors, setFrontendAccountValidationErrors] = useState<string | string[]>([]);
+  // State to hold validation error messages for the login form
   const [loginError, setLoginError] = useState<string | string[]>([]);
 
   // Redirect to home if user is logged in
@@ -155,11 +156,11 @@ function AccountsPage() {
     const errorMessages = Object.values(errors);
 
     if (errorMessages.length > 0) {
-      setValidationErrors(errorMessages); // Set validation errors as an array
+      setFrontendAccountValidationErrors(errorMessages); // Set validation errors as an array
       return;
     }
 
-    setValidationErrors([]); // Clear previous validation errors
+    setFrontendAccountValidationErrors([]); // Clear previous validation errors
 
     // Hash the password before sending
     const hashedPassword = hashPassword(trimmedData.password);
@@ -305,7 +306,7 @@ function AccountsPage() {
 
   // Combine frontend and backend errors
   const combinedErrors = [
-    ...validationErrors,  // Frontend validation errors
+    ...frontendAccountValidationErrors,  // Frontend validation errors
     ...(intent === "register" && signupFetch.error ? signupFetch.error : []),  // Backend errors for register
     ...(intent === "login" && loginError.length ? loginError : []),  // Backend errors for login
   ];
@@ -340,8 +341,8 @@ function AccountsPage() {
       password: "",
     });
     
-
-    setValidationErrors([]); // Clear any validation errors
+    // Clear any validation errors
+    setFrontendAccountValidationErrors([]);
     setLoginError([]);
   }, [location, intent]);
 
