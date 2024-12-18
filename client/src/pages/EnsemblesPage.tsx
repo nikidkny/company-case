@@ -1,7 +1,7 @@
 import TextHeadline from "../components/atoms/TextHeadline";
 import { useFetch } from "../hooks/use-fetch";
 import { useStore } from "../store/useStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import TextBody from "../components/atoms/TextBody";
 import { Dropdown } from "../components/molecules/Dropdown";
 import { InstrumentType } from "../types/InstrumentType";
@@ -23,6 +23,7 @@ export default function EnsemblesPage() {
   >([], "/ensemblePosts", "GET");
   // const ensemblesData = useFetch<EnsembleType[]>([], "/ensembles", "GET");
   const instrumentsFetch = useFetch<InstrumentType[]>([], "/instruments", "GET");
+  const [filteredPosts, setFilteredPosts] = useState<PostWithEnsembleType[]>([]);
   //resets the filterOption when coming back to the page
   useEffect(() => {
     setFilterOption(null);
@@ -69,6 +70,18 @@ export default function EnsemblesPage() {
   console.log("posts", posts);
   console.log("PostWithEnsembleData", PostWithEnsembleData);
 
+  // Filter posts based on selected instrument
+  useEffect(() => {
+    if (filterOption) {
+      const filtered = PostWithEnsembleData.filter((item) =>
+        item.post.instrument.includes(filterOption)
+      );
+      setFilteredPosts(filtered);
+    } else {
+      setFilteredPosts(PostWithEnsembleData);
+    }
+  }, [filterOption, PostWithEnsembleData]);
+
   return (
     <div>
       <div className="p-6 flex flex-col justify-around gap-4">
@@ -107,8 +120,8 @@ export default function EnsemblesPage() {
         </div>
       </div>
       <div className="p-6 flex flex-col justify-around gap-4 bg-gray-300">
-        {PostWithEnsembleData.length > 0 ? (
-          PostWithEnsembleData.map((item, index) => (
+        {filteredPosts.length > 0 ? (
+          filteredPosts.map((item, index) => (
             <PostCard key={index} post={item.post} ensemble={item.ensemble} />
           ))
         ) : (
