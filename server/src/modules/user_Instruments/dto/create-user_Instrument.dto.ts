@@ -2,6 +2,6 @@ export class CreateUser_InstrumentDto {
   userId: string;
   name: string;
   instrumentId: string;
-  levelOfExperience: string;
+  levelOfExperience: number;
   genres: string[];
 }

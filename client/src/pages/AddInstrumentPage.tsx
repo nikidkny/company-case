@@ -35,13 +35,13 @@ export default function AddInstrumentPage() {
 
   const instrumentData: UserInstrumentType = {
     userId,
-    instrumentId: selectedInstrument?._id,
-    levelOfExperience: level.toString(),
+    instrumentId: selectedInstrument?._id || "",
+    levelOfExperience: level,
     genres: selectedGenres,
     name: selectedInstrument?.name || "",
   };
 
-  const { triggerFetch: userFetchTrigger } = useFetch<Partial<User> | null>(
+  const { triggerFetch: fetchUserInstrumentsTrigger } = useFetch<Partial<User> | null>(
     null,
     "/userInstruments",
     "POST",
@@ -69,7 +69,7 @@ export default function AddInstrumentPage() {
   const handleDecrease = () => setLevel((prev) => Math.max(prev - 1, 1));
 
   const handleAddInstrument = () => {
-    userFetchTrigger();
+    fetchUserInstrumentsTrigger();
     alert(`Instrument added to your profile`);
     navigate({ to: `/profile/${userId}` });
   };
@@ -95,8 +95,8 @@ export default function AddInstrumentPage() {
   const getDescription = (level: number) => levelDescriptions[level];
 
   return (
-    <div className="add-instrument-page-wrapper flex flex-col gap-6 p-6">
-      <div className="back-button-wrapper flex flex-col items-start">
+    <div className="flex flex-col gap-6 p-6">
+      <div className="flex flex-col items-start">
         <Button
           onClick={handleBackButtonClick}
           buttonVariant="secondary"
@@ -105,7 +105,7 @@ export default function AddInstrumentPage() {
           buttonLabel="Back"
         />
       </div>
-      <div className="instrument-wrapper flex flex-col gap-6">
+      <div className="flex flex-col gap-6">
         <TextHeadline variant="h2" size="sm">
           Add Instrument
         </TextHeadline>

@@ -20,10 +20,12 @@ const AssetsLazyImport = createFileRoute('/assets')()
 const AccountsLazyImport = createFileRoute('/accounts')()
 const IndexLazyImport = createFileRoute('/')()
 const PostsIndexLazyImport = createFileRoute('/posts/')()
+const MusiciansIndexLazyImport = createFileRoute('/musicians/')()
 const EnsemblesIndexLazyImport = createFileRoute('/ensembles/')()
 const AccountsIndexLazyImport = createFileRoute('/accounts/')()
 const PostsCreateLazyImport = createFileRoute('/posts/create')()
 const PostsPostIdLazyImport = createFileRoute('/posts/$postId')()
+const MusiciansUserIdLazyImport = createFileRoute('/musicians/$userId')()
 const EnsemblesCreateLazyImport = createFileRoute('/ensembles/create')()
 const EnsemblesEnsemblesIdLazyImport = createFileRoute(
   '/ensembles/$ensemblesId',
@@ -67,6 +69,14 @@ const PostsIndexLazyRoute = PostsIndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/posts/index.lazy').then((d) => d.Route))
 
+const MusiciansIndexLazyRoute = MusiciansIndexLazyImport.update({
+  id: '/musicians/',
+  path: '/musicians/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/musicians/index.lazy').then((d) => d.Route),
+)
+
 const EnsemblesIndexLazyRoute = EnsemblesIndexLazyImport.update({
   id: '/ensembles/',
   path: '/ensembles/',
@@ -94,6 +104,14 @@ const PostsPostIdLazyRoute = PostsPostIdLazyImport.update({
   path: '/posts/$postId',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/posts/$postId.lazy').then((d) => d.Route))
+
+const MusiciansUserIdLazyRoute = MusiciansUserIdLazyImport.update({
+  id: '/musicians/$userId',
+  path: '/musicians/$userId',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/musicians/$userId.lazy').then((d) => d.Route),
+)
 
 const EnsemblesCreateLazyRoute = EnsemblesCreateLazyImport.update({
   id: '/ensembles/create',
@@ -186,6 +204,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EnsemblesCreateLazyImport
       parentRoute: typeof rootRoute
     }
+    '/musicians/$userId': {
+      id: '/musicians/$userId'
+      path: '/musicians/$userId'
+      fullPath: '/musicians/$userId'
+      preLoaderRoute: typeof MusiciansUserIdLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/posts/$postId': {
       id: '/posts/$postId'
       path: '/posts/$postId'
@@ -212,6 +237,13 @@ declare module '@tanstack/react-router' {
       path: '/ensembles'
       fullPath: '/ensembles'
       preLoaderRoute: typeof EnsemblesIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/musicians/': {
+      id: '/musicians/'
+      path: '/musicians'
+      fullPath: '/musicians'
+      preLoaderRoute: typeof MusiciansIndexLazyImport
       parentRoute: typeof rootRoute
     }
     '/posts/': {
@@ -272,10 +304,12 @@ export interface FileRoutesByFullPath {
   '/assets': typeof AssetsLazyRoute
   '/ensembles/$ensemblesId': typeof EnsemblesEnsemblesIdLazyRoute
   '/ensembles/create': typeof EnsemblesCreateLazyRoute
+  '/musicians/$userId': typeof MusiciansUserIdLazyRoute
   '/posts/$postId': typeof PostsPostIdLazyRoute
   '/posts/create': typeof PostsCreateLazyRoute
   '/accounts/': typeof AccountsIndexLazyRoute
   '/ensembles': typeof EnsemblesIndexLazyRoute
+  '/musicians': typeof MusiciansIndexLazyRoute
   '/posts': typeof PostsIndexLazyRoute
   '/profile/$profileId/edit': typeof ProfileProfileIdEditLazyRoute
   '/profile/$profileId/settings': typeof ProfileProfileIdSettingsLazyRoute
@@ -288,10 +322,12 @@ export interface FileRoutesByTo {
   '/assets': typeof AssetsLazyRoute
   '/ensembles/$ensemblesId': typeof EnsemblesEnsemblesIdLazyRoute
   '/ensembles/create': typeof EnsemblesCreateLazyRoute
+  '/musicians/$userId': typeof MusiciansUserIdLazyRoute
   '/posts/$postId': typeof PostsPostIdLazyRoute
   '/posts/create': typeof PostsCreateLazyRoute
   '/accounts': typeof AccountsIndexLazyRoute
   '/ensembles': typeof EnsemblesIndexLazyRoute
+  '/musicians': typeof MusiciansIndexLazyRoute
   '/posts': typeof PostsIndexLazyRoute
   '/profile/$profileId/edit': typeof ProfileProfileIdEditLazyRoute
   '/profile/$profileId/settings': typeof ProfileProfileIdSettingsLazyRoute
@@ -306,10 +342,12 @@ export interface FileRoutesById {
   '/assets': typeof AssetsLazyRoute
   '/ensembles/$ensemblesId': typeof EnsemblesEnsemblesIdLazyRoute
   '/ensembles/create': typeof EnsemblesCreateLazyRoute
+  '/musicians/$userId': typeof MusiciansUserIdLazyRoute
   '/posts/$postId': typeof PostsPostIdLazyRoute
   '/posts/create': typeof PostsCreateLazyRoute
   '/accounts/': typeof AccountsIndexLazyRoute
   '/ensembles/': typeof EnsemblesIndexLazyRoute
+  '/musicians/': typeof MusiciansIndexLazyRoute
   '/posts/': typeof PostsIndexLazyRoute
   '/profile/$profileId/edit': typeof ProfileProfileIdEditLazyRoute
   '/profile/$profileId/settings': typeof ProfileProfileIdSettingsLazyRoute
@@ -325,10 +363,12 @@ export interface FileRouteTypes {
     | '/assets'
     | '/ensembles/$ensemblesId'
     | '/ensembles/create'
+    | '/musicians/$userId'
     | '/posts/$postId'
     | '/posts/create'
     | '/accounts/'
     | '/ensembles'
+    | '/musicians'
     | '/posts'
     | '/profile/$profileId/edit'
     | '/profile/$profileId/settings'
@@ -340,10 +380,12 @@ export interface FileRouteTypes {
     | '/assets'
     | '/ensembles/$ensemblesId'
     | '/ensembles/create'
+    | '/musicians/$userId'
     | '/posts/$postId'
     | '/posts/create'
     | '/accounts'
     | '/ensembles'
+    | '/musicians'
     | '/posts'
     | '/profile/$profileId/edit'
     | '/profile/$profileId/settings'
@@ -356,10 +398,12 @@ export interface FileRouteTypes {
     | '/assets'
     | '/ensembles/$ensemblesId'
     | '/ensembles/create'
+    | '/musicians/$userId'
     | '/posts/$postId'
     | '/posts/create'
     | '/accounts/'
     | '/ensembles/'
+    | '/musicians/'
     | '/posts/'
     | '/profile/$profileId/edit'
     | '/profile/$profileId/settings'
@@ -374,9 +418,11 @@ export interface RootRouteChildren {
   AssetsLazyRoute: typeof AssetsLazyRoute
   EnsemblesEnsemblesIdLazyRoute: typeof EnsemblesEnsemblesIdLazyRoute
   EnsemblesCreateLazyRoute: typeof EnsemblesCreateLazyRoute
+  MusiciansUserIdLazyRoute: typeof MusiciansUserIdLazyRoute
   PostsPostIdLazyRoute: typeof PostsPostIdLazyRoute
   PostsCreateLazyRoute: typeof PostsCreateLazyRoute
   EnsemblesIndexLazyRoute: typeof EnsemblesIndexLazyRoute
+  MusiciansIndexLazyRoute: typeof MusiciansIndexLazyRoute
   PostsIndexLazyRoute: typeof PostsIndexLazyRoute
   ProfileProfileIdEditLazyRoute: typeof ProfileProfileIdEditLazyRoute
   ProfileProfileIdSettingsLazyRoute: typeof ProfileProfileIdSettingsLazyRoute
@@ -390,9 +436,11 @@ const rootRouteChildren: RootRouteChildren = {
   AssetsLazyRoute: AssetsLazyRoute,
   EnsemblesEnsemblesIdLazyRoute: EnsemblesEnsemblesIdLazyRoute,
   EnsemblesCreateLazyRoute: EnsemblesCreateLazyRoute,
+  MusiciansUserIdLazyRoute: MusiciansUserIdLazyRoute,
   PostsPostIdLazyRoute: PostsPostIdLazyRoute,
   PostsCreateLazyRoute: PostsCreateLazyRoute,
   EnsemblesIndexLazyRoute: EnsemblesIndexLazyRoute,
+  MusiciansIndexLazyRoute: MusiciansIndexLazyRoute,
   PostsIndexLazyRoute: PostsIndexLazyRoute,
   ProfileProfileIdEditLazyRoute: ProfileProfileIdEditLazyRoute,
   ProfileProfileIdSettingsLazyRoute: ProfileProfileIdSettingsLazyRoute,
@@ -416,9 +464,11 @@ export const routeTree = rootRoute
         "/assets",
         "/ensembles/$ensemblesId",
         "/ensembles/create",
+        "/musicians/$userId",
         "/posts/$postId",
         "/posts/create",
         "/ensembles/",
+        "/musicians/",
         "/posts/",
         "/profile/$profileId/edit",
         "/profile/$profileId/settings",
@@ -444,6 +494,9 @@ export const routeTree = rootRoute
     "/ensembles/create": {
       "filePath": "ensembles/create.lazy.tsx"
     },
+    "/musicians/$userId": {
+      "filePath": "musicians/$userId.lazy.tsx"
+    },
     "/posts/$postId": {
       "filePath": "posts/$postId.lazy.tsx"
     },
@@ -456,6 +509,9 @@ export const routeTree = rootRoute
     },
     "/ensembles/": {
       "filePath": "ensembles/index.lazy.tsx"
+    },
+    "/musicians/": {
+      "filePath": "musicians/index.lazy.tsx"
     },
     "/posts/": {
       "filePath": "posts/index.lazy.tsx"
