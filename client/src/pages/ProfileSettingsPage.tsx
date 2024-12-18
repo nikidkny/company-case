@@ -7,7 +7,8 @@ import TextHeadline from "../components/atoms/TextHeadline";
 import TextInput from "../components/atoms/TextInput";
 import { useFetch } from "../hooks/use-fetch";
 import { useNavigate } from "@tanstack/react-router";
-import { hashPassword } from "../utilities/auth";
+import { getFieldErrorMessage, hashPassword } from "../utilities/auth";
+import TextBody from "../components/atoms/TextBody";
 
 export default function ProfileSettingsPage() {
   // TODO: validation for password fields - like login/signup
@@ -30,7 +31,8 @@ export default function ProfileSettingsPage() {
   });
   // State for errors
   const [frontendProfileValidationErrors, setFrontendProfileValidationErrors] = useState<string | string[]>([]);
-  
+  const [backendProfileValidationErrors, setBackendEProfileValidationErrors] = useState<string | string[]>([]);
+
 
   const userData = {
     currentPassword,
@@ -88,6 +90,7 @@ export default function ProfileSettingsPage() {
       alert("No changes to save!");
     }
   };
+
   useEffect(() => {
     // Clear password fields and show alert after update is successful
     if (updateData) {
@@ -118,46 +121,48 @@ export default function ProfileSettingsPage() {
     }
   };
 
-  // *Delete Profile*
+  // *** Delete Profile ***
   const deleteFetch = useFetch(null, `/auth/${userId}`, "DELETE", {
     "Content-Type": "application/json",
   }, deleteUserPasswordToSend);
 
-
+  // Opens the modal
   const handleDeleteProfile = () => {
     setIsModalOpen(true);
   };
 
+  //Check if password is long enough, and triggers the deleteFetch
   const handleDeleteSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
+    resetErrors();
+
     if (!deleteUserPassword.trim()) {
+      setFrontendProfileValidationErrors(["Password cannot be empty"]);
+      return;
+    }
+
+    if (deleteUserPassword.length < 8) {
+      setFrontendProfileValidationErrors(["Password must be at least 8 characters"]);
       return;
     }
 
     const confirmed = window.confirm("Are you sure you want to delete your profile?");
-    // Add debug logging to confirm flow
     if (confirmed) {
-      setFrontendProfileValidationErrors([])
-      if (deleteUserPassword && deleteUserPassword.length < 8) {
-        setFrontendProfileValidationErrors(["Password must be at least 8 characters"]);
-        return;
-      } else {
-        setFrontendProfileValidationErrors([]);
-        deleteFetch.triggerFetch();
-      }
+      deleteFetch.triggerFetch();
     }
   };
 
+  //Handles the cancel button
   const handleDeleteCancel = () => {
     setDeleteUserPasswordToSend({ password: "" });
     setDeleteUserPassword("");
-    setFrontendProfileValidationErrors([]);
+    resetErrors();
     setIsModalOpen(false);
   };
 
+  // Automatically hash and set deleteUserPasswordToSend whenever deleteUserPassword changes
   useEffect(() => {
-    // Automatically hash and set deleteUserPasswordToSend whenever deleteUserPassword changes
     if (deleteUserPassword.trim()) {
       setDeleteUserPasswordToSend({ password: hashPassword(deleteUserPassword.trim()) });
     } else {
@@ -167,15 +172,17 @@ export default function ProfileSettingsPage() {
 
   // handles delte user api response
   useEffect(() => {
-    if (deleteFetch.data) {
-      setFrontendProfileValidationErrors([])
+    if (deleteFetch.error) {
+      setBackendEProfileValidationErrors(deleteFetch.error);
+    } else if (deleteFetch.data) {
+      resetErrors();
       setDeleteUserPassword("")
       setDeleteUserPasswordToSend({ password: "" })
       setIsModalOpen(false); // Close modal after profile deletion
       alert("Profile deleted successfully!");
       navigate({ to: "/" });
     }
-  }, [deleteFetch.data, deleteFetch.error, frontendProfileValidationErrors])
+  }, [deleteFetch.data, deleteFetch.error])
 
   // Reset form data
   useEffect(() => {
@@ -183,16 +190,29 @@ export default function ProfileSettingsPage() {
     setCurrentPassword("");
     setNewPassword("");
     setConfirmNewPassword("");
-    setFrontendProfileValidationErrors([]);
     setDeleteUserPassword("");
+    resetErrors();
   }, [location]);
+
+
+  // Reset errors whenever the modal opens or closes
+  useEffect(() => {
+    if (!isModalOpen) {
+      resetErrors();
+    }
+  }, [isModalOpen]);
 
   // Combine frontend and backend errors
   const combinedErrors = [
     ...frontendProfileValidationErrors,
-    ...(deleteFetch.error ? deleteFetch.error : []),
+    ...backendProfileValidationErrors,
     // ...(loginError.length ? loginError : []),  // current TODO: implement same for changing password
   ];
+
+  const resetErrors = () => {
+    setFrontendProfileValidationErrors([]);
+    setBackendEProfileValidationErrors([])
+  }
 
   return (
     <div className="settings-page-wrapper flex flex-col gap-6 p-6 ">
@@ -304,10 +324,13 @@ export default function ProfileSettingsPage() {
                     className="w-80"
                     value={deleteUserPassword}
                     onChange={(value) => setDeleteUserPassword(value)}
-                    isValid={!combinedErrors}
+                    isValid={!(combinedErrors.length > 0)}
                     validityMsg={combinedErrors[0]}
                     required={true}
                   />
+                  {combinedErrors && (
+                    <TextBody className="text-red-500 text-sm mt-1" >{getFieldErrorMessage(combinedErrors, 'User not found')}</TextBody>
+                  )}
                   <div className="modal-actions flex gap-4 pt-2">
                     <Button
                       buttonVariant="primary"
