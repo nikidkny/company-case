@@ -15,7 +15,7 @@ export interface CreatePostState {
   experienceRequired: number;
   postGenres: string[];
   posts: PostType[];
-  setPosts: (posts: PostType | PostType[]) => void;
+  setPosts: (posts: PostType) => void;
 
   // Actions
   setSelectedEnsembleOption: (selectedEnsembleOption: selectedEnsembleOption) => void;
@@ -23,7 +23,7 @@ export interface CreatePostState {
   setPostDescription: (postDescription: string) => void;
   setPostInstrument: (postInstrument: InstrumentType) => void;
   setExperienceRequired: (experienceRequired: number) => void;
-  setPostGenres: (postGenre: string) => void;
+  setPostGenres: (postGenre: string[]) => void;
   removePostGenre: (postGenre: string) => void;
   resetPostData: () => void;
 }
@@ -44,9 +44,9 @@ export const createPostSlice: StateCreator<CreatePostState, [], [], CreatePostSt
   setPostDescription: (postDescription) => set(() => ({ postDescription })),
   setPostInstrument: (postInstrument) => set(() => ({ postInstrument })),
   setExperienceRequired: (experienceRequired) => set(() => ({ experienceRequired })),
-  setPostGenres: (postGenre) =>
+  setPostGenres: (postGenres) =>
     set((state) => ({
-      postGenres: [...state.postGenres, postGenre],
+      postGenres: [...state.postGenres, ...postGenres],
     })),
   removePostGenre: (postGenre) =>
     set((state) => ({

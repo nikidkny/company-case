@@ -1,6 +1,6 @@
 import { IsNotEmpty } from 'class-validator';
 
-export class CreatePost_EnsemblesDto {
+export class CreateEnsemble_PostsDto {
   @IsNotEmpty()
   userId: string;
   @IsNotEmpty()

@@ -1,11 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Transform } from 'class-transformer';
 import { HydratedDocument, Types } from 'mongoose';
 
-export type Post_EnsemblesDocument = HydratedDocument<Post_Ensembles>;
+export type Ensemble_PostsDocument = HydratedDocument<Ensemble_Posts>;
 
 @Schema()
-export class Post_Ensembles {
+export class Ensemble_Posts {
   _id: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
@@ -17,5 +16,5 @@ export class Post_Ensembles {
   @Prop({ type: Types.ObjectId, ref: 'Post', required: true })
   postId: Types.ObjectId;
 }
-export const Post_EnsemblesSchema =
-  SchemaFactory.createForClass(Post_Ensembles);
+export const Ensemble_PostsSchema =
+  SchemaFactory.createForClass(Ensemble_Posts);

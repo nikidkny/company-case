@@ -14,9 +14,13 @@ import { PostType } from "../types/PostType";
 import { InstrumentType } from "../types/InstrumentType";
 import { EnsembleType } from "../types/EnsembleType";
 import { levelDescriptions } from "../utilities/levelDescriptions";
+import { getUserIdFromCookie } from "../hooks/getCookies";
 
 export default function CreateEnsemblePostPage() {
   const { ensemblesId } = useParams({ strict: false });
+  const navigate = useNavigate();
+  const { userId } = getUserIdFromCookie();
+
   const {
     user,
     setPosts,
@@ -38,9 +42,12 @@ export default function CreateEnsemblePostPage() {
     objectData,
     setObjectData,
   } = useStore();
-  const navigate = useNavigate();
 
-  const { data: fetchedInstruments, triggerFetch: instrumentsFetch } = useFetch<InstrumentType[]>([], "/instruments", "GET");
+  const { data: fetchedInstruments, triggerFetch: instrumentsFetch } = useFetch<InstrumentType[]>(
+    [],
+    "/instruments",
+    "GET"
+  );
 
   const { data: ensemble, triggerFetch: triggerFetchEnsembleDetails } = useFetch<EnsembleType>(
     {
@@ -74,7 +81,10 @@ export default function CreateEnsemblePostPage() {
   }, [instruments, ensemblesId]);
 
   useEffect(() => {
-    if (fetchedInstruments.length > 0 && JSON.stringify(instruments) !== JSON.stringify(fetchedInstruments)) {
+    if (
+      fetchedInstruments.length > 0 &&
+      JSON.stringify(instruments) !== JSON.stringify(fetchedInstruments)
+    ) {
       setInstruments(fetchedInstruments);
       // This will correctly replace the list when fetching data - avoiding duplication
     }
@@ -89,49 +99,15 @@ export default function CreateEnsemblePostPage() {
   //   };
 
   // console.log("selectedEnsembleOption", selectedEnsembleOption);
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const postData = {
-      title: postTitle,
-      description: postDescription,
-      instrument: postInstrument.name,
-      experienceRequired,
-      genres: postGenres,
-      createdAt: new Date().toLocaleString(),
-      createdBy: user._id,
-      // isReported: false,
-      webpage: ensemble.webpage,
-      location: `${ensemble.zip} ${ensemble.city}`,
-    };
-    setObjectData(postData);
-    setLoading(true);
-
-    setTimeout(() => {
-      triggerFetch();
-      if (createdPost) {
-        alert("The post has been created! You will be redirected to your profile");
-        navigate({
-          to: "/profile/$profileId",
-          params: { profileId: user._id },
-        });
-      } else {
-        return; // Stop further execution if there's an error
-      }
-      resetPostData();
-    }, 2000);
-  };
-
   const {
     data: createdPost,
     error,
     loading,
-    setLoading,
+    // setLoading,
     triggerFetch,
     shouldFetch,
-  } = useFetch<PostType[]>(
-    [],
+  } = useFetch<PostType | null>(
+    null,
     "/posts",
     "POST",
     {
@@ -142,13 +118,13 @@ export default function CreateEnsemblePostPage() {
 
   const postEnsembleData = {
     ensembleId: ensemble._id,
-    userId: user._id,
-    postId: createdPost[0]?._id,
+    userId: userId,
+    postId: createdPost?._id,
   };
 
   const createPostEnsemble = useFetch(
     null,
-    "/postEnsembles",
+    "/ensemblePosts",
     "POST",
     {
       "Content-Type": "application/json",
@@ -156,15 +132,51 @@ export default function CreateEnsemblePostPage() {
     postEnsembleData
   );
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const postData = {
+      title: postTitle,
+      description: postDescription,
+      instrument: postInstrument.name,
+      experienceRequired,
+      genres: postGenres,
+      createdAt: new Date().toLocaleString(),
+      createdBy: user._id,
+      webpage: ensemble.webpage,
+      location: `${ensemble.zip} ${ensemble.city}`,
+    };
+
+    setObjectData(postData);
+    triggerFetch(); // Start the POST request
+  };
+
   useEffect(() => {
-    console.log("Updated objectData:", objectData);
+    if (createPostEnsemble.data) {
+      alert("The post has been created! You will be redirected to your profile");
+      navigate({
+        to: "/profile/$profileId",
+        params: { profileId: user._id },
+      });
+
+      // Reset form fields
+      setPostTitle("");
+      setPostDescription("");
+      setPostInstrument({ _id: "", name: "" });
+      setExperienceRequired(1);
+      setPostGenres([]);
+      resetPostData();
+    } else if (error) {
+      alert("There was an error creating the post. Please try again.");
+    }
+  }, [createPostEnsemble.data, error]);
+  useEffect(() => {
+    // console.log("Updated objectData:", objectData);
   }, [objectData]);
 
-  console.log("createdPost", createdPost);
-
   useEffect(() => {
-    if (createdPost && createdPost.length >= 1) {
-      console.log("Post created:", createdPost);
+    if (createdPost) {
+      // console.log("Post created:", createdPost);
       createPostEnsemble.triggerFetch();
       setPosts(createdPost);
     } else {
@@ -177,7 +189,7 @@ export default function CreateEnsemblePostPage() {
     const currentTags = new Set(postGenres);
     tags.forEach((tag) => {
       if (!currentTags.has(tag)) {
-        setPostGenres(tag); // Add new tags
+        setPostGenres([tag]); // Add new tags
       }
     });
     currentTags.forEach((tag) => {
@@ -200,14 +212,24 @@ export default function CreateEnsemblePostPage() {
         </TextHeadline>
         //TODO: add validation on the form inputs
         <form onSubmit={handleSubmit} className="flex flex-col justify-around gap-6">
-          <TextInput inputType="text" value={postTitle} onChange={(value) => setPostTitle(value)} placeholder={"Title"} id="postTitle" name="postTitle" className="w-auto" />
-
-          {/* description */}
+          <TextInput
+            inputType="text"
+            value={postTitle}
+            onChange={(value) => setPostTitle(value)}
+            placeholder={"Title"}
+            id="postTitle"
+            name="postTitle"
+            className="w-auto"
+          />
           <div className="flex flex-col gap-3">
             <TextBody variant="strong" size="md" className="text-blue-500">
               Description
             </TextBody>
-            <Textarea textareaPlaceholder="Write a short description for your post" textareaValue={postDescription} onChange={(value) => setPostDescription(value)} />
+            <Textarea
+              textareaPlaceholder="Write a short description for your post"
+              textareaValue={postDescription}
+              onChange={(value) => setPostDescription(value)}
+            />
           </div>
           {/* instrument selection */}
           <div className="flex flex-col gap-3">
@@ -219,7 +241,9 @@ export default function CreateEnsemblePostPage() {
               options={instruments.map((instrument) => instrument.name)}
               selectedOption={postInstrument ? postInstrument.name : ""}
               onSelect={(value) => {
-                const selectedInstrumentObj = instruments.find((instrument) => instrument.name === value);
+                const selectedInstrumentObj = instruments.find(
+                  (instrument) => instrument.name === value
+                );
                 if (selectedInstrumentObj) {
                   setPostInstrument(selectedInstrumentObj);
                 }
@@ -232,7 +256,6 @@ export default function CreateEnsemblePostPage() {
             <TextBody variant="strong" size="md" className="text-blue-500">
               Minimum experience required
             </TextBody>
-
             <div>
               <div className="border-solid border-1px border-gray-300 p-4 rounded-md shadow-base bg-white flex flex-col gap-6">
                 <div className="flex flex-row justify-between">
@@ -279,7 +302,14 @@ export default function CreateEnsemblePostPage() {
             />
           </div>
 
-          <Button buttonVariant="primary" buttonLabel="Create post" buttonState={(loading && "disabled") || "default"} iconPosition="top" className="w-auto m-b-6 py-4" type="submit">
+          <Button
+            buttonVariant="primary"
+            buttonLabel="Create post"
+            buttonState={(loading && "disabled") || "default"}
+            iconPosition="top"
+            className="w-auto m-b-6 py-4"
+            type="submit"
+          >
             {loading ? "Creating..." : "Create post"}
           </Button>
         </form>

@@ -28,7 +28,7 @@ export class Post {
   @Prop()
   experienceRequired: number;
   @Prop()
-  genre: string;
+  genres: string[];
   @Prop()
   webPage: string;
   @Prop()
