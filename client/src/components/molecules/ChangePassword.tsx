@@ -1,5 +1,6 @@
 import { getFieldErrorMessage } from "../../utilities/auth";
 import Button from "../atoms/Button";
+import TextBody from "../atoms/TextBody";
 import TextHeadline from "../atoms/TextHeadline";
 import TextInput from "../atoms/TextInput";
 
@@ -16,8 +17,6 @@ interface ChangePasswordProps {
     combinedErrors: string[];
 }
 
-
-//TODO: mofify the getErromessage based on the message i send
 export default function ChangePassword({
     showPasswordFields,
     setShowPasswordFields,
@@ -88,6 +87,11 @@ export default function ChangePassword({
                         />
                     </div>
                 )}
+
+                {getFieldErrorMessage(combinedErrors, "User not found") && (
+                    <TextBody className="text-red-500 text-sm mt-1" >{getFieldErrorMessage(combinedErrors, "User not found")}</TextBody>
+                )}
+
             </div>
         </div>
     );

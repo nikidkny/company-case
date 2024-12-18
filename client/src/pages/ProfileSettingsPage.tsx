@@ -12,7 +12,6 @@ import TextBody from "../components/atoms/TextBody";
 import ChangePassword from "../components/molecules/ChangePassword";
 
 export default function ProfileSettingsPage() {
-  // TODO: validation for password fields - like login/signup
   // TODO: do not show the userId in the url
 
   const { user } = useStore();
@@ -157,6 +156,19 @@ export default function ProfileSettingsPage() {
   };
 
   useEffect(() => {
+    // Show alert if there is an error updating the password
+    //current TODO: error like login/signup in displaying error with isValidityMsg
+    if (passwordUpdateError) {
+      setBackendEProfileValidationErrors(passwordUpdateData!)
+      /*
+       
+      if (passwordUpdateError.includes("Current password is incorrect")) {
+        alert("The current password you entered is incorrect. Please try again.");
+      } else {
+        alert("Error updating password. Please try again.");
+      }
+       */
+    }
     // Clear password fields and show alert after update is successful
     if (passwordUpdateData) {
       alert("Settings updated successfully!");
@@ -164,15 +176,6 @@ export default function ProfileSettingsPage() {
       setNewPassword("");
       setConfirmNewPassword("");
       setShowPasswordFields(false);
-    }
-    // Show alert if there is an error updating the password
-    //current TODO: error like login/signup in displaying error with isValidityMsg
-    if (passwordUpdateError) {
-      if (passwordUpdateError.includes("Current password is incorrect")) {
-        alert("The current password you entered is incorrect. Please try again.");
-      } else {
-        alert("Error updating password. Please try again.");
-      }
     }
   }, [passwordUpdateData, passwordUpdateError]);
 

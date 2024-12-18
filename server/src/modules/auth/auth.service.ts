@@ -227,7 +227,7 @@ export class AuthService {
       console.error('No user found with ID:', id);
       throw new NotFoundException('User not found');
     }
-
+    
     // Compare the provided current password with the stored password
     const isPasswordValid = await bcrypt.compare(
       currentPassword,

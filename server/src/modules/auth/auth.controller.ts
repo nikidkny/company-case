@@ -9,7 +9,8 @@ import {
   UseGuards,
   UnauthorizedException,
   Delete,
-  Param
+  Param,
+  Put
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
@@ -57,14 +58,13 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('update-password')
+  @Put('password')
   @HttpCode(HttpStatus.OK)
   async updatePassword(
     @Body() updatePasswordDto: UpdatePasswordDto,
     @Req() req: Request, 
   ) {
-  
-    const userId = req.user['userId']; // JWT payload contains the user ID
+    const userId = req.user['userId'];
     await this.authService.updatePassword(userId, updatePasswordDto);
     return { message: 'Password updated successfully' };
   }
