@@ -2,6 +2,7 @@ import TextHeadline from "../atoms/TextHeadline";
 import TextInput from "../atoms/TextInput";
 import Button from "../atoms/Button";
 import TextBody from "../atoms/TextBody";
+import { getCustomErrorMessage } from "../../utilities/auth";
 
 interface LoginFormProps {
   formData: { email: string; password: string };
@@ -18,11 +19,15 @@ export default function LoginForm({
 }: LoginFormProps) {
 
   // Check if 'User not found' is in error messages, and display a custom message
-  const displayErrorMessage = errorMessages?.some((error) =>
-    ["User not found", "Invalid credentials"].includes(error)
-  )
-    ? "Invalid credentials"
-    : null;
+  // Error mapping for custom messages
+  const errorMap = {
+    "User not found": "Invalid credentials",
+    "Invalid credentials": "Invalid credentials",
+    // Add more mappings if necessary
+  };
+
+  // Use the utility function to get the custom error message
+  const displayErrorMessage = getCustomErrorMessage(errorMessages, errorMap);
 
   return (
     <div className="flex flex-col items-center">
