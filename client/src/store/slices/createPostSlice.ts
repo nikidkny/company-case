@@ -15,7 +15,7 @@ export interface CreatePostState {
   experienceRequired: number;
   postGenres: string[];
   posts: PostType[];
-  setPosts: (posts: PostType) => void;
+  setPosts: (posts: PostType | PostType[]) => void;
 
   // Actions
   setSelectedEnsembleOption: (selectedEnsembleOption: selectedEnsembleOption) => void;

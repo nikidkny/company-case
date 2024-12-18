@@ -84,15 +84,6 @@ export default function NavigationBar() {
             <li>
               <Link
                 onClick={() => (!loginStatus && displayPopUp(true)) || toggleMenu()}
-                to={(loginStatus && "/posts") || "/"}
-                className="link text-base"
-              >
-                See posts
-              </Link>
-            </li>
-            <li>
-              <Link
-                onClick={() => (!loginStatus && displayPopUp(true)) || toggleMenu()}
                 to={(loginStatus && "/ensembles") || "/"}
                 className="link text-base"
               >

@@ -7,46 +7,68 @@ import { Dropdown } from "../components/molecules/Dropdown";
 import { InstrumentType } from "../types/InstrumentType";
 import Button from "../components/atoms/Button";
 import { ICON_NAMES } from "../components/atoms/Icon/IconNames";
-import { PostType } from "../types/PostType";
 import PostCard from "../components/molecules/PostCard";
+import { EnsemblePostsType } from "../types/EnsemblePostsType";
+// import { EnsembleType } from "../types/EnsembleType";
+import { PostWithEnsembleType } from "../types/PostWithEnsembleType";
 
 //TODO: this page will be ensembles posts page and will need to be reworked.
 export default function EnsemblesPage() {
   const { posts, setPosts, filterOption, setFilterOption } = useStore();
-  const { data, triggerFetch } = useFetch<PostType[]>([], "/posts", "GET");
-
+  const { data: PostWithEnsembleData, triggerFetch: fetchPostWithEnsemble } = useFetch<
+    PostWithEnsembleType[]
+  >([], "/posts", "GET");
+  const { data: ensemblePostsData, triggerFetch: fetchEnsemblePosts } = useFetch<
+    EnsemblePostsType[]
+  >([], "/ensemblePosts", "GET");
+  // const ensemblesData = useFetch<EnsembleType[]>([], "/ensembles", "GET");
   const instrumentsFetch = useFetch<InstrumentType[]>([], "/instruments", "GET");
-
   //resets the filterOption when coming back to the page
   useEffect(() => {
     setFilterOption(null);
   }, [setFilterOption]);
 
-  console.log(instrumentsFetch.data);
-  console.log(filterOption);
+  // console.log(instrumentsFetch.data);
+  // console.log(filterOption);
 
   // Trigger fetch only when ensembles are empty
   useEffect(() => {
-    if (posts.length === 0 && !data.length) {
-      triggerFetch();
-
-      // Only fetch if ensembles or instruments are not yet loaded
-    }
-    if (instrumentsFetch.data.length === 0) {
-      instrumentsFetch.triggerFetch();
-    }
-  }, [posts, triggerFetch, data, instrumentsFetch]);
+    if (posts.length === 0 && !PostWithEnsembleData.length) fetchPostWithEnsemble();
+    // Only fetch if ensembles or instruments are not yet loaded
+    if (instrumentsFetch.data.length === 0) instrumentsFetch.triggerFetch();
+    if (ensemblePostsData.length === 0) fetchEnsemblePosts();
+    // if (ensemblesData.data.length === 0) ensemblesData.triggerFetch();
+  }, [
+    posts,
+    fetchPostWithEnsemble,
+    PostWithEnsembleData,
+    instrumentsFetch,
+    ensemblePostsData,
+    fetchEnsemblePosts,
+    // ensemblesData,
+  ]);
 
   // Set fetched data into the store
+  // useEffect(() => {
+  //   if (postsData.length > 0 && JSON.stringify(posts) !== JSON.stringify(postsData)) {
+  //     console.log("posts", posts);
+  //     console.log("postsData", postsData);
+  //     setPosts(postsData); // Set the fetched posts with ensemble data
+  //   }
+  // }, [postsData, setPosts, posts]);
+  // get from fetched data the posts and set them in the store
   useEffect(() => {
-    //saving the data - making sure to avoid duplicates
-    if (data.length > 0 && JSON.stringify(posts) !== JSON.stringify(data)) {
-      setPosts(data);
-      // This will correctly replace the list when fetching data - avoiding duplication
-    }
-  }, [data, setPosts, posts]);
+    if (PostWithEnsembleData.length > 0) {
+      const transformedPosts = PostWithEnsembleData.map((item) => ({
+        ...item.post,
+      }));
 
-  console.log({ posts });
+      setPosts(transformedPosts);
+    }
+  }, [PostWithEnsembleData, setPosts]);
+  console.log("posts", posts);
+  console.log("PostWithEnsembleData", PostWithEnsembleData);
+
   return (
     <div>
       <div className="p-6 flex flex-col justify-around gap-4">
@@ -54,7 +76,13 @@ export default function EnsemblesPage() {
           Find ensemble
         </TextHeadline>
         <TextBody variant="span">{posts.length} results found</TextBody>
-        <Dropdown initialSelectedLabel="Choose an instrument" options={instrumentsFetch.data.map((instrument) => instrument.name)} selectedOption={filterOption} onSelect={(value) => setFilterOption(value as string)} className="w-auto" />
+        <Dropdown
+          initialSelectedLabel="Choose an instrument"
+          options={instrumentsFetch.data.map((instrument) => instrument.name)}
+          selectedOption={filterOption}
+          onSelect={(value) => setFilterOption(value as string)}
+          className="w-auto"
+        />
         <div className="flex flex-row items-center justify-between gap-3 w-full items-stretch text-blue-500">
           {/* //TODO: finish adding filter options as needed */}
           <Button
@@ -68,12 +96,21 @@ export default function EnsemblesPage() {
             iconViewbox={"0 0 23.887 17.887"}
             className="no-underline w-full py-2"
           />
-          <Button buttonState="default" buttonLabel="Clear filter options" buttonVariant="secondary" iconPosition="none" className="no-underline w-full py-2" onClick={() => setFilterOption(null)} />
+          <Button
+            buttonState="default"
+            buttonLabel="Clear filter options"
+            buttonVariant="secondary"
+            iconPosition="none"
+            className="no-underline w-full py-2"
+            onClick={() => setFilterOption(null)}
+          />
         </div>
       </div>
       <div className="p-6 flex flex-col justify-around gap-4 bg-gray-300">
-        {posts.length > 0 ? (
-          posts.map((post, index) => <PostCard key={index} post={post} />)
+        {PostWithEnsembleData.length > 0 ? (
+          PostWithEnsembleData.map((item, index) => (
+            <PostCard key={index} post={item.post} ensemble={item.ensemble} />
+          ))
         ) : (
           <TextBody variant="p" size="md">
             No ensembles available
