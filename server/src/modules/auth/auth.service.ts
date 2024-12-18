@@ -248,7 +248,9 @@ export class AuthService {
     user.password = hashedPassword;
     await user.save();
 
-    return { message: 'Password updated successfully' };
+    return res.status(HttpStatus.OK).json({
+      message: 'Password updated correctly',
+    });
   }
 
   async deleteUser(id:string, password: string, req: Request, res) {

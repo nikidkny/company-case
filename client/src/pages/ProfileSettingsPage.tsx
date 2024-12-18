@@ -4,12 +4,11 @@ import { getUserIdFromCookie } from "../hooks/getCookies";
 import Button from "../components/atoms/Button";
 import Checkbox from "../components/atoms/Checkbox";
 import TextHeadline from "../components/atoms/TextHeadline";
-import TextInput from "../components/atoms/TextInput";
 import { useFetch } from "../hooks/use-fetch";
 import { useNavigate } from "@tanstack/react-router";
-import { getFieldErrorMessage, hashPassword } from "../utilities/auth";
-import TextBody from "../components/atoms/TextBody";
+import { hashPassword } from "../utilities/auth";
 import ChangePassword from "../components/molecules/ChangePassword";
+import DeleteProfile from "../components/molecules/DeleteProfilePopup";
 
 export default function ProfileSettingsPage() {
   // TODO: do not show the userId in the url
@@ -27,7 +26,6 @@ export default function ProfileSettingsPage() {
   const [newPasswordToSend, setNewPasswordTosend] = useState("");
 
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
-  const [confirmNewPasswordToSend, setConfirmNewPasswordTosend] = useState("");
 
   const [newsletter, setNewsletter] = useState(user.isNewsletter || false);
 
@@ -47,30 +45,6 @@ export default function ProfileSettingsPage() {
     newsletter,
   };
 
-  useEffect(() => {
-    if (user) {
-      setNewsletter(user.isNewsletter || false);
-    }
-  }, [user]);
-
-
-  // Hash passwords when they change
-  useEffect(() => {
-    if (currentPassword.trim()) {
-      setCurrentPasswordTosend(hashPassword(currentPassword.trim()));
-    } else {
-      setCurrentPasswordTosend("");
-    }
-  }, [currentPassword]);
-
-  useEffect(() => {
-    if (newPassword.trim()) {
-      setNewPasswordTosend(hashPassword(newPassword.trim()));
-    } else {
-      setNewPasswordTosend("");
-    }
-  }, [newPassword]);
-
   // Update Password
   const {
     data: passwordUpdateData,
@@ -86,6 +60,7 @@ export default function ProfileSettingsPage() {
     userData
   );
 
+  // Update the newsLetter
   const { triggerFetch: triggerNewsletter } = useFetch(
     null,
     `/users/${userId}`,
@@ -96,6 +71,8 @@ export default function ProfileSettingsPage() {
     { isNewsletter: newsletter }
   );
 
+  // *** Password and newsletter update ***
+  // Handles validation for frontend, Api call for updating password and newsLetter 
   const handleSaveSettings = () => {
     resetErrors();
 
@@ -136,7 +113,6 @@ export default function ProfileSettingsPage() {
     }
 
     if (!(!currentPassword?.trim() && !newPassword.trim() && !confirmNewPassword.trim())) {
-
       //Check if new and current password are different
       if (newPassword.trim() === currentPassword.trim()) {
         setFrontendProfileValidationErrors(["New password cannot be the same as current password"])
@@ -151,8 +127,9 @@ export default function ProfileSettingsPage() {
       // Trigger password update only if password fields are not empty
       triggerPasswordUpdate();
       setHasChanges(false);
+
+      //If the newsLetter has changed
     } else if (newsletter !== user.isNewsletter) {
-      // current TODO: Call external function ??
       triggerNewsletter();
       setHasChanges(false);
     } else {
@@ -161,9 +138,47 @@ export default function ProfileSettingsPage() {
     }
   };
 
+
+  const handleBackButtonClick = () => {
+    if (hasChanges) {
+      if (window.confirm("You have unsaved changes. Are you sure you want to go back?")) {
+        navigate({ to: `/profile/${userId}` });
+      }
+    } else {
+      navigate({ to: `/profile/${userId}` });
+    }
+  };
+
+  
+  useEffect(() => {
+    if (user) {
+      setNewsletter(user.isNewsletter || false);
+    }
+  }, [user]);
+
+
+  // Hashing for current password
+  useEffect(() => {
+    if (currentPassword.trim()) {
+      setCurrentPasswordTosend(hashPassword(currentPassword.trim()));
+    } else {
+      setCurrentPasswordTosend("");
+    }
+  }, [currentPassword]);
+
+  // Hashing for new password
+  useEffect(() => {
+    if (newPassword.trim()) {
+      setNewPasswordTosend(hashPassword(newPassword.trim()));
+    } else {
+      setNewPasswordTosend("");
+    }
+  }, [newPassword]);
+
+  // Handling error for update password
   useEffect(() => {
     // Show alert if there is an error updating the password
-    if (passwordUpdateError) {      
+    if (passwordUpdateError) {
       setBackendEProfileValidationErrors(passwordUpdateError!)
     }
     // Clear password fields and show alert after update is successful
@@ -175,16 +190,6 @@ export default function ProfileSettingsPage() {
       setShowPasswordFields(false);
     }
   }, [passwordUpdateData, passwordUpdateError]);
-
-  const handleBackButtonClick = () => {
-    if (hasChanges) {
-      if (window.confirm("You have unsaved changes. Are you sure you want to go back?")) {
-        navigate({ to: `/profile/${userId}` });
-      }
-    } else {
-      navigate({ to: `/profile/${userId}` });
-    }
-  };
 
   // *** Delete Profile ***
   const deleteFetch = useFetch(null, `/auth/${userId}`, "DELETE", {
@@ -272,7 +277,6 @@ export default function ProfileSettingsPage() {
   const combinedErrors = [
     ...frontendProfileValidationErrors,
     ...backendProfileValidationErrors,
-    // ...(loginError.length ? loginError : []),  // current TODO: implement same for changing password
   ];
 
   const resetErrors = () => {
@@ -291,6 +295,8 @@ export default function ProfileSettingsPage() {
           buttonLabel="Back"
         ></Button>
       </div>
+
+      {/* Change Password */}
       <ChangePassword
         showPasswordFields={showPasswordFields}
         setShowPasswordFields={setShowPasswordFields}
@@ -303,6 +309,8 @@ export default function ProfileSettingsPage() {
         setHasChanges={setHasChanges}
         combinedErrors={combinedErrors}
       />
+
+      {/* Change Newsletter */}
       <div className="settings-newsletter-wrapper">
         <TextHeadline variant="h3" size="sm">
           Newsletter
@@ -319,6 +327,8 @@ export default function ProfileSettingsPage() {
           />
         </div>
       </div>
+
+      {/* Delete Profile */}
       <div className="settings-delete-profile-wrapper">
         <TextHeadline variant="h3" size="sm">
           Profile
@@ -334,54 +344,18 @@ export default function ProfileSettingsPage() {
           ></Button>
 
           {/* Delete Profile Modal */}
-          {isModalOpen && (
-            <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-50">
-              <div className="flex flex-col gap-6 items-center bg-white p-6 rounded-lg shadow-lg w-120">
-                <TextHeadline variant="h3" size="sm">
-                  Confirm Deletion
-                </TextHeadline>
-
-                {/* Form for Deleting Profile */}
-                <form onSubmit={handleDeleteSubmit}>
-                  <TextInput
-                    inputType="password"
-                    id="deletePassword"
-                    name="deletePassword"
-                    placeholder="Enter your password"
-                    className="w-80"
-                    value={deleteUserPassword}
-                    onChange={(value) => setDeleteUserPassword(value)}
-                    isValid={!(combinedErrors.length > 0)}
-                    validityMsg={combinedErrors[0]}
-                    required={true}
-                  />
-                  {combinedErrors && (
-                    <TextBody className="text-red-500 text-sm mt-1" >{getFieldErrorMessage(combinedErrors, 'User not found')}</TextBody>
-                  )}
-                  <div className="modal-actions flex gap-4 pt-2">
-                    <Button
-                      buttonVariant="primary"
-                      size="lg"
-                      iconPosition="none"
-                      type="submit"
-                      buttonLabel="Confirm"
-
-                    />
-                    <Button
-                      buttonVariant="secondary"
-                      size="lg"
-                      iconPosition="none"
-                      type="button"
-                      onClick={handleDeleteCancel}
-                      buttonLabel="Cancel"
-                    />
-                  </div>
-                </form>
-              </div>
-            </div>
-          )}
+          <DeleteProfile
+            isModalOpen={isModalOpen}
+            deleteUserPassword={deleteUserPassword}
+            setDeleteUserPassword={setDeleteUserPassword}
+            combinedErrors={combinedErrors}
+            handleDeleteSubmit={handleDeleteSubmit}
+            handleDeleteCancel={handleDeleteCancel}
+          />
         </div>
       </div>
+
+      {/* Delete Profile */}
       <div className="w-full h-full">
         <Button buttonVariant="primary" iconPosition="none" size="lg" onClick={handleSaveSettings}>
           Save changes

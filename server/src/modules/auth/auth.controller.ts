@@ -67,7 +67,6 @@ export class AuthController {
   ) {
     const userId = req.user['userId'];
     await this.authService.updatePassword(userId, updatePasswordDto, res);
-    return { message: 'Password updated successfully' };
   }
 
   // TODO: add password validation before delete, find user before deliting it
