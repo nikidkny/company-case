@@ -5,17 +5,10 @@ import CryptoJS from "crypto-js"
     return CryptoJS.SHA256(password).toString();
   };
 
-  // Function to get an array of messages and an array of error to map and return the error message that matches the errorMap
-  export const getCustomErrorMessage = (
-    errorMessages: string[] | null,
-    errorMap: Record<string, string>
-  ): string | null => {
-    if (!errorMessages) return null;
-  
-    for (const error of errorMessages) {
-      if (errorMap[error]) {
-        return errorMap[error];
-      }
-    }
-    return null;
-  };
+// The getFieldErrorMessage function matches specific field error messages by a substring of the message that corresponds to the field name, allowing correct validation for each field.
+export const getFieldErrorMessage = (errorMessages: string[] | null, errorSubstring: string): string | null => {
+  if (!errorMessages) return null;
+  const lowerCaseField = errorSubstring.toLowerCase();
+  // Match the field name in the error messages
+  return errorMessages.find((msg) => msg.toLowerCase().includes(lowerCaseField)) || null;
+};

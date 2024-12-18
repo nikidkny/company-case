@@ -1,6 +1,6 @@
-import TextInput from "../atoms/TextInput"; // Assuming you've already imported TextInput
-import Button from "../atoms/Button"; // Assuming you've already imported Button
-import { getFieldErrorMessage } from "../../utilities/errorUtils";
+import TextInput from "../atoms/TextInput";
+import Button from "../atoms/Button"; 
+import { getFieldErrorMessage } from "../../utilities/auth";
 import Checkbox from "../atoms/Checkbox";
 
 interface SignupFormProps {
