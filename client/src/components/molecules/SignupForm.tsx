@@ -51,7 +51,7 @@ export default function SignupForm({
           id="firstName"
           name="firstName"
           isValid={!getFieldErrorMessage(errorMessages, "First name")}
-          validityMsg={getFieldErrorMessage(errorMessages, "First name") || undefined}
+          validityMsg={getFieldErrorMessage(errorMessages, "First name")}
           required={true}
         />
 
@@ -63,7 +63,7 @@ export default function SignupForm({
           id="lastName"
           name="lastName"
           isValid={!getFieldErrorMessage(errorMessages, "Last name")}
-          validityMsg={getFieldErrorMessage(errorMessages, "Last name") || undefined}
+          validityMsg={getFieldErrorMessage(errorMessages, "Last name")}
           required={true}
         />
 
@@ -75,7 +75,7 @@ export default function SignupForm({
           id="email"
           name="email"
           isValid={!getFieldErrorMessage(errorMessages, "Email")}
-          validityMsg={getFieldErrorMessage(errorMessages, "Email") || undefined}
+          validityMsg={getFieldErrorMessage(errorMessages, "Email")}
           required={true}
         />
 
@@ -87,7 +87,7 @@ export default function SignupForm({
           id="password"
           name="password"
           isValid={!getFieldErrorMessage(errorMessages, "Password")}
-          validityMsg={getFieldErrorMessage(errorMessages, "Password") || undefined}
+          validityMsg={getFieldErrorMessage(errorMessages, "Password")}
           required={true}
         />
 
@@ -101,8 +101,7 @@ export default function SignupForm({
           isValid={!getFieldErrorMessage(errorMessages, "Confirm")}
           validityMsg={
             getFieldErrorMessage(errorMessages, "match") ||
-            getFieldErrorMessage(errorMessages, "Confirm") ||
-            undefined
+            getFieldErrorMessage(errorMessages, "Confirm")
           }
           required={true}
         />
@@ -115,7 +114,7 @@ export default function SignupForm({
           id="birthdate"
           name="birthdate"
           isValid={!getFieldErrorMessage(errorMessages, "Birthdate")}
-          validityMsg={getFieldErrorMessage(errorMessages, "Birthdate") || undefined}
+          validityMsg={getFieldErrorMessage(errorMessages, "Birthdate")}
           required={true}
         />
 
