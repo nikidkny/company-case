@@ -78,8 +78,8 @@ export default function ProfileSettingsPage() {
     triggerFetch: triggerUpdate,
   } = useFetch(
     null,
-    `/auth/update-password`,
-    "POST",
+    `/auth/password`,
+    "PUT",
     {
       "Content-Type": "application/json",
     },
@@ -135,7 +135,11 @@ export default function ProfileSettingsPage() {
     }
 
     if (!(!currentPassword?.trim() && !newPassword.trim() && !confirmNewPassword.trim())) {
-      if (newPassword !== confirmNewPassword) {
+      if (newPassword.trim() === currentPassword.trim()) {
+        setFrontendProfileValidationErrors(["New password cannot be the same as current password"])
+        return;
+      }
+      if (newPassword.trim() !== confirmNewPassword.trim()) {
         setFrontendProfileValidationErrors(["Password do not match"])
         return;
       }
@@ -189,6 +193,7 @@ export default function ProfileSettingsPage() {
 
   // Opens the modal
   const handleDeleteProfile = () => {
+    resetErrors()
     setIsModalOpen(true);
   };
 
