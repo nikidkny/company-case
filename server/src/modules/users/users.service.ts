@@ -11,8 +11,14 @@ export class UsersService {
   //injecting the user model based on the schema we made
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
-  findAll() {}
-
+  async findAll(excludedUserId: string): Promise<User[]> {
+    return await this.userModel
+      .find({
+        _id: { $ne: new Types.ObjectId(excludedUserId) }, // Exclude logged-in user
+        isAvailable: true, // Only available users
+      })
+      .exec();
+  }
   async findOne(id: string) {
     return await this.userModel.findById(id).exec();
   }

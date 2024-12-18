@@ -1,7 +1,7 @@
 import classNames from "classnames";
 
 interface Props {
-  number: string;
+  number: string | number;
   className?: string;
 }
 

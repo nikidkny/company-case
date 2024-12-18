@@ -12,7 +12,8 @@ import EnsembleCard from "../components/molecules/EnsembleCard";
 import { EnsembleType } from "../types/EnsembleType";
 import { getUserIdFromCookie } from "../hooks/getCookies";
 import InstrumentCard from "../components/molecules/InstrumentCard"; // Import InstrumentCard component
-import { InstrumentType } from "../types/InstrumentType";
+import { UserInstrumentType } from "../types/userInstrumentType";
+
 export default function ProfilePage() {
   const { user } = useStore();
   const { userId } = getUserIdFromCookie();
@@ -72,7 +73,7 @@ export default function ProfilePage() {
     "GET"
   );
   const { data: userInstruments, triggerFetch: fetchUserInstruments } = useFetch<
-    InstrumentType[] | null
+    UserInstrumentType[] | null
   >(null, userId ? `/userInstruments/user/${userId}` : null, "GET");
 
   useEffect(() => {
@@ -85,9 +86,6 @@ export default function ProfilePage() {
   // console.log("userEnsembles", userEnsembles);
   console.log("userInstruments", userInstruments);
   const fullName = `${user?.firstName || ""} ${user?.lastName || ""}`;
-  // const ensembles = mockEnsembles.filter(
-  //   (ensemble) =>
-  //     ensemble.memberList.includes(user?.id) || ensemble.createdBy.equals(mockUser._id)
 
   return (
     <div className="flex flex-col gap-6">
@@ -146,9 +144,11 @@ export default function ProfilePage() {
           <div className="flex-0">
             <Button
               buttonVariant="secondary"
-              onClick={() => console.log("Edit description")}
+              to="/profile/$profileId/edit"
+              params={{ profileId: userId }}
               iconPosition="none"
               buttonLabel="Edit"
+              className="no-underline"
             ></Button>
           </div>
         </div>
@@ -171,11 +171,26 @@ export default function ProfilePage() {
           </div>
         </div>
         {userInstruments && userInstruments.length > 0 ? (
-          userInstruments.map((instrument, index) => (
-            <InstrumentCard key={index} instrument={instrument} />
-          ))
+          userInstruments
+            .sort((a, b) => b.levelOfExperience - a.levelOfExperience)
+            .map((instrument) => (
+              <InstrumentCard key={instrument.instrumentId} instrument={instrument} />
+            ))
         ) : (
-          <div>No instruments available</div>
+          <div className="flex flex-col items-center gap-4">
+            <Icon
+              name={ICON_NAMES.posts_empty}
+              height={120.989}
+              width={110.122}
+              viewBox="0 0 110.122 120.989"
+            />
+            <TextHeadline variant="h3" size="sm">
+              No instruments
+            </TextHeadline>
+            <TextBody className="text-center">
+              Add an instrument you can play so ensembles and musicians can find you.{" "}
+            </TextBody>
+          </div>
         )}
       </div>
       <div className="profile-ensembles-wrapper flex flex-col p-4 border-y-solid border-y-gray-400 border-y-1px gap-6">
@@ -186,7 +201,6 @@ export default function ProfilePage() {
           <div>
             <Button
               buttonVariant="secondary"
-              // onClick={() => (window.location.href = "/ensembles/create")}
               to="/ensembles/create"
               iconPosition="none"
               buttonLabel="Create"
@@ -194,7 +208,25 @@ export default function ProfilePage() {
             ></Button>
           </div>
         </div>
-        {userEnsembles?.map((ensemble, index) => <EnsembleCard key={index} ensemble={ensemble} />)}
+        {userEnsembles && userEnsembles.length > 0 ? (
+          userEnsembles.map((ensemble, index) => <EnsembleCard key={index} ensemble={ensemble} />)
+        ) : (
+          <div className="flex flex-col items-center gap-4">
+            <Icon
+              name={ICON_NAMES.posts_empty}
+              height={120.989}
+              width={110.122}
+              viewBox="0 0 110.122 120.989"
+            />
+            <TextHeadline variant="h3" size="sm">
+              No ensembles
+            </TextHeadline>
+            <TextBody className="text-center">
+              If you represent an ensemble, you can create it here so you can make a post on behalf
+              of the ensemble.
+            </TextBody>
+          </div>
+        )}
       </div>
       <div className="profile-posts-wrapper flex flex-col p-4 border-y-solid border-y-gray-400 border-y-1px gap-6">
         <div className="flex flex-row gap-6 justify-between">
@@ -208,9 +240,24 @@ export default function ProfilePage() {
           </div>
         </div>
         {/* TO DO: map through logged in user's posts for now it is static posts */}
-        {/* {posts.map((post, index) => (
-          <PostCard key={index} post={post} />
-        ))} */}
+        {/* {posts && posts.length > 0 ? (
+          posts.map((post, index) => <PostCard key={index} post={post} />)
+        ) : (
+          <div className="flex flex-col items-center gap-4">
+            <Icon
+              name={ICON_NAMES.posts_empty}
+              height={120.989}
+              width={110.122}
+              viewBox="0 0 110.122 120.989"
+            />
+            <TextHeadline variant="h3" size="sm">
+              No posts
+            </TextHeadline>
+            <TextBody className="text-center">
+              Create a post to let other musicians or ensembles ensbmbles know what you are looking for.
+            </TextBody>
+          </div>
+        )} */}
       </div>
     </div>
   );
