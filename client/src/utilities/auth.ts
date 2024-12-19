@@ -13,6 +13,52 @@ export const getFieldErrorMessage = (errorMessages: string[] | null, errorSubstr
   return errorMessages.find((msg) => msg.toLowerCase().includes(lowerCaseField)) || undefined;
 };
 
+
+type ValidationRule = {
+  validator: (value: any, formData?: FormFields) => string | undefined; // A validation function that returns an error message or undefined if valid
+  required?: boolean;
+};
+
+export type FormFields = {
+  [key: string]: any;
+};
+
+export type ValidationSchema = {
+  [key: string]: ValidationRule;
+};
+
+
+// General validateForm function
+export const validateForm = (
+  formData: FormFields,
+  validationSchema: ValidationSchema
+) => {
+  const errors: { [key: string]: string } = {};
+
+  // Loop through the fields in the validation schema
+  for (const field in validationSchema) {
+    const value = formData[field];
+    const { validator, required } = validationSchema[field];
+
+    // Check if the field is required and empty
+    if (required && (value === "" || value === undefined)) {
+      errors[field] = `${field} is required.`;
+      continue;
+    }
+
+    // Use the validator with formData if it requires formData
+    const error = validator.length === 2
+      ? validator(value, formData) // Call with formData if needed
+      : validator(value);          // Call without formData for normal validation
+
+    if (error) {
+      errors[field] = error; // Dynamically assign error based on the validator
+    }
+  }
+
+  return errors;
+};
+
 // Name validation
 export const validateName = (name: string, fieldName: string) => {
   const nameRegex = /^[A-Za-z\s]+$/;

@@ -6,7 +6,7 @@ import SignupForm from "../components/molecules/SignupForm";
 import { useFetch } from "../hooks/use-fetch";
 import { getUserIdFromCookie } from "../hooks/getCookies";
 import { User } from "../types/UserType";
-import { hashPassword, validateBirthdate, validateEmail, validateName, validatePassword } from "../utilities/auth";
+import { hashPassword, validateBirthdate, validateEmail, validateForm, validateName, validatePassword, ValidationSchema } from "../utilities/auth";
 
 export const Route = createLazyFileRoute("/accounts")({
   component: AccountsPage,
@@ -28,12 +28,43 @@ function AccountsPage() {
   // State to hold validation error messages for the login form
   const [loginError, setLoginError] = useState<string | string[]>([]);
 
+  const signupValidationSchema: ValidationSchema = {
+    firstName: {
+      validator: (value: string) => validateName(value, "First name"),
+      required: true,
+    },
+    lastName: {
+      validator: (value: string) => validateName(value, "Last name"),
+      required: true,
+    },
+    email: {
+      validator: (value: string) => validateEmail(value),
+      required: true,
+    },
+    password: {
+      validator: (value: string) => validatePassword(value),
+      required: true,
+    },
+    confirmPassword: {
+      validator: (value: string, formData: any) => 
+        value !== formData.password ? "Passwords do not match" : undefined,
+      required: true,
+    },
+    birthdate: {
+      validator: (value: string) => validateBirthdate(value),
+      required: true,
+    },
+  };
+
   // Redirect to home if user is logged in
   useEffect(() => {
     if (userId) {
       navigate({ to: "/" });
     }
   }, [userId, navigate]);
+
+
+  /*
 
   // Function to validate signup form data
   const validateForm = (signupFormData: typeof signupData) => {
@@ -76,6 +107,7 @@ function AccountsPage() {
     }
     return errors;
   };
+  */
 
   // Generalized change handler for both forms
   const handleChange = (name: string, value: string | boolean) => {
@@ -142,7 +174,7 @@ function AccountsPage() {
     };
 
     // Validate form data
-    const errors = validateForm(trimmedData);
+    const errors = validateForm(trimmedData, signupValidationSchema);
     // Convert errors object into an array of error messages
     const errorMessages = Object.values(errors);
 
