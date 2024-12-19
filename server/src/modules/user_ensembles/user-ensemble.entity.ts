@@ -5,11 +5,11 @@ import { Types } from 'mongoose';
 export class User_Ensemble {
   _id: Types.ObjectId;
   @Prop({ required: true })
-  user_id: string;
+  userId: string;
   @Prop({ required: true })
-  ensemble_id: string;
+  ensembleId: string;
   @Prop({ required: true })
-  joined_at: Date;
+  joinedAt: Date;
 }
 
 export const User_EnsembleSchema = SchemaFactory.createForClass(User_Ensemble);

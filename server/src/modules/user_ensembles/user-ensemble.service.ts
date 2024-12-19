@@ -23,8 +23,8 @@ export class UserEnsembleService {
 
     // Check if user is already in the ensemble
     const userAlreadyInEnsemble = await this.userEnsembleModel.findOne({
-      user_id: userId,
-      ensemble_id: ensembleId,
+      userId: userId,
+      ensembleId: ensembleId,
     });
     if (userAlreadyInEnsemble) {
       throw new ConflictException('User is already a member of this ensemble.');
@@ -50,9 +50,9 @@ export class UserEnsembleService {
       ensemble.memberList.push(userId);
       // Add to user_ensemble collection
       await this.userEnsembleModel.create({
-        user_id: userId,
-        ensemble_id: ensembleId,
-        joined_at: joinedAt,
+        userId: userId,
+        ensembleId: ensembleId,
+        joinedAt: joinedAt,
       });
 
       await ensemble.save(); // Save the updated ensemble document
@@ -68,8 +68,8 @@ export class UserEnsembleService {
     ensembleId: string,
   ): Promise<boolean> {
     const existingRelation = await this.userEnsembleModel.findOne({
-      user_id: userId,
-      ensemble_id: ensembleId,
+      userId: userId,
+      ensembleId: ensembleId,
     });
 
     return !!existingRelation;
