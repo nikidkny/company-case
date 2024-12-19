@@ -15,7 +15,8 @@ export class Post {
   description: string;
   // @Prop({ required: true })
   // type: string;
-
+  @Prop({ required: true })
+  activeMusicians: string;
   //if the type of post is "looking for a musician.." then the post will display the ensemble name in the "createdBy" otherwise we display the user by default
   @Prop()
   createdBy: string;
