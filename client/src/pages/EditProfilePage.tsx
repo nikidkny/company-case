@@ -14,8 +14,6 @@ import { getFieldErrorMessage, validateCity, validateEmail, validateForm, valida
 
 export default function EditProfilePage() {
 
-  // TODO: validation for city - maybe that it is a valid city name
-
   const { user } = useStore();
   const { userId } = getUserIdFromCookie();
   const navigate = useNavigate();
@@ -72,12 +70,15 @@ export default function EditProfilePage() {
   const editProfileInfoValidationSchema: ValidationSchema = {
     firstName: {
       validator: (value: string) => validateName(value, "First name"),
+      required:true
     },
     lastName: {
       validator: (value: string) => validateName(value, "Last name"),
+      required:true
     },
     email: {
       validator: (value: string) => validateEmail(value),
+      required:true
     },
     phoneNumber: {
       validator: (value: string) => validatePhoneNumber(value),
