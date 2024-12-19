@@ -48,12 +48,14 @@ export default function MusiciansPage() {
 
   // Filter instruments for musicians
   const filteredMusiciansWithInstruments =
-    allMusicians?.map((musician) => ({
-      ...musician,
-      instruments: allMusicianInstruments.filter(
-        (instrument) => instrument.userId === musician._id
-      ),
-    })) || [];
+    allMusicians
+      ?.map((musician) => ({
+        ...musician,
+        instruments: allMusicianInstruments.filter(
+          (instrument) => instrument.userId === musician._id
+        ),
+      }))
+      .filter((musician) => musician.instruments.length > 0) || [];
 
   // Apply filtering based on the selected instrument from the dropdown
   const displayedMusicians = filterOption
