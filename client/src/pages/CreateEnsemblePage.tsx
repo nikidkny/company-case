@@ -42,7 +42,6 @@ export function CreateEnsemblePage() {
     resetForm,
     setObjectData,
     objectData,
-    setEnsembles,
   } = useStore();
 
   // const userId = "6751e7b6ef87e8376bba326e";
@@ -123,12 +122,12 @@ export function CreateEnsemblePage() {
   useEffect(() => {
     if (createdEnsemble.length >= 1) {
       console.log("Ensemble created:", createdEnsemble);
-      setEnsembles(createdEnsemble);
+      //  setEnsembles(createdEnsemble);
     } else {
       console.log("errors", error);
       return;
     }
-  }, [createdEnsemble, setEnsembles, error, shouldFetch]);
+  }, [createdEnsemble, error, shouldFetch]);
 
   // useEffect(() => {
   //   if (error) {

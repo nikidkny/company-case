@@ -9,7 +9,7 @@ const mockPosts = [
     location: 'New York, NY',
     description:
       'We are a rock band looking for a talented guitarist to join our team. Must be passionate and reliable.',
-    type: 'MusicianWanted',
+
     createdBy: new Types.ObjectId(mockEnsembles[1]._id), // Linked to 'The Rocking Stars' ensemble
     isReported: false,
     instrument: 'Guitar',
@@ -26,7 +26,7 @@ const mockPosts = [
     location: 'Los Angeles, CA',
     description:
       'Looking for a skilled pianist to perform at a wedding event. The ideal candidate should be able to play classical and contemporary songs.',
-    type: 'MusicianWanted',
+
     createdBy: new Types.ObjectId(mockUsers[4]._id), // Linked to Emil D. (userId)
     isReported: false,
     instrument: 'Piano',
@@ -43,7 +43,7 @@ const mockPosts = [
     location: 'Chicago, IL',
     description:
       'We are a jazz band looking for a versatile drummer. Experience in jazz is a plus.',
-    type: 'MusicianWanted',
+
     createdBy: new Types.ObjectId(mockEnsembles[0]._id), // Linked to 'Chicago Jazz Collective' ensemble
     isReported: false,
     instrument: 'Drums',
@@ -60,7 +60,7 @@ const mockPosts = [
     location: 'Austin, TX',
     description:
       'We are an indie band looking for a bassist. You should be passionate and ready to collaborate.',
-    type: 'MusicianWanted',
+
     createdBy: new Types.ObjectId(mockEnsembles[3]._id), // Linked to 'Indie Vibes' ensemble
     isReported: false,
     instrument: 'Bass',
@@ -77,7 +77,7 @@ const mockPosts = [
     location: 'San Francisco, CA',
     description:
       'I am an experienced violinist available for solo or group performances. Classical and contemporary music.',
-    type: 'MusicianAvailable',
+
     createdBy: new Types.ObjectId(mockUsers[0]._id), // Linked to John Doe (userId)
     isReported: false,
     instrument: 'Violin',
@@ -94,7 +94,7 @@ const mockPosts = [
     location: 'Nashville, TN',
     description:
       'Pop music project looking for a talented vocalist. Must be comfortable with both live performances and studio recordings.',
-    type: 'MusicianWanted',
+
     createdBy: new Types.ObjectId(mockEnsembles[4]._id), // Linked to 'Pop Music Collective' ensemble
     isReported: false,
     instrument: 'Vocals',
@@ -111,7 +111,6 @@ const mockPosts = [
     location: 'Miami, FL',
     description:
       'Experienced pianist available for corporate events, weddings, and private parties. Classical and jazz repertoire available.',
-    type: 'MusicianAvailable',
     createdBy: new Types.ObjectId(mockUsers[1]._id), // Linked to Emil D. (userId)
     isReported: false,
     instrument: 'Piano',
