@@ -10,6 +10,7 @@ interface Props {
   post: PostType;
   ensemble: EnsembleType;
   key: number;
+  variant?: "profile" | "post";
 }
 
 export default function PostCard({ post, ensemble }: Props) {

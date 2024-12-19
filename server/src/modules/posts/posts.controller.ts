@@ -13,9 +13,13 @@ import { CreatePostDto } from './dto/create-post.dto';
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
+  @Get('createdBy/:createdById')
+  async findByCreatedBy(@Param('createdById') createdById: string) {
+    return await this.postsService.findByCreatedBy(createdById);
+  }
   @Get()
-  async findAll() {
-    return await this.postsService.findAll();
+  async findAllWithEnsembles() {
+    return await this.postsService.findAllWithEnsembles();
   }
   @Get(':id')
   findOne(@Param('id') id: string) {
