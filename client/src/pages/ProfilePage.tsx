@@ -298,8 +298,7 @@ export default function ProfilePage() {
               No posts
             </TextHeadline>
             <TextBody className="text-center">
-              Create a post to let other musicians or ensembles ensbmbles know what you are looking
-              for.
+              Create a post to let other musicians or ensembles know what you are looking for.
             </TextBody>
           </div>
         )}
