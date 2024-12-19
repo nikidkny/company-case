@@ -87,15 +87,6 @@ export default function NavigationBar() {
                 to={(loginStatus && "/posts") || "/"}
                 className="link text-base"
               >
-                See posts
-              </Link>
-            </li>
-            <li>
-              <Link
-                onClick={() => (!loginStatus && displayPopUp(true)) || toggleMenu()}
-                to={(loginStatus && "/ensembles") || "/"}
-                className="link text-base"
-              >
                 Find ensemble
               </Link>
             </li>

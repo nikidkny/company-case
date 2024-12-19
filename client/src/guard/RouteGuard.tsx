@@ -15,6 +15,7 @@ const AuthGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   useEffect(() => {
     //if the user is logged in and there's cookies for them - fetching the user data
     if (userId) {
+      //get user data
       userFetchTrigger();
     } else {
       return;
