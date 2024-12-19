@@ -12,7 +12,7 @@ export interface CreateEnsembleState {
   sessionFrequency: string;
   isPermanent: boolean | null;
   genres: string[];
-  ensembles: EnsembleType[];
+  ensemble: EnsembleType | null;
 
   // Actions
   setName: (name: string) => void;
@@ -27,7 +27,7 @@ export interface CreateEnsembleState {
   addGenre: (genre: string) => void;
   removeGenre: (genre: string) => void;
   // Accept both a single ensemble and an array because sometimes we might need to reset the ensembles
-  setEnsembles: (ensembles: EnsembleType | EnsembleType[]) => void;
+  setEnsemble: (ensemble: EnsembleType | null) => void;
   resetForm: () => void;
 }
 
@@ -43,7 +43,7 @@ export const createEnsembleSlice: StateCreator<CreateEnsembleState, [], [], Crea
   sessionFrequency: "",
   isPermanent: null,
   genres: [],
-  ensembles: [],
+  ensemble: null,
 
   // Actions
   setName: (name) => set(() => ({ name })),
@@ -73,16 +73,20 @@ export const createEnsembleSlice: StateCreator<CreateEnsembleState, [], [], Crea
       genres: state.genres.filter((g) => g !== genre),
     })),
 
-  setEnsembles: (ensembles: EnsembleType | EnsembleType[]) =>
-    set((state) => {
-      if (Array.isArray(ensembles)) {
-        // If it's an array, append it to the current ensemble list
-        return { ensembles: [...state.ensembles, ...ensembles] };
-      } else {
-        // If it's a single ensemble, append it to the list
-        return { ensembles: [...state.ensembles, ensembles] };
-      }
-    }),
+  // setEnsembles: (ensembles: EnsembleType | EnsembleType[]) =>
+  //   set((state) => {
+  //     if (Array.isArray(ensembles)) {
+  //       // If it's an array, append it to the current ensemble list
+  //       return { ensembles: [...state.ensembles, ...ensembles] };
+  //     } else {
+  //       // If it's a single ensemble, append it to the list
+  //       return { ensembles: [...state.ensembles, ensembles] };
+  //     }
+  //   }),
+  setEnsemble: (ensemble) =>
+    set(() => ({
+      ensemble, // Directly sets the value, whether it's a single `EnsembleType` or an array
+    })),
   resetForm: () =>
     set(() => ({
       name: "",

@@ -13,32 +13,20 @@ import { useStore } from "../store/useStore";
 
 export default function EnsembleDetailsPage() {
   // Get the ensembleId from the URL
+
+  const { ensemble, setEnsemble } = useStore();
   const { ensemblesId } = useParams({ strict: false });
   const { user } = useStore();
   //console.log(user);
-  const { data: ensemble, triggerFetch: triggerFetchEnsembleDetails } = useFetch<EnsembleType>(
-    {
-      _id: "",
-      name: "",
-      memberList: [],
-      createdBy: "",
-      description: "",
-      numberOfMembers: 0,
-      zip: "",
-      city: "",
-      sessionFrequency: "",
-      genres: [],
-      isPermanent: false,
-      //image: "",
-      activeMusicians: "",
-      webpage: "",
-      createdAt: "",
-    },
-    `/ensembles/${ensemblesId}`,
-    "GET"
-  );
-  console.log("ensemble - fetched", ensemble);
+  const { data: fetchedEnsemble, triggerFetch: triggerFetchEnsembleDetails } = useFetch<EnsembleType | null>(null, `/ensembles/${ensemblesId}`, "GET");
+  console.log("ensemble - fetched", fetchedEnsemble);
 
+  useEffect(() => {
+    if (fetchedEnsemble && ensemblesId) {
+      setEnsemble(fetchedEnsemble);
+    }
+  }, [ensemblesId, fetchedEnsemble, setEnsemble]);
+  console.log("ensemble", ensemble);
   // Get members' details (first name, last name) including the creator of the ensemble
   const { data: membersDetails, triggerFetch: triggerFetchMembersDetails } = useFetch(
     { foundMembers: [], creator: { _id: "" } },
@@ -47,7 +35,7 @@ export default function EnsembleDetailsPage() {
     {
       "Content-Type": "application/json",
     },
-    { membersIds: ensemble.memberList, creatorId: ensemble.createdBy }
+    { membersIds: fetchedEnsemble?.memberList, creatorId: fetchedEnsemble?.createdBy }
   );
 
   console.log("membersDetails", membersDetails);
@@ -55,8 +43,10 @@ export default function EnsembleDetailsPage() {
   const membersList: User[] = membersDetails.foundMembers;
   const creator: User = membersDetails.creator;
 
-  const isUserMember = ensemble.memberList.includes(user._id);
+  const isUserMember = fetchedEnsemble?.memberList.includes(user._id);
+  const isUserCreator = fetchedEnsemble?.createdBy.includes(user._id);
   console.log("isUserMember", isUserMember);
+  console.log("isUserCreator", isUserCreator);
   //Join the ensemble
   const {
     data: registrationData,
@@ -87,17 +77,17 @@ export default function EnsembleDetailsPage() {
   }, [registrationData, registrationLoading]);
 
   useEffect(() => {
-    if (!ensemble && ensemblesId) {
+    if (!fetchedEnsemble) {
       triggerFetchEnsembleDetails();
     }
     // triggerFetchCurrentUser();
-  }, [ensemblesId, ensemble]);
+  }, [fetchedEnsemble]);
 
   useEffect(() => {
-    if (ensemble.memberList && ensemble.createdBy) {
+    if (fetchedEnsemble?.memberList && fetchedEnsemble?.createdBy) {
       triggerFetchMembersDetails();
     }
-  }, [ensemble]);
+  }, [fetchedEnsemble]);
 
   return (
     <div>
@@ -107,15 +97,16 @@ export default function EnsembleDetailsPage() {
       {/* name, zip city and button */}
       <div className="flex flex-col gap-6 p-6 items-center">
         <TextHeadline variant="h2" size="sm" className="text-red-500">
-          {ensemble.name || "No name provided"}
+          {fetchedEnsemble?.name || "No name provided"}
         </TextHeadline>
         <TextBody variant="p" size="md">
-          {ensemble.zip} {ensemble.city}
+          {fetchedEnsemble?.zip} {fetchedEnsemble?.city}
         </TextBody>
 
         {(!isUserMember && <RegisterInEnsembleButton registrationLoading={registrationLoading} registrationError={registrationError} registrationData={registrationData} handleAddUserToEnsemble={handleAddUserToEnsemble} />) || (
           <ProfileBadge ProfileBadgeLabel="You're a member of this ensemble" ProfileBadgeSize="sm" />
         )}
+        {isUserCreator && <Button type="button" buttonVariant="secondary" iconPosition="none" buttonLabel="Edit ensemble" to="/ensembles/$ensemblesId/edit" params={{ ensemblesId: fetchedEnsemble._id }} className="no-underline w-auto px-4"></Button>}
       </div>
       <div className="h-[30px] bg-gray-300 border-solid border-1 border-gray-400"></div>
 
@@ -126,7 +117,7 @@ export default function EnsembleDetailsPage() {
             Description
           </TextBody>
           <TextBody variant="p" size="md">
-            {ensemble.description || "No description provided"}
+            {fetchedEnsemble?.description || "No description provided"}
           </TextBody>
         </div>
         <div className="flex flex-col gap-2">
@@ -134,7 +125,7 @@ export default function EnsembleDetailsPage() {
             Number of active musicians
           </TextBody>
           <TextBody variant="p" size="md">
-            {ensemble.activeMusicians || "There are no active musicians at the moment"}
+            {fetchedEnsemble?.activeMusicians || "There are no active musicians at the moment"}
           </TextBody>
         </div>
 
@@ -163,7 +154,7 @@ export default function EnsembleDetailsPage() {
             Frequency of music sessions
           </TextBody>
           <TextBody variant="p" size="md">
-            {ensemble.sessionFrequency || "The frequency of music sessions hasn't been specified"}
+            {fetchedEnsemble?.sessionFrequency || "The frequency of music sessions hasn't been specified"}
           </TextBody>
         </div>
 
@@ -172,7 +163,7 @@ export default function EnsembleDetailsPage() {
             The ensemble plays...
           </TextBody>
           <TextBody variant="p" size="md">
-            {ensemble.isPermanent === true ? "Continuously" : "On a project basis"}
+            {fetchedEnsemble?.isPermanent === true ? "Continuously" : "On a project basis"}
           </TextBody>
         </div>
 
@@ -181,7 +172,9 @@ export default function EnsembleDetailsPage() {
             Genres
           </TextBody>
 
-          <div className="flex flex-wrap gap-2">{ensemble.genres ? ensemble.genres.map((genre, index) => <ProfileBadge key={index} ProfileBadgeLabel={genre} ProfileBadgeSize="sm" />) : "No information about genres has been provided"}</div>
+          <div className="flex flex-wrap gap-2">
+            {fetchedEnsemble?.genres ? fetchedEnsemble.genres.map((genre, index) => <ProfileBadge key={index} ProfileBadgeLabel={genre} ProfileBadgeSize="sm" />) : "No information about genres has been provided"}
+          </div>
         </div>
 
         <div className="flex flex-col gap-2">
@@ -196,7 +189,7 @@ export default function EnsembleDetailsPage() {
         </div>
       </div>
 
-      <Button buttonVariant="secondary" buttonState="default" buttonLabel="Visit the webpage" className="no-underline w-auto m-6" size="lg" iconPosition="none" to={ensemble.webpage || "https://google.com"}></Button>
+      <Button buttonVariant="secondary" buttonState="default" buttonLabel="Visit the webpage" className="no-underline w-auto m-6" size="lg" iconPosition="none" to={fetchedEnsemble?.webpage || "https://google.com"}></Button>
     </div>
   );
 }

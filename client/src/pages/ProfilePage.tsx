@@ -20,10 +20,8 @@ import { PostWithEnsembleType } from "../types/PostWithEnsembleType";
 export default function ProfilePage() {
   const { user } = useStore();
   const { userId } = getUserIdFromCookie();
-  const [userPosts, setUserPosts] = useState<PostWithEnsembleType[] | null>([]);
-  const [UserPostsWithEnsemble, setUserPostsWithEnsemble] = useState<PostWithEnsembleType[] | null>(
-    []
-  );
+  // const [userPosts, setUserPosts] = useState<PostWithEnsembleType[] | null>([]);
+  const [UserPostsWithEnsemble, setUserPostsWithEnsemble] = useState<PostWithEnsembleType[] | null>([]);
   //utility to format dates
   const formatDate = (date?: Date | string): string => {
     if (!date) return "N/A"; // Handle undefined or null
@@ -31,42 +29,34 @@ export default function ProfilePage() {
     return isNaN(parsedDate.getTime()) ? "Invalid Date" : parsedDate.toDateString();
   };
   // get posts created by the logged in user
-  const { data: posts, triggerFetch: fetchUserPosts } = useFetch(
-    null,
-    `/posts/createdBy/${userId}`,
-    "GET"
-  );
+  //const { data: postsByUser, triggerFetch: fetchPostsByUser } = useFetch(null, `/posts/createdBy/${userId}`, "GET");
   // get all posts with ensembles
-  const { data: PostWithEnsembleData, triggerFetch: fetchPostWithEnsemble } = useFetch<
-    PostWithEnsembleType[]
-  >([], "/posts", "GET");
+  const { data: allPosts, triggerFetch: fetchAllPosts } = useFetch<PostWithEnsembleType[]>([], "/posts", "GET");
 
   useEffect(() => {
-    if (userId) {
-      fetchUserPosts();
-      setUserPosts(posts);
+    //if (userId) {
+    //getting all posts made by the user - saving them in the state
+    //  fetchPostsByUser();
+    // setUserPosts(postsByUser);
+    // }
+    //getting all the posts
+    if (allPosts.length === 0 && userId) {
+      fetchAllPosts();
     }
-    if (PostWithEnsembleData.length === 0) {
-      fetchPostWithEnsemble();
-    }
-  }, [userId, fetchUserPosts, posts, fetchPostWithEnsemble, PostWithEnsembleData]);
+  }, [userId, fetchAllPosts, allPosts]);
 
   // find in the fetched posts that belong to the user and set the userPosts and UserPostsWithEnsemble states
   useEffect(() => {
-    if (PostWithEnsembleData.length > 0) {
-      const UserPostsWithEnsemble = PostWithEnsembleData.filter(
-        (post) => post.post.createdBy === userId
-      );
+    if (allPosts.length > 0) {
+      const UserPostsWithEnsemble = allPosts.filter((post) => post.post.createdBy === userId);
       setUserPostsWithEnsemble(UserPostsWithEnsemble);
-      const userPosts = PostWithEnsembleData.filter((post) => post.post.createdBy === userId);
-      setUserPosts(userPosts);
+      // const userPosts = allPosts.filter((post) => post.post.createdBy === userId);
+      //setUserPosts(userPosts);
     }
-  }, [PostWithEnsembleData, userId]);
+  }, [allPosts, userId]);
 
-  console.log("posts", posts);
+  //console.log("posts", userPosts);
   console.log("UserPostsWithEnsemble", UserPostsWithEnsemble);
-  // console.log("user from profile", user);
-  //the user.lastLoggedIn has to be added to the createUserDTO in the backend when the user is created, that's why is appears as undefined.
 
   //console.log(user.lastLoggedIn);
   // useEffect(() => {
@@ -108,14 +98,8 @@ export default function ProfilePage() {
 
   // console.log("userInstruments", userInstrument);
 
-  const { data: userEnsembles, triggerFetch: fetchUserEnsembles } = useFetch<EnsembleType[] | null>(
-    null,
-    userId ? `/ensembles/user/${userId}` : null,
-    "GET"
-  );
-  const { data: userInstruments, triggerFetch: fetchUserInstruments } = useFetch<
-    UserInstrumentType[] | null
-  >(null, userId ? `/userInstruments/user/${userId}` : null, "GET");
+  const { data: userEnsembles, triggerFetch: fetchUserEnsembles } = useFetch<EnsembleType[] | null>(null, userId ? `/ensembles/user/${userId}` : null, "GET");
+  const { data: userInstruments, triggerFetch: fetchUserInstruments } = useFetch<UserInstrumentType[] | null>(null, userId ? `/userInstruments/user/${userId}` : null, "GET");
 
   useEffect(() => {
     if (userId) {
@@ -133,48 +117,22 @@ export default function ProfilePage() {
       <div className="profile-base-wrapper p-4 border-y-solid border-y-gray-400 border-y-1px">
         <div className="flex flex-row gap-4 pb-4">
           {/*TO DO: have to add that the user image is the src if there is */}
-          {user?.image ? (
-            <Image src={user?.image} alt="Profile Image" className="rounded-full h-24 w-24" />
-          ) : (
-            <Icon
-              name={ICON_NAMES.profile_placeholder}
-              height={91}
-              width={91}
-              viewBox="0 0 91 91"
-              className="rounded-full"
-            />
-          )}
+          {user?.image ? <Image src={user?.image} alt="Profile Image" className="rounded-full h-24 w-24" /> : <Icon name={ICON_NAMES.profile_placeholder} height={91} width={91} viewBox="0 0 91 91" className="rounded-full" />}
 
           <div className="flex flex-col">
             <div className="flex flex-row gap-4 items-center">
               <TextHeadline variant="h1" size="sm">
                 {fullName}
               </TextHeadline>
-              {user?.isAvailable && (
-                <ProfileBadge ProfileBadgeLabel="Seeking" ProfileBadgeSize="sm" />
-              )}
+              {user?.isAvailable && <ProfileBadge ProfileBadgeLabel="Seeking" ProfileBadgeSize="sm" />}
             </div>
             <TextBody>{formatDate(user.createdAt)}</TextBody>
             <TextBody>{formatDate(user.lastLoggedIn)}</TextBody>
           </div>
         </div>
         <div className="flex flex-row gap-4">
-          <Button
-            buttonVariant="secondary"
-            to="/profile/$profileId/edit"
-            params={{ profileId: userId }}
-            iconPosition="none"
-            buttonLabel="Edit Profile"
-            className="no-underline"
-          ></Button>
-          <Button
-            buttonVariant="secondary"
-            to="/profile/$profileId/settings"
-            params={{ profileId: userId }}
-            iconPosition="none"
-            buttonLabel="Settings"
-            className="no-underline"
-          ></Button>
+          <Button buttonVariant="secondary" to="/profile/$profileId/edit" params={{ profileId: userId }} iconPosition="none" buttonLabel="Edit Profile" className="no-underline"></Button>
+          <Button buttonVariant="secondary" to="/profile/$profileId/settings" params={{ profileId: userId }} iconPosition="none" buttonLabel="Settings" className="no-underline"></Button>
         </div>
       </div>
       <div className="profile-description-wrapper flex flex-col p-4 border-y-solid border-y-gray-400 border-y-1px gap-6">
@@ -183,14 +141,7 @@ export default function ProfilePage() {
             Description
           </TextHeadline>
           <div className="flex-0">
-            <Button
-              buttonVariant="secondary"
-              to="/profile/$profileId/edit"
-              params={{ profileId: userId }}
-              iconPosition="none"
-              buttonLabel="Edit"
-              className="no-underline"
-            ></Button>
+            <Button buttonVariant="secondary" to="/profile/$profileId/edit" params={{ profileId: userId }} iconPosition="none" buttonLabel="Edit" className="no-underline"></Button>
           </div>
         </div>
         <TextBody size="lg">{user?.description}</TextBody>
@@ -201,36 +152,18 @@ export default function ProfilePage() {
             My Instruments
           </TextHeadline>
           <div>
-            <Button
-              buttonVariant="secondary"
-              to="/profile/$profileId/instruments/add"
-              params={{ profileId: userId }}
-              iconPosition="none"
-              buttonLabel="Add"
-              className="no-underline"
-            ></Button>
+            <Button buttonVariant="secondary" to="/profile/$profileId/instruments/add" params={{ profileId: userId }} iconPosition="none" buttonLabel="Add" className="no-underline"></Button>
           </div>
         </div>
         {userInstruments && userInstruments.length > 0 ? (
-          userInstruments
-            .sort((a, b) => b.levelOfExperience - a.levelOfExperience)
-            .map((instrument) => (
-              <InstrumentCard key={instrument.instrumentId} instrument={instrument} />
-            ))
+          userInstruments.sort((a, b) => b.levelOfExperience - a.levelOfExperience).map((instrument) => <InstrumentCard key={instrument.instrumentId} instrument={instrument} />)
         ) : (
           <div className="flex flex-col items-center gap-4">
-            <Icon
-              name={ICON_NAMES.posts_empty}
-              height={120.989}
-              width={110.122}
-              viewBox="0 0 110.122 120.989"
-            />
+            <Icon name={ICON_NAMES.posts_empty} height={120.989} width={110.122} viewBox="0 0 110.122 120.989" />
             <TextHeadline variant="h3" size="sm">
               No instruments
             </TextHeadline>
-            <TextBody className="text-center">
-              Add an instrument you can play so ensembles and musicians can find you.{" "}
-            </TextBody>
+            <TextBody className="text-center">Add an instrument you can play so ensembles and musicians can find you. </TextBody>
           </div>
         )}
       </div>
@@ -240,32 +173,18 @@ export default function ProfilePage() {
             My Ensembles
           </TextHeadline>
           <div>
-            <Button
-              buttonVariant="secondary"
-              to="/ensembles/create"
-              iconPosition="none"
-              buttonLabel="Create"
-              className="no-underline"
-            ></Button>
+            <Button buttonVariant="secondary" to="/ensembles/create" iconPosition="none" buttonLabel="Create" className="no-underline"></Button>
           </div>
         </div>
         {userEnsembles && userEnsembles.length > 0 ? (
           userEnsembles.map((ensemble, index) => <EnsembleCard key={index} ensemble={ensemble} />)
         ) : (
           <div className="flex flex-col items-center gap-4">
-            <Icon
-              name={ICON_NAMES.posts_empty}
-              height={120.989}
-              width={110.122}
-              viewBox="0 0 110.122 120.989"
-            />
+            <Icon name={ICON_NAMES.posts_empty} height={120.989} width={110.122} viewBox="0 0 110.122 120.989" />
             <TextHeadline variant="h3" size="sm">
               No ensembles
             </TextHeadline>
-            <TextBody className="text-center">
-              If you represent an ensemble, you can create it here so you can make a post on behalf
-              of the ensemble.
-            </TextBody>
+            <TextBody className="text-center">If you represent an ensemble, you can create it here so you can make a post on behalf of the ensemble.</TextBody>
           </div>
         )}
       </div>
@@ -275,35 +194,19 @@ export default function ProfilePage() {
             My Posts
           </TextHeadline>
           <div>
-            <Button
-              buttonVariant="secondary"
-              to="/posts/create/"
-              iconPosition="none"
-              buttonLabel="Create"
-              className="no-underline"
-            ></Button>
+            <Button buttonVariant="secondary" to="/posts/create/" iconPosition="none" buttonLabel="Create" className="no-underline"></Button>
           </div>
         </div>
         {/* TO DO: map through logged in user's posts for now it is static posts */}
         {UserPostsWithEnsemble ? (
-          UserPostsWithEnsemble.map((item, index) => (
-            <PostCard key={index} post={item.post} ensemble={item.ensemble} />
-          ))
+          UserPostsWithEnsemble.map((item, index) => <PostCard key={index} post={item.post} ensemble={item.ensemble} />)
         ) : (
           <div className="flex flex-col items-center gap-4">
-            <Icon
-              name={ICON_NAMES.posts_empty}
-              height={120.989}
-              width={110.122}
-              viewBox="0 0 110.122 120.989"
-            />
+            <Icon name={ICON_NAMES.posts_empty} height={120.989} width={110.122} viewBox="0 0 110.122 120.989" />
             <TextHeadline variant="h3" size="sm">
               No posts
             </TextHeadline>
-            <TextBody className="text-center">
-              Create a post to let other musicians or ensembles ensbmbles know what you are looking
-              for.
-            </TextBody>
+            <TextBody className="text-center">Create a post to let other musicians or ensembles ensbmbles know what you are looking for.</TextBody>
           </div>
         )}
       </div>
