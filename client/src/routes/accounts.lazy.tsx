@@ -6,11 +6,13 @@ import SignupForm from "../components/molecules/SignupForm";
 import { useFetch } from "../hooks/use-fetch";
 import { getUserIdFromCookie } from "../hooks/getCookies";
 import { User } from "../types/UserType";
-import { hashPassword } from "../utilities/auth";
+import { hashPassword, validateBirthdate, validateEmail, validateName, validatePassword } from "../utilities/auth";
 
 export const Route = createLazyFileRoute("/accounts")({
   component: AccountsPage,
 });
+
+//TODO: why if the signup with already existing mail, no error
 
 function AccountsPage() {
   const location = useLocation();
@@ -37,42 +39,34 @@ function AccountsPage() {
   const validateForm = (signupFormData: typeof signupData) => {
     const errors: { [key: string]: string } = {};
     if (signupFormData) {
-      const nameRegex = /^[A-Za-z\s]+$/;
 
-      // Validate first and last name (letters only)
-      if (!nameRegex.test(signupFormData.firstName.trim())) {
-        errors.firstName = "First name must contain only letters";
-      } else if (signupFormData.firstName.trim().length < 2) {
-        errors.firstName = "First name must be at least 2 characters";
+      // Validate first and last names
+      const firstNameError = validateName(signupFormData.firstName, "First name");
+      if (firstNameError) {
+        errors.firstName = firstNameError;
       }
 
-      if (!nameRegex.test(signupFormData.lastName.trim())) {
-        errors.lastName = "Last name must contain only letters";
-      } else if (signupFormData.lastName.trim().length < 2) {
-        errors.lastName = "Last name must be at least 2 characters";
+      const lastNameError = validateName(signupFormData.lastName, "Last name");
+      if (lastNameError) {
+        errors.lastName = lastNameError;
       }
 
       // Validate email format
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(signupFormData.email.trim())) {
-        errors.email = "Invalid email format";
+      const emailError = validateEmail(signupFormData.email);
+      if (emailError) {
+        errors.email = emailError;
       }
 
-      // Validate birthdate - check if it's a valid date and if the user is at least 18
-      const birthdate = new Date(signupFormData.birthdate);
-      if (isNaN(birthdate.getTime())) {
-        errors.birthdate = "Invalid birthdate";
-      } else {
-        const today = new Date();
-        const age = today.getFullYear() - birthdate.getFullYear();
-        if (age < 18 || (age === 18 && today < new Date(birthdate.setFullYear(today.getFullYear())))) {
-          errors.birthdate = "Invalid birthdate. You must be at least 18 years old";
-        }
+      // Validate birthdate
+      const birthdateError = validateBirthdate(signupFormData.birthdate);
+      if (birthdateError) {
+        errors.birthdate = birthdateError;
       }
 
       // Validate password length
-      if (signupFormData.password.trim().length < 8) {
-        errors.password = "Password must be at least 8 characters";
+      const passwordError = validatePassword(signupFormData.password);
+      if (passwordError) {
+        errors.password = passwordError;
       }
 
       // Check if passwords match
@@ -215,12 +209,12 @@ function AccountsPage() {
     password: "",
   });
 
-    // Define the state for sending the data
-    const [loginDataToSend, setLoginDataToSend] = useState({
-      email: "",
-      password: "",
-    });
-  
+  // Define the state for sending the data
+  const [loginDataToSend, setLoginDataToSend] = useState({
+    email: "",
+    password: "",
+  });
+
 
   // API hooks for login
   const loginFetch = useFetch(
@@ -252,7 +246,7 @@ function AccountsPage() {
 
     // Update the state with trimmed data (optional, if you need state to reflect trimmed values)
     setLoginDataToSend(dataToSend);
-    
+
     // Trigger login fetch with the trimmed data
     loginFetch.triggerFetch();
   };
@@ -337,7 +331,7 @@ function AccountsPage() {
       email: "",
       password: "",
     });
-    
+
     // Clear any validation errors
     setFrontendAccountValidationErrors([]);
     setLoginError([]);
