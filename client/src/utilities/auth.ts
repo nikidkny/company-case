@@ -97,3 +97,47 @@ export const validateBirthdate = (birthdate: string) => {
     }
   }
 };
+
+// Phone number validation
+export const validatePhoneNumber = (phoneNumber: string) => {
+  const phoneNumberRegex = /^[0-9]+$/;
+
+  if (!phoneNumberRegex.test(phoneNumber.trim())) {
+    return `Phone number must contain only numbers`;
+  } else if (phoneNumber.trim().length !== 8) {
+    return `Phone number must be exactly 8 digits`;
+  }
+};
+
+// Zip code validation
+export const validateZipCode = (zipCode: string) => {
+  const zipCodeRegex = /^[0-9]+$/;
+
+  if (!zipCodeRegex.test(zipCode.trim())) {
+    return `Zip code must contain only numbers`;
+  } else if (zipCode.trim().length !== 4) {
+    return `Zip code must be exactly 4 digits`;
+  }
+};
+
+const cities = [
+  "New York", "Los Angeles", "London", "Tokyo", "Paris", "Berlin", "Sydney",
+  "Moscow", "Dubai", "Shanghai", "Beijing", "Mumbai", "São Paulo", "Mexico City",
+  "Cairo", "Buenos Aires", "Istanbul", "Rome", "Bangkok", "Lagos", "Rio de Janeiro",
+  "Jakarta", "Lahore", "Kolkata", "Chennai", "Lima", "Tehran", "Hong Kong",
+  "Singapore", "Riyadh", "Baghdad", "Seoul", "Karachi", "Dhaka", "Kuala Lumpur",
+  "Manila", "Cape Town", "Nairobi", "Melbourne", "Tunis", "Santiago", "Miami",
+  "San Francisco", "Madrid", "Bangalore", "Chengdu", "Baku", "Tashkent", "Dallas",
+  "Toronto", "Athens", "Barcelona", "Stockholm", "Helsinki", "Milan", "Vienna",
+  "Prague", "Budapest", "Warsaw", "Kiev", "Los Angeles", "Rio de Janeiro", "Berlin",
+  "Osaka", "Brisbane", "Buenos Aires", "Chicago", "Mexico City", "Rome", "Istanbul", "Copenhagen"
+];
+
+export const validateCity = (city: string) => {
+  // Check if the city is in the cities array
+  const cityExists = cities.includes(city.trim());
+
+  if (!cityExists) {
+    return "Invalid city. Please select a valid city from the list.";
+  }
+};

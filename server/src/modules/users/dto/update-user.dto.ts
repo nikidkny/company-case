@@ -9,6 +9,7 @@ import {
   MinLength,
 } from 'class-validator';
 
+//TODO: validation
 export class UpdateUserDto {
   @IsOptional()
   @IsNotEmpty({ message: 'First name should not be empty' })

@@ -10,20 +10,17 @@ import { useFetch } from "../hooks/use-fetch";
 import { User } from "../types/UserType";
 import { getUserIdFromCookie } from "../hooks/getCookies";
 import { useNavigate } from "@tanstack/react-router";
+import { getFieldErrorMessage, validateCity, validateEmail, validateForm, validateName, validatePhoneNumber, validateZipCode, ValidationSchema } from "../utilities/auth";
 
 export default function EditProfilePage() {
-  // TODO: validation for name fields - like sign up
-  // TODO: validation for email field - like sign up
-  // TODO: validation for phone number - mabye that it is 8 characters like a danish number, idk what else could be
-  // TODO: validation for zip code - maybe that it is 4 characters like a danish zip code
-  // TODO: validation for description - maybe that it has a max character limit and no curse words or foul language
+
   // TODO: validation for city - maybe that it is a valid city name
+
   const { user } = useStore();
   const { userId } = getUserIdFromCookie();
   const navigate = useNavigate();
   const [hasChanges, setHasChanges] = useState(false);
 
-  console.log(user);
   const [firstName, setFirstName] = useState(user.firstName);
   const [lastName, setLastName] = useState(user.lastName);
   const [description, setDescription] = useState(user.description);
@@ -32,6 +29,10 @@ export default function EditProfilePage() {
   const [email, setEmail] = useState(user.email);
   const [phoneNumber, setPhoneNumber] = useState(user.phoneNumber);
   const [isAvailable, setIsAvailable] = useState(user.isAvailable);
+
+  const [frontendProfileEditValidationErrors, setFrontendProfileEditValidationErrors] = useState<string | string[]>([]);
+  const [backendProfileEditValidationErrors, setBackendEditProfileValidationErrors] = useState<string | string[]>([]);
+
   const userData = {
     firstName,
     lastName,
@@ -42,8 +43,11 @@ export default function EditProfilePage() {
     phoneNumber,
     isAvailable,
   };
-  console.log(userData);
-  const { triggerFetch: userFetchTrigger } = useFetch<Partial<User> | null>(
+  const {
+    triggerFetch: userFetchTrigger,
+    error: userFetchError,
+    data: userFetchData
+  } = useFetch<Partial<User> | null>(
     null,
     userId ? `/users/${userId}` : null,
     "PUT",
@@ -65,19 +69,88 @@ export default function EditProfilePage() {
     }
   }, [user]);
 
+  const editProfileInfoValidationSchema: ValidationSchema = {
+    firstName: {
+      validator: (value: string) => validateName(value, "First name"),
+    },
+    lastName: {
+      validator: (value: string) => validateName(value, "Last name"),
+    },
+    email: {
+      validator: (value: string) => validateEmail(value),
+    },
+    phoneNumber: {
+      validator: (value: string) => validatePhoneNumber(value),
+    },
+    zip: {
+      validator: (value: string) => validateZipCode(value),
+    },
+    city: {
+      validator: (value: string) => validateCity(value),
+    }
+  }
+
   const handleSaveChanges = async () => {
-    try {
-      await userFetchTrigger();
-      alert("Changes saved successfully!");
-      setHasChanges(false);
-    } catch (error) {
-      if (error instanceof Error) {
-        alert(`Failed to save changes: ${error.message}`);
-      } else {
-        alert('An unknown error occurred.');
+    if (hasChanges) {
+      try {
+        resetErrors();
+
+        // Manually trim each field before validation
+        const trimmedFirstName = firstName?.trim();
+        const trimmedLastName = lastName?.trim();
+        const trimmedDescription = description?.trim();
+        const trimmedZip = zip?.trim();
+        const trimmedCity = city?.trim();
+        const trimmedEmail = email?.trim();
+        const trimmedPhoneNumber = phoneNumber?.trim();
+
+        // Prepare the user data to validate
+        const userDataToValidate = {
+          firstName: trimmedFirstName,
+          lastName: trimmedLastName,
+          description: trimmedDescription,
+          zip: trimmedZip,
+          city: trimmedCity,
+          email: trimmedEmail,
+          phoneNumber: trimmedPhoneNumber,
+          isAvailable,
+        };
+
+
+        const errors = validateForm(userDataToValidate, editProfileInfoValidationSchema);
+        const errorMessages = Object.values(errors);
+        // If there are any errors, set them
+        if (errorMessages.length > 0) {
+          setFrontendProfileEditValidationErrors(errorMessages);
+          return;
+        }
+
+        await userFetchTrigger();
+      } catch (error) {
+        if (error instanceof Error) {
+          alert(`Failed to save changes: ${error.message}`);
+        } else {
+          alert('An unknown error occurred.');
+        }
       }
+    } else {
+      alert("No changes detected.");
     }
   };
+
+  // Handling error for update password
+  useEffect(() => {
+    // Show alert if there is an error updating the password
+    if (userFetchError) {
+      setBackendEditProfileValidationErrors(userFetchError!)
+    }
+    // Clear password fields and show alert after update is successful
+    if (userFetchData) {
+      setHasChanges(false);
+      resetErrors();
+      alert("Settings updated successfully!");
+    }
+  }, [userFetchError, userFetchData]);
 
   const handleBackButtonClick = () => {
     if (hasChanges) {
@@ -89,8 +162,19 @@ export default function EditProfilePage() {
     }
   };
 
+  const resetErrors = () => {
+    setBackendEditProfileValidationErrors([])
+    setFrontendProfileEditValidationErrors([])
+  }
+
+  // Combine frontend and backend errors
+  const combinedErrors = [
+    ...frontendProfileEditValidationErrors,
+    ...backendProfileEditValidationErrors,
+  ];
+
   return (
-    <div className="edit-page-wrapper flex flex-col gap-6 p-6 ">
+    <div className="edit-page-wrapper flex flex-col gap-6 p-6 " >
       <div className="back-button-wrapper flex flex-col items-start">
         <Button
           onClick={handleBackButtonClick}
@@ -120,6 +204,8 @@ export default function EditProfilePage() {
               setHasChanges(true);
             }}
             className="w-full"
+            isValid={!getFieldErrorMessage(combinedErrors, "First name")}
+            validityMsg={getFieldErrorMessage(combinedErrors, "First name")}
           />
           <TextInput
             inputType="text"
@@ -132,6 +218,8 @@ export default function EditProfilePage() {
               setHasChanges(true);
             }}
             className="w-full"
+            isValid={!getFieldErrorMessage(combinedErrors, "Last name")}
+            validityMsg={getFieldErrorMessage(combinedErrors, "Last name")}
           />
         </div>
       </div>
@@ -173,6 +261,8 @@ export default function EditProfilePage() {
               setHasChanges(true);
             }}
             className="w-full"
+            isValid={!getFieldErrorMessage(combinedErrors, "Zip")}
+            validityMsg={getFieldErrorMessage(combinedErrors, "Zip")}
           />
           <TextInput
             inputType="text"
@@ -185,6 +275,8 @@ export default function EditProfilePage() {
               setHasChanges(true);
             }}
             className="w-full"
+            isValid={!getFieldErrorMessage(combinedErrors, "City")}
+            validityMsg={getFieldErrorMessage(combinedErrors, "City")}
           />
         </div>
       </div>
@@ -217,6 +309,8 @@ export default function EditProfilePage() {
             setPhoneNumber(value);
             setHasChanges(true);
           }}
+          isValid={!getFieldErrorMessage(combinedErrors, "Phone")}
+          validityMsg={getFieldErrorMessage(combinedErrors, "Phone")}
         />
       </div>
       <div className="edit-availability-wrapper flex flex-col gap-4">
@@ -242,6 +336,6 @@ export default function EditProfilePage() {
           Save changes
         </Button>
       </div>
-    </div>
+    </div >
   );
 }

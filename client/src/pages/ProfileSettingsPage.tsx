@@ -37,7 +37,7 @@ export default function ProfileSettingsPage() {
   });
   // State for errors
   const [frontendProfileValidationErrors, setFrontendProfileValidationErrors] = useState<string | string[]>([]);
-  const [backendProfileValidationErrors, setBackendEProfileValidationErrors] = useState<string | string[]>([]);
+  const [backendProfileValidationErrors, setBackendProfileValidationErrors] = useState<string | string[]>([]);
 
   const userData = {
     currentPassword: currentPasswordToSend,
@@ -183,7 +183,7 @@ export default function ProfileSettingsPage() {
   useEffect(() => {
     // Show alert if there is an error updating the password
     if (passwordUpdateError) {
-      setBackendEProfileValidationErrors(passwordUpdateError!)
+      setBackendProfileValidationErrors(passwordUpdateError!)
     }
     // Clear password fields and show alert after update is successful
     if (passwordUpdateData) {
@@ -199,7 +199,7 @@ export default function ProfileSettingsPage() {
   useEffect(() => {
     // Show alert if there is an error updating the password
     if (newsLetterUpdateError) {
-      setBackendEProfileValidationErrors(newsLetterUpdateError!)
+      setBackendProfileValidationErrors(newsLetterUpdateError!)
     }
     // Clear password fields and show alert after update is successful
     if (newsLetterUpdateData) {
@@ -262,7 +262,7 @@ export default function ProfileSettingsPage() {
   // handles delte user api response
   useEffect(() => {
     if (deleteFetch.error) {
-      setBackendEProfileValidationErrors(deleteFetch.error);
+      setBackendProfileValidationErrors(deleteFetch.error);
     } else if (deleteFetch.data) {
       resetErrors();
       setDeleteUserPassword("")
@@ -299,7 +299,7 @@ export default function ProfileSettingsPage() {
 
   const resetErrors = () => {
     setFrontendProfileValidationErrors([]);
-    setBackendEProfileValidationErrors([])
+    setBackendProfileValidationErrors([])
   }
 
   return (
