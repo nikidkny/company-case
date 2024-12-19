@@ -5,17 +5,40 @@ import mockEnsembles from './mockEnsembles';
 const mockUserEnsemble = [
   {
     _id: new Types.ObjectId(),
-    user_id: mockUsers[0]._id.toString(),
-    ensemble_id: mockEnsembles[0]._id.toString(),
-    joined_at: new Date(),
+    userId: mockUsers[0]._id.toString(),
+    ensembleId: mockEnsembles[5]._id.toString(),
+    joinedAt: new Date(),
   },
   {
     _id: new Types.ObjectId(),
-    user_id: mockUsers[1]._id.toString(),
-    ensemble_id: mockEnsembles[1]._id.toString(),
-    joined_at: new Date(),
+    userId: mockUsers[1]._id.toString(),
+    ensembleId: mockEnsembles[4]._id.toString(),
+    joinedAt: new Date(),
   },
-  // Add more mock user ensembles as needed
+  {
+    _id: new Types.ObjectId(),
+    userId: mockUsers[2]._id.toString(),
+    ensembleId: mockEnsembles[3]._id.toString(),
+    joinedAt: new Date(),
+  },
+  {
+    _id: new Types.ObjectId(),
+    userId: mockUsers[3]._id.toString(),
+    ensembleId: mockEnsembles[2]._id.toString(),
+    joinedAt: new Date(),
+  },
+  {
+    _id: new Types.ObjectId(),
+    userId: mockUsers[4]._id.toString(),
+    ensembleId: mockEnsembles[1]._id.toString(),
+    joinedAt: new Date(),
+  },
+  {
+    _id: new Types.ObjectId(),
+    userId: mockUsers[5]._id.toString(),
+    ensembleId: mockEnsembles[0]._id.toString(),
+    joinedAt: new Date(),
+  },
 ];
 
 export default mockUserEnsemble;

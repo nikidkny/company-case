@@ -109,7 +109,22 @@ export class SeederService {
             levelOfExperience: 5,
             genres: ['Classical', 'Jazz'],
           },
-          // Add more mock user instruments as needed
+          {
+            _id: new Types.ObjectId(),
+            userId: mockUsers[2]._id.toString(),
+            instrumentId: instruments[2]._id.toString(),
+            name: instruments[2].name,
+            levelOfExperience: 2,
+            genres: ['Pop', 'Rock'],
+          },
+          {
+            _id: new Types.ObjectId(),
+            userId: mockUsers[3]._id.toString(),
+            instrumentId: instruments[3]._id.toString(),
+            name: instruments[3].name,
+            levelOfExperience: 4,
+            genres: ['Metal', 'Rock'],
+          },
         ];
         await this.userInstrumentModel.insertMany(mockUserInstruments);
         console.log(
