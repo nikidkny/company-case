@@ -28,8 +28,8 @@ async function bootstrap() {
   const seederService = app.get(SeederService);
   const seederInstruments = app.get(InstrumentsService);
   // Call the seeding function
-  await seederService.seedDatabase();
   await seederInstruments.seedInstruments();
+  await seederService.seedDatabase();
 
   console.log('Seeding complete');
 
