@@ -15,7 +15,6 @@ import { useNavigate } from "@tanstack/react-router";
 import { getFieldErrorMessage, notEmpty, validateForm, ValidationSchema } from "../utilities/auth";
 
 export default function AddInstrumentPage() {
-  // TODO: Add error handling
   // states
   const [hasChanges, setHasChanges] = useState(false);
   const [level, setLevel] = useState(1);
