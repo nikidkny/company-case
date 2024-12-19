@@ -18,8 +18,8 @@ export class PostsController {
     return await this.postsService.findAll();
   }
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    // Empty endpoint to get a single post
+  async findOne(@Param('id') id: string) {
+    return await this.postsService.findOne(id);
   }
 
   @Post()

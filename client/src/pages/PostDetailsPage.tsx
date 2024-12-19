@@ -12,20 +12,23 @@ import { ICON_NAMES } from "../components/atoms/Icon/IconNames";
 import { useFetch } from "../hooks/use-fetch";
 import { User } from "../types/UserType";
 import { getUserIdFromCookie } from "../hooks/getCookies";
+import EnsembleCard from "../components/molecules/EnsembleCard";
+import { PostWithEnsembleType } from "../types/PostWithEnsembleType";
 
 export default function PostDetailsPage() {
   // TO DO: add ensemble card
   const { userId } = getUserIdFromCookie();
   const { postId } = useParams({ from: "/ensembles/posts/$postId" });
   const { posts } = useStore();
+  const [post, setPost] = useState(posts.find((post) => post._id === postId));
   const [isModalOpen, setIsModalOpen] = useState(false);
   // get the post by the post id
-  const post = posts.find((post) => post._id === postId);
+  // const post = posts.find((post) => post._id === postId);
   // get contact person id by the post createdBy property
-  const contactPeronId = post?.createdBy;
+  const contactPersonId = post?.createdBy;
 
   // check if the contact person id is the same as the logged in user id
-  const isContactPerson = userId === contactPeronId;
+  const isContactPerson = userId === contactPersonId;
 
   const formatDate = (date?: Date | string): string => {
     if (!date) return "N/A"; // Handle undefined or null
@@ -35,15 +38,31 @@ export default function PostDetailsPage() {
   // fetch the contact person by the contact person id
   const { data: contactPerson, triggerFetch: fetchContactPerson } = useFetch<User | null>(
     null,
-    `/users/${contactPeronId}`,
+    `/users/${contactPersonId}`,
     "GET"
   );
+  // feth the ensemblePost
+  const { data: PostWithEnsembleData, triggerFetch: fetchPostWithEnsemble } =
+    useFetch<PostWithEnsembleType | null>(null, `/posts/${postId}`, "GET");
+  console.log("post", post);
+
+  useEffect(() => {
+    if (!PostWithEnsembleData && !post) {
+      setPost(post);
+      fetchPostWithEnsemble();
+    }
+  }, [fetchPostWithEnsemble, PostWithEnsembleData, post]);
+
+  console.log("postsWithEnsemble", PostWithEnsembleData);
+  // get the ensemble from the postWithEnsembleData
+  const ensemble = PostWithEnsembleData?.ensemble;
+
   // fetch the contact person when the contact person id changes
   useEffect(() => {
-    if (contactPeronId) {
+    if (contactPersonId) {
       fetchContactPerson();
     }
-  }, [contactPeronId, fetchContactPerson]);
+  }, [contactPersonId, fetchContactPerson]);
 
   const handleContactClick = () => {
     setIsModalOpen(true);
@@ -71,7 +90,9 @@ export default function PostDetailsPage() {
           <TextBody variant="span" size="sm">
             Post created at {formatDate(post?.createdAt)}
           </TextBody>
-          {/* ensemble card */}
+          <div className="w-full">
+            {ensemble && <EnsembleCard key={1} ensemble={ensemble} variant="post" />}
+          </div>
           {isContactPerson && (
             <Button buttonVariant="secondary" size="sm" iconPosition="none" className="w-fit">
               Edit Post
