@@ -17,7 +17,6 @@ const mockPosts = [
     createdAt: new Date('2024-10-01T10:00:00Z'),
     deletedAt: null,
     updatedAt: new Date('2024-10-01T10:00:00Z'),
-    activeMusicians: '1 - 4 musicians',
     genres: ['Rock', 'Metal'],
   },
   {
@@ -35,7 +34,6 @@ const mockPosts = [
     createdAt: new Date('2024-09-20T12:15:00Z'),
     deletedAt: null,
     updatedAt: new Date('2024-09-20T12:15:00Z'),
-    activeMusicians: '1 - 4 musicians',
     genres: ['Rock'],
   },
   {
@@ -53,7 +51,6 @@ const mockPosts = [
     createdAt: new Date('2024-09-10T08:00:00Z'),
     deletedAt: null,
     updatedAt: new Date('2024-09-10T08:00:00Z'),
-    activeMusicians: '1 - 4 musicians',
     genres: ['Rock'],
   },
   {
@@ -71,7 +68,6 @@ const mockPosts = [
     createdAt: new Date('2024-07-30T16:30:00Z'),
     deletedAt: null,
     updatedAt: new Date('2024-07-30T16:30:00Z'),
-    activeMusicians: '1 - 4 musicians',
     genres: ['Pop'],
   },
   {
@@ -89,7 +85,6 @@ const mockPosts = [
     createdAt: new Date('2024-07-15T14:45:00Z'),
     deletedAt: null,
     updatedAt: new Date('2024-07-15T14:45:00Z'),
-    activeMusicians: '1 - 4 musicians',
     genres: ['Jazz', 'Soul'],
   },
 ];

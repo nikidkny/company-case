@@ -3,7 +3,6 @@ export type PostType = {
   title: string;
   description: string;
   instrument: string;
-  activeMusicians: string;
   experienceRequired: number;
   genres: string[];
   createdBy: string;
