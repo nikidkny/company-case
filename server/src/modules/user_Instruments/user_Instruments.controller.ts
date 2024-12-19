@@ -48,7 +48,9 @@ export class User_InstrumentsController {
     @Res() res: Response
   ) {
     this.user_InstrumentsService.create(createUserInstrumentDto);
-    return res.status(HttpStatus.OK)
+    return res.status(HttpStatus.OK).json({
+      message: 'Instrument added successfully',
+    });
   }
 
   @Patch(':id')

@@ -45,8 +45,6 @@ export const validateForm = (
 
     // Check if the field is required and empty
     if (required && (value === "" || value === undefined)) {
-      console.log(fieldName);
-      
       errors[field] = `${fieldName} is required.`;
       continue;
     }
@@ -92,20 +90,20 @@ export const validatePassword = (password: string) => {
 // Birthdate validation
 export const validateBirthdate = (birthdate: string) => {
   const birthDateObj = new Date(birthdate);
-  
+
   // Check if the birthdate is a valid date
   if (isNaN(birthDateObj.getTime())) {
     return "Invalid birthdate";
   }
-  
+
   const today = new Date();
   const age = today.getFullYear() - birthDateObj.getFullYear();
-  
+
   // Check if the year is before 1924
   if (birthDateObj.getFullYear() < 1924) {
     return "Birthdate must be after 1924";
   }
-  
+
   // Check if the person is at least 18 years old
   if (age < 18 || (age === 18 && today < new Date(birthDateObj.setFullYear(today.getFullYear())))) {
     return "Invalid birthdate. You must be at least 18 years old";
@@ -158,6 +156,23 @@ export const validateCity = (city: string) => {
 
     if (!cityExists) {
       return "Invalid city.";
+    }
+  }
+};
+
+export const notEmpty = (value: string | string[], fieldName: string) => {
+  console.log(fieldName);
+  console.log(value);
+  
+  if (Array.isArray(value)) {
+    // Check if the array is empty
+    if (value.length === 0) {
+      return `${fieldName} must not be empty`;
+    }
+  } else {
+    // Check if the value is an empty string or undefined/null
+    if (value === "" || value === undefined || value === null) {
+      return `${fieldName} must not be empty`;
     }
   }
 };
