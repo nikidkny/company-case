@@ -132,7 +132,7 @@ export default function ProfilePage() {
     <div className="flex flex-col gap-6">
       <div className="profile-base-wrapper p-4 border-y-solid border-y-gray-400 border-y-1px">
         <div className="flex flex-row gap-4 pb-4">
-          {/*TODO: have to add that the user image is the src if there is */}
+          {/*TO DO: have to add that the user image is the src if there is */}
           {user?.image ? (
             <Image src={user?.image} alt="Profile Image" className="rounded-full h-24 w-24" />
           ) : (
@@ -211,11 +211,12 @@ export default function ProfilePage() {
             ></Button>
           </div>
         </div>
-        {/* TO DO: map through logged in user's instruments for now it is static insturment */}
-        {/* {Object.values(instruments).length > 0 ? (
-          Object.values(instruments).map((instrument, index) => (
-            <InstrumentCard key={index} instrument={instrument} />
-          ))
+        {userInstruments && userInstruments.length > 0 ? (
+          userInstruments
+            .sort((a, b) => b.levelOfExperience - a.levelOfExperience)
+            .map((instrument) => (
+              <InstrumentCard key={instrument.instrumentId} instrument={instrument} />
+            ))
         ) : (
           <div className="flex flex-col items-center gap-4">
             <Icon
