@@ -45,13 +45,10 @@ export class PostsService {
   // find one post by id and populate the ensemble details
   async findOne(id: string): Promise<any> {
     const post = await this.postModel.findById(id).exec();
-    console.log('post', post);
-    console.log('post.id', post._id);
     const ensemblePost = await this.ensemblePostsModel
       .findOne({ postId: post._id.toString() })
       .populate('ensembleId')
       .exec();
-    console.log('ensemblePost', ensemblePost);
     return {
       post: post,
       ensemble: ensemblePost?.ensembleId,

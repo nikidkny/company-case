@@ -15,7 +15,6 @@ export default function EnsembleDetailsPage() {
   // Get the ensembleId from the URL
   const { ensemblesId } = useParams({ strict: false });
   const { user } = useStore();
-  //console.log(user);
   const { data: ensemble, triggerFetch: triggerFetchEnsembleDetails } = useFetch<EnsembleType>(
     {
       _id: "",
@@ -37,7 +36,7 @@ export default function EnsembleDetailsPage() {
     `/ensembles/${ensemblesId}`,
     "GET"
   );
-  console.log("ensemble - fetched", ensemble);
+  // console.log("ensemble - fetched", ensemble);
 
   // Get members' details (first name, last name) including the creator of the ensemble
   const { data: membersDetails, triggerFetch: triggerFetchMembersDetails } = useFetch(
@@ -50,13 +49,13 @@ export default function EnsembleDetailsPage() {
     { membersIds: ensemble.memberList, creatorId: ensemble.createdBy }
   );
 
-  console.log("membersDetails", membersDetails);
+  // console.log("membersDetails", membersDetails);
 
   const membersList: User[] = membersDetails.foundMembers;
   const creator: User = membersDetails.creator;
 
   const isUserMember = ensemble.memberList.includes(user._id);
-  console.log("isUserMember", isUserMember);
+  // console.log("isUserMember", isUserMember);
   //Join the ensemble
   const {
     data: registrationData,

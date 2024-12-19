@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "@tanstack/react-router";
-import { useStore } from "../store/useStore";
+// import { useStore } from "../store/useStore";
 import TextHeadline from "../components/atoms/TextHeadline";
 import TextBody from "../components/atoms/TextBody";
 // import EnsembleCard from "../components/molecules/EnsembleCard";
@@ -19,44 +19,35 @@ export default function PostDetailsPage() {
   // TO DO: add ensemble card
   const { userId } = getUserIdFromCookie();
   const { postId } = useParams({ from: "/posts/$postId" });
-  const { posts } = useStore();
   const navigate = useNavigate();
-  const [post, setPost] = useState(posts.find((post) => post._id === postId));
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // get the post by the post id
-  // const post = posts.find((post) => post._id === postId);
-  // get contact person id by the post createdBy property
-  const contactPersonId = post?.createdBy;
-
-  // check if the contact person id is the same as the logged in user id
-  const isContactPerson = userId === contactPersonId;
 
   const formatDate = (date?: Date | string): string => {
     if (!date) return "N/A"; // Handle undefined or null
     const parsedDate = typeof date === "string" ? new Date(date) : date;
     return isNaN(parsedDate.getTime()) ? "Invalid Date" : parsedDate.toDateString();
   };
+  // feth the ensemblePost
+  const { data: PostWithEnsembleData, triggerFetch: fetchPostWithEnsemble } =
+    useFetch<PostWithEnsembleType | null>(null, `/posts/${postId}`, "GET");
+
+  // get contact person id by the post createdBy property
+  const contactPersonId = PostWithEnsembleData?.post.createdBy;
+
+  // check if the contact person id is the same as the logged in user id
+  const isContactPerson = userId === contactPersonId;
+
   // fetch the contact person by the contact person id
   const { data: contactPerson, triggerFetch: fetchContactPerson } = useFetch<User | null>(
     null,
     `/users/${contactPersonId}`,
     "GET"
   );
-  // feth the ensemblePost
-  const { data: PostWithEnsembleData, triggerFetch: fetchPostWithEnsemble } =
-    useFetch<PostWithEnsembleType | null>(null, `/posts/${postId}`, "GET");
-  console.log("post", post);
-
   useEffect(() => {
-    if (!PostWithEnsembleData && !post) {
-      setPost(post);
+    if (!PostWithEnsembleData) {
       fetchPostWithEnsemble();
     }
-  }, [fetchPostWithEnsemble, PostWithEnsembleData, post]);
-
-  console.log("postsWithEnsemble", PostWithEnsembleData);
-  // get the ensemble from the postWithEnsembleData
-  const ensemble = PostWithEnsembleData?.ensemble;
+  }, [fetchPostWithEnsemble, PostWithEnsembleData]);
 
   // fetch the contact person when the contact person id changes
   useEffect(() => {
@@ -65,13 +56,10 @@ export default function PostDetailsPage() {
     }
   }, [contactPersonId, fetchContactPerson]);
 
-  const handleContactClick = () => {
-    setIsModalOpen(true);
-  };
+  const handleContactClick = () => setIsModalOpen(true);
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
+  const closeModal = () => setIsModalOpen(false);
+
   const getDescription = (level: number) => levelDescriptions[level];
 
   const handleBackClick = () => {
@@ -82,6 +70,9 @@ export default function PostDetailsPage() {
       navigate({ to: "/" });
     }
   };
+  // Destructure post and ensemble
+  const post = PostWithEnsembleData?.post;
+  const ensemble = PostWithEnsembleData?.ensemble;
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-4 bg-white border-b-solid border-b-1px border-b-gray-400 p-6">
