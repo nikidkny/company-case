@@ -13,7 +13,7 @@ import PostCard from "../components/molecules/PostCard";
 import { PostWithEnsembleType } from "../types/PostWithEnsembleType";
 
 //TODO: this page will be ensembles posts page and will need to be reworked.
-export default function EnsemblesPage() {
+export default function PostsPage() {
   const { posts, setPosts, filterOption, setFilterOption } = useStore();
   const { data: PostWithEnsembleData, triggerFetch: fetchPostWithEnsemble } = useFetch<
     PostWithEnsembleType[]

@@ -28,12 +28,11 @@ export default function Footer() {
           </Link>
         </li>
         <li>
-          <Link onClick={() => !loginStatus && displayPopUp(true)} to={(loginStatus && "/posts") || "/"} className="link text-white">
-            See posts
-          </Link>
-        </li>
-        <li>
-          <Link onClick={() => !loginStatus && displayPopUp(true)} to={(loginStatus && "/ensembles") || "/"} className="link text-white">
+          <Link
+            onClick={() => !loginStatus && displayPopUp(true)}
+            to={(loginStatus && "/posts") || "/"}
+            className="link text-white"
+          >
             Find ensemble
           </Link>
         </li>
@@ -58,7 +57,11 @@ export default function Footer() {
           </a>
         </li>
         <li className="w-full max-w-sm xs:max-w-xs ">
-          <Icon name={ICON_NAMES.footer_music} viewBox={"0 0 290.251 100.704"} className="w-full h-auto" />
+          <Icon
+            name={ICON_NAMES.footer_music}
+            viewBox={"0 0 290.251 100.704"}
+            className="w-full h-auto"
+          />
         </li>
       </ul>
     </div>
