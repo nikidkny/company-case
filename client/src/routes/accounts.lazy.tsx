@@ -12,8 +12,6 @@ export const Route = createLazyFileRoute("/accounts")({
   component: AccountsPage,
 });
 
-//TODO: why if the signup with already existing mail, no error
-
 function AccountsPage() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -28,6 +26,7 @@ function AccountsPage() {
   // State to hold validation error messages for the login form
   const [loginError, setLoginError] = useState<string | string[]>([]);
 
+  // Specify ValidationSchema
   const signupValidationSchema: ValidationSchema = {
     firstName: {
       validator: (value: string) => validateName(value, "First name"),
@@ -62,52 +61,6 @@ function AccountsPage() {
       navigate({ to: "/" });
     }
   }, [userId, navigate]);
-
-
-  /*
-
-  // Function to validate signup form data
-  const validateForm = (signupFormData: typeof signupData) => {
-    const errors: { [key: string]: string } = {};
-    if (signupFormData) {
-
-      // Validate first and last names
-      const firstNameError = validateName(signupFormData.firstName, "First name");
-      if (firstNameError) {
-        errors.firstName = firstNameError;
-      }
-
-      const lastNameError = validateName(signupFormData.lastName, "Last name");
-      if (lastNameError) {
-        errors.lastName = lastNameError;
-      }
-
-      // Validate email format
-      const emailError = validateEmail(signupFormData.email);
-      if (emailError) {
-        errors.email = emailError;
-      }
-
-      // Validate birthdate
-      const birthdateError = validateBirthdate(signupFormData.birthdate);
-      if (birthdateError) {
-        errors.birthdate = birthdateError;
-      }
-
-      // Validate password length
-      const passwordError = validatePassword(signupFormData.password);
-      if (passwordError) {
-        errors.password = passwordError;
-      }
-
-      // Check if passwords match
-      if (signupFormData.password !== signupFormData.confirmPassword) {
-        errors.confirmPassword = "Passwords do not match";
-      }
-    }
-    return errors;
-  };
-  */
 
   // Generalized change handler for both forms
   const handleChange = (name: string, value: string | boolean) => {
