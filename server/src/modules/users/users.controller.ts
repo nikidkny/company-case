@@ -8,16 +8,19 @@ import {
   Param,
   Req,
   UseGuards,
+  Res,
+  HttpStatus,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { GetMembersDetailsDto } from './dto/get-members-details.dto';
+import { Response} from 'express';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
   @UseGuards(JwtAuthGuard)
   @Get()
   async findAll(@Req() req) {
@@ -33,13 +36,23 @@ export class UsersController {
   }
 
   @Post()
-  async create(@Body() createUserDto: CreateUserDto) {
+  async create(
+    @Body() createUserDto: CreateUserDto,
+  ) {
     return await this.usersService.create(createUserDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return await this.usersService.update(id, updateUserDto);
+  async update(
+    @Param('id') id: string, 
+    @Body() updateUserDto: UpdateUserDto,
+    @Res() res: Response
+  ) {
+    await this.usersService.update(id, updateUserDto, res);
+    return res.status(HttpStatus.OK).json({
+      message: 'User details updated successfully',
+    });
   }
   @Post('details')
   async getMembersDetails(@Body() getMembersDetailsDto: GetMembersDetailsDto) {

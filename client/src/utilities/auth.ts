@@ -138,6 +138,6 @@ export const validateCity = (city: string) => {
   const cityExists = cities.includes(city.trim());
 
   if (!cityExists) {
-    return "Invalid city. Please select a valid city from the list.";
+    return "Invalid city.";
   }
 };

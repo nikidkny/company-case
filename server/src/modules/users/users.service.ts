@@ -1,10 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './user.entity';
 import { Model, Types } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { GetMembersDetailsDto } from './dto/get-members-details.dto';
+import { error } from 'console';
+import { Response } from 'express';
 
 @Injectable()
 export class UsersService {
@@ -29,10 +31,17 @@ export class UsersService {
     return createdUser.save();
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
-    return this.userModel
-      .findByIdAndUpdate(id, updateUserDto, { new: true })
-      .exec();
+  async update(id: string, updateUserDto: UpdateUserDto, res: Response): Promise<User> {
+    try {
+      return this.userModel
+        .findByIdAndUpdate(id, updateUserDto, { new: true })
+        .exec();
+    } catch (error) {
+      console.error(error)
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: error,
+      });
+    }
   }
 
   async updatePassword(id: string, hashedPassword: string): Promise<void> {
