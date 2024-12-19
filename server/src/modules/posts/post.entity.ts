@@ -13,8 +13,8 @@ export class Post {
   location: string;
   @Prop({ required: true })
   description: string;
-  @Prop({ required: true })
-  type: string;
+  // @Prop({ required: true })
+  // type: string;
 
   //if the type of post is "looking for a musician.." then the post will display the ensemble name in the "createdBy" otherwise we display the user by default
   @Prop()
@@ -26,17 +26,17 @@ export class Post {
   @Prop({ required: true })
   instrument: string;
   @Prop()
-  experienceRequired: string;
+  experienceRequired: number;
   @Prop()
-  genre: string;
+  genres: string[];
   @Prop()
   webPage: string;
   @Prop()
-  createdAt: Date;
+  createdAt: string;
   @Prop()
-  deletedAt: Date;
+  deletedAt: string;
   @Prop()
-  updatedAt: Date;
+  updatedAt: string;
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);

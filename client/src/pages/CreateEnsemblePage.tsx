@@ -49,6 +49,7 @@ export function CreateEnsemblePage() {
   const { user } = useStore();
   // console.log(user);
   const navigate = useNavigate();
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     //this is just when the ensemble is first created. the only member is the creator itself.
@@ -69,7 +70,7 @@ export function CreateEnsemblePage() {
       isPermanent,
       genres,
     };
-    console.log("ensembleData", ensembleData);
+
     setObjectData(ensembleData);
     setLoading(true);
 
@@ -84,9 +85,17 @@ export function CreateEnsemblePage() {
           params: { profileId: user._id },
         });
       }
+      resetForm();
     }, 2000);
-    resetForm();
   };
+
+  // Reset form on component unmount
+  useEffect(() => {
+    return () => {
+      // Reset when navigating away
+      resetForm();
+    };
+  }, [resetForm]);
 
   useEffect(() => {
     console.log("Updated objectData:", objectData);
@@ -98,6 +107,7 @@ export function CreateEnsemblePage() {
     loading,
     setLoading,
     triggerFetch,
+    shouldFetch,
   } = useFetch<EnsembleType[]>(
     [],
     "/ensembles",
@@ -118,7 +128,7 @@ export function CreateEnsemblePage() {
       console.log("errors", error);
       return;
     }
-  }, [createdEnsemble, setEnsembles, error]);
+  }, [createdEnsemble, setEnsembles, error, shouldFetch]);
 
   // useEffect(() => {
   //   if (error) {
@@ -147,6 +157,7 @@ export function CreateEnsemblePage() {
         <TextHeadline variant="h3" size="lg">
           Create an ensemble
         </TextHeadline>
+        //TODO: add validation on the form inputs
         <form onSubmit={handleSubmit} className="flex flex-col justify-around gap-6">
           <TextInput inputType="text" value={name} onChange={(value) => setName(value)} placeholder={"Ensemble's name"} id="ensembleName" name="ensembleName" className="w-auto" />
 
@@ -202,7 +213,15 @@ export function CreateEnsemblePage() {
             <TextBody variant="strong" size="md" className="text-blue-500">
               Number of active musicians
             </TextBody>
-            <Dropdown initialSelectedLabel="Select a number" options={activeMusiciansNumberOptions} className="w-auto" selectedOption={activeMusicians} onSelect={(value: string) => setActiveMusicians(value)} />
+            <Dropdown
+              initialSelectedLabel="Select a number"
+              options={activeMusiciansNumberOptions}
+              className="w-auto"
+              selectedOption={activeMusicians}
+              onSelect={(value) => {
+                setActiveMusicians(value);
+              }}
+            />
           </div>
 
           {/* sessions frequency */}
@@ -210,7 +229,15 @@ export function CreateEnsemblePage() {
             <TextBody variant="strong" size="md" className="text-blue-500">
               Frequency of music sessions
             </TextBody>
-            <Dropdown initialSelectedLabel="Select a frequency" options={musicSessionsFrequencyOptions} selectedOption={sessionFrequency} onSelect={(value) => setSessionFrequency(value)} className="w-auto" />
+            <Dropdown
+              initialSelectedLabel="Select a frequency"
+              options={musicSessionsFrequencyOptions}
+              selectedOption={sessionFrequency}
+              onSelect={(value) => {
+                setSessionFrequency(value);
+              }}
+              className="w-auto"
+            />
           </div>
 
           {/* Type of ensemble */}

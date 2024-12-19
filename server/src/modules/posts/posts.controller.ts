@@ -13,11 +13,14 @@ import { CreatePostDto } from './dto/create-post.dto';
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
-  @Get()
-  findAll() {
-    // Empty endpoint to get all posts
+  @Get('createdBy/:createdById')
+  async findByCreatedBy(@Param('createdById') createdById: string) {
+    return await this.postsService.findByCreatedBy(createdById);
   }
-
+  @Get()
+  async findAllWithEnsembles() {
+    return await this.postsService.findAllWithEnsembles();
+  }
   @Get(':id')
   findOne(@Param('id') id: string) {
     // Empty endpoint to get a single post

@@ -1,12 +1,15 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
-import AuthGuard from "../../guard/RouteGuard";
-import EnsemblesPage from "../../pages/EnsemblesPage";
+import { createLazyFileRoute } from '@tanstack/react-router'
+import AuthGuard from '../../guard/RouteGuard'
 
-//ensembles overview page
-export const Route = createLazyFileRoute("/ensembles/")({
+//this is actually the posts page!
+export const Route = createLazyFileRoute('/ensembles/')({
   component: () => (
     <AuthGuard>
-      <EnsemblesPage />
+      <RouteComponent />
     </AuthGuard>
   ),
-});
+})
+
+function RouteComponent() {
+  return '/ensembles!'
+}

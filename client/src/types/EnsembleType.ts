@@ -8,8 +8,8 @@ export type EnsembleType = {
   numberOfMembers?: number;
   memberList: string[];
   image?: File | null;
-  activeMusicians: string | null;
-  sessionFrequency: string | null;
+  activeMusicians: string;
+  sessionFrequency: string;
   isPermanent: boolean | null;
   genres: string[];
   createdBy: string;

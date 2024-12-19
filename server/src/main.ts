@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { SeederService } from './seeder/seeder.service';
-import { InstrumentsService } from './seeder/instruments/instruments.service';
+import { InstrumentsService } from './modules/instruments/instruments.service';
 import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
@@ -12,7 +12,7 @@ async function bootstrap() {
 
   app.enableCors({
     origin: 'http://localhost:5173', // Frontend URL
-    credentials: true,              // Allow cookies if needed
+    credentials: true, // Allow cookies if needed
   });
 
   app.useGlobalPipes(
@@ -34,6 +34,6 @@ async function bootstrap() {
   console.log('Seeding complete');
 
   await app.listen(process.env.PORT);
-  console.log('Server running on port', process.env.PORT)
+  console.log('Server running on port', process.env.PORT);
 }
 bootstrap();

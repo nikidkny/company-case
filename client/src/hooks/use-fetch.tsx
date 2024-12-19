@@ -28,7 +28,7 @@ export function useFetch<T>(initialValue: T, subPath: string | null, method: HTT
         const response = await fetch(serverBaseURL + subPath, {
           method,
           headers: memoizedHeaders,
-          body: method !== "GET" && memoizedBody ? JSON.stringify(memoizedBody) : null,
+          body: method !== "GET" && shouldFetch ? JSON.stringify(memoizedBody) : null,
           // body: shouldFetch ? JSON.stringify(memoizedBody) : null,
           credentials: "include",
         });
@@ -36,16 +36,14 @@ export function useFetch<T>(initialValue: T, subPath: string | null, method: HTT
           const responseBody = await response.json();
           // Set the error without throwing the error so it doesn't enter the catch block
           setError(Array.isArray(responseBody.message) ? responseBody.message : [responseBody.message]);
-          return;  // Stop execution here, no need to continue the try block
+          return; // Stop execution here, no need to continue the try block
         }
         const responseBody = await response.json();
 
         //data is set as the response of the request
         setData(responseBody);
       } catch (error) {
-        setError(
-          error instanceof Error ? [error.message] : ["An unknown error occurred"]
-        );
+        setError(error instanceof Error ? [error.message] : ["An unknown error occurred"]);
       } finally {
         setLoading(false);
       }

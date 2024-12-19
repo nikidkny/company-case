@@ -6,11 +6,12 @@ import { UsersModule } from './modules/users/users.module';
 import { PostsModule } from './modules/posts/posts.module';
 import { EnsemblesModule } from './modules/ensembles/ensembles.module';
 import { SeederModule } from './seeder/seeder.module';
-import { InstrumentsModule } from './seeder/instruments/instruments.module';
+import { InstrumentsModule } from './modules/instruments/instruments.module';
 import { User_InstrumentsModule } from './modules/user_Instruments/user_Instruments.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { User_EnsembleModule } from './modules/user_ensembles/user-ensemble.module';
+import { Ensemble_PostsModule } from './modules/ensemble_posts/ensemble_posts.module';
 
 @Module({
   imports: [
@@ -21,8 +22,8 @@ import { User_EnsembleModule } from './modules/user_ensembles/user-ensemble.modu
     InstrumentsModule,
     User_InstrumentsModule,
     AuthModule,
-
     User_EnsembleModule,
+    Ensemble_PostsModule,
     MongooseModule.forRootAsync({
       useFactory: async (configService: ConfigService) => ({
         uri: configService.get<string>('MONGODB_URI'),

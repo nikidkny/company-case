@@ -19,4 +19,6 @@ describe('UserInstrumentsController', () => {
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
+  //TO dO: Add test for getting all instruments for a given user
+  //TO dO: Add test for getting all instruments for all users except a given user
 });

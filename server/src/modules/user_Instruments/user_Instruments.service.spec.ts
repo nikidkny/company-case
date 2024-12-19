@@ -15,4 +15,6 @@ describe('UserInstrumentsService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+  // TO DO: Add test for getting all instruments for a given user
+  // TO DO: Add test for getting all instruments for all users except a given user
 });

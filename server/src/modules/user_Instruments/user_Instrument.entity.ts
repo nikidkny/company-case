@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Transform } from 'class-transformer';
 import { HydratedDocument, Types } from 'mongoose';
 
 export type User_InstrumentDocument = HydratedDocument<User_Instrument>;
@@ -10,11 +11,14 @@ export class User_Instrument {
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   userId: Types.ObjectId;
   @Prop({ type: Types.ObjectId, ref: 'Instrument', required: true })
-  instrumentId: Types.ObjectId;
+  @Transform(({ value }) => value.toString()) // transform it to make sure it's a string
+  instrumentId: Types.ObjectId | string;
   @Prop({ required: true })
-  levelOfExperience: string;
+  name: string;
   @Prop({ required: true })
-  genre: string[];
+  levelOfExperience: number;
+  @Prop({ required: true })
+  genres: string[];
 }
 export const User_InstrumentSchema =
   SchemaFactory.createForClass(User_Instrument);

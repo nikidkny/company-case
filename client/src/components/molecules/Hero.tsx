@@ -21,16 +21,30 @@ export default function Hero() {
     <>
       <div className="flex flex-col items-center">
         <div className="w-full max-w-sm xs:max-w-xs">
-          {(!loginStatus && <Icon name={ICON_NAMES.hero_image} viewBox={"0 0 470 325.475"} className="w-full h-auto" />) || <Icon name={ICON_NAMES.profile_welcome} viewBox={"0 0 150.993 180.24"} className="w-full h-auto" />}
+          {(!loginStatus && (
+            <Icon
+              name={ICON_NAMES.hero_image}
+              viewBox={"0 0 470 325.475"}
+              className="w-full h-auto"
+            />
+          )) || (
+            <Icon
+              name={ICON_NAMES.profile_welcome}
+              viewBox={"0 0 150.993 180.24"}
+              className="w-full h-auto"
+            />
+          )}
         </div>
 
         <TextHeadline size="sm" variant="h1" className="pt-6 pb-8">
-          {(!loginStatus && "A place where musicians find other musicians and play music together") || `Welcome back ${user.firstName}!`}
+          {(!loginStatus &&
+            "A place where musicians find other musicians and play music together") ||
+            `Welcome back ${user.firstName}!`}
         </TextHeadline>
         <div className="flex flex-row items-center justify-between gap-3 w-full items-stretch text-blue-500">
           <Button
             buttonState="default"
-            buttonLabel="Find posts"
+            buttonLabel="Find musicians"
             buttonVariant="secondary"
             iconPosition="top"
             icon={ICON_NAMES.author_icon}
@@ -51,7 +65,7 @@ export default function Hero() {
             iconWidth={13.887}
             iconViewbox={"0 0 13.887 13.887"}
             onClick={() => !loginStatus && displayPopUp(true)}
-            to={loginStatus ? "/ensembles" : undefined}
+            to={loginStatus ? "/posts" : undefined}
             className="no-underline w-full"
           ></Button>
         </div>
@@ -59,7 +73,14 @@ export default function Hero() {
         {popUp && (
           <PopUp title={"Log in to find musicians you can play with in all of Denmark"}>
             <a href="https://facebook.com" target="_blank">
-              <Button buttonState="default" buttonLabel="Log in with Facebook" buttonVariant="primary" iconPosition="none" size="sm" className="no-underline bg-blue-900 inline w-full"></Button>
+              <Button
+                buttonState="default"
+                buttonLabel="Log in with Facebook"
+                buttonVariant="primary"
+                iconPosition="none"
+                size="sm"
+                className="no-underline bg-blue-900 inline w-full"
+              ></Button>
             </a>
             <Button
               iconPosition="none"

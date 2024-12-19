@@ -46,11 +46,11 @@ describe('PostsService', () => {
       title: 'Post Title',
       description: 'Post description',
       location: 'Copenhagen',
-      type: 'Musician',
+      createdBy: 'John',
       instrument: 'Violin',
       webpage: 'Webpage link',
-      experienceRequired: '5 years',
-      genre: 'Rock',
+      experienceRequired: 5,
+      genres: ['Rock'],
     };
 
     // Act
