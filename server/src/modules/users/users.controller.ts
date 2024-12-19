@@ -42,6 +42,7 @@ export class UsersController {
     return await this.usersService.create(createUserDto);
   }
 
+  //TODO: check if new email is already taken
   @UseGuards(JwtAuthGuard)
   @Put(':id')
   async update(
