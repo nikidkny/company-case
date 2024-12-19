@@ -1,5 +1,5 @@
 import Button from "../components/atoms/Button";
-import ProfileBadge from "../components/atoms/ProfileBadge";
+import Badge from "../components/atoms/Badge";
 import TextBody from "../components/atoms/TextBody";
 import TextHeadline from "../components/atoms/TextHeadline";
 import { useStore } from "../store/useStore";
@@ -109,9 +109,7 @@ export default function ProfilePage() {
               <TextHeadline variant="h1" size="sm">
                 {fullName}
               </TextHeadline>
-              {user?.isAvailable && (
-                <ProfileBadge ProfileBadgeLabel="Seeking" ProfileBadgeSize="sm" />
-              )}
+              {user?.isAvailable && <Badge BadgeLabel="Seeking" BadgeSize="sm" />}
             </div>
             <TextBody>{formatDate(user.createdAt)}</TextBody>
             <TextBody>{formatDate(user.lastLoggedIn)}</TextBody>
@@ -234,9 +232,13 @@ export default function ProfilePage() {
             My Posts
           </TextHeadline>
           <div>
-
-            <Button buttonVariant="secondary" to="/posts/create/" iconPosition="none" buttonLabel="Create" className="no-underline"></Button>
-
+            <Button
+              buttonVariant="secondary"
+              to="/posts/create/"
+              iconPosition="none"
+              buttonLabel="Create"
+              className="no-underline"
+            ></Button>
           </div>
         </div>
         {/* TO DO: map through logged in user's posts for now it is static posts */}

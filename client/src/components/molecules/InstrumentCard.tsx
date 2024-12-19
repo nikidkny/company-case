@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import { UserInstrumentType } from "../../types/userInstrumentType";
-import ProfileBadge from "../atoms/ProfileBadge";
+import Badge from "../atoms/Badge";
 import Tag from "../atoms/Tag";
 import TextBody from "../atoms/TextBody";
 import TextHeadline from "../atoms/TextHeadline";
@@ -35,10 +35,8 @@ export default function InstrumentCard({ instrument, variant = "default", classN
         </div>
       </div>
       <div className="flex flex-row gap-2 flex-wrap">
-
         {instrument.genres?.map((genre, index) => (
-
-          <ProfileBadge key={index} ProfileBadgeLabel={genre} ProfileBadgeSize="sm" />
+          <Badge key={index} BadgeLabel={genre} BadgeSize="sm" />
         ))}
       </div>
     </div>
