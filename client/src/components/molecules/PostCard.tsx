@@ -17,24 +17,18 @@ export default function PostCard({ post, ensemble }: Props) {
   const minumumExperience = post.experienceRequired + "+";
   return (
     <div className="postcard-wrapper flex flex-col gap-4 border-solid border border-gray-400  rounded-lg shadow-md">
-      <div className="flex flex-row justify-between items-center border-b-1px border-b-solid border-b-gray-400 px-6 pt-4.5">
+      <div className="flex flex-row justify-between items-center border-b-1px border-b-solid border-b-gray-400 px-6 pt-4.5 bg-gray-200">
         {/* needs to ensemble.image */}
         <div className="flex flex-col gap-1 pb-3">
           <TextHeadline variant="h3" size="sm">
             {ensemble?.name}
           </TextHeadline>
           <TextBody size="sm" className="text-gray-600">
-            {ensemble?.city} •
+            {ensemble?.city} • {ensemble?.activeMusicians}
           </TextBody>
         </div>
         <div className="h-full flex">
-          <Icon
-            name={ICON_NAMES.instruments}
-            height={32}
-            width={36}
-            viewBox={"0 0 36 32"}
-            className="text-blue-500"
-          />
+          <Icon name={ICON_NAMES.instruments} height={32} width={36} viewBox={"0 0 36 32"} className="text-blue-500" />
         </div>
       </div>
 

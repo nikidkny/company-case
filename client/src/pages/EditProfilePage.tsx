@@ -43,13 +43,7 @@ export default function EditProfilePage() {
     isAvailable,
   };
   console.log(userData);
-  const { triggerFetch: userFetchTrigger } = useFetch<Partial<User> | null>(
-    null,
-    userId ? `/users/${userId}` : null,
-    "PUT",
-    { "Content-Type": "application/json" },
-    userData
-  );
+  const { triggerFetch: userFetchTrigger } = useFetch<Partial<User> | null>(null, userId ? `/users/${userId}` : null, "PUT", { "Content-Type": "application/json" }, userData);
   // populate the data from the user object
   useEffect(() => {
     if (user) {
@@ -71,7 +65,7 @@ export default function EditProfilePage() {
       alert("Changes saved successfully!");
       setHasChanges(false);
     } catch (error) {
-      alert(`Failed to save changes: ${error.message}`);
+      alert(`Failed to save changes: ${error}`);
     }
   };
 
@@ -88,12 +82,7 @@ export default function EditProfilePage() {
   return (
     <div className="edit-page-wrapper flex flex-col gap-6 p-6 ">
       <div className="back-button-wrapper flex flex-col items-start">
-        <Button
-          onClick={handleBackButtonClick}
-          buttonVariant="secondary"
-          iconPosition="none"
-          className="w-fit"
-        >
+        <Button onClick={handleBackButtonClick} buttonVariant="secondary" iconPosition="none" className="w-fit">
           Back
         </Button>
       </div>
@@ -188,10 +177,7 @@ export default function EditProfilePage() {
         <TextHeadline variant="h3" size="sm">
           Contact information
         </TextHeadline>
-        <TextBody size="sm">
-          Your email address and mobile number are only visible to others if you have marked on your
-          profile that you are looking for someone to play with or if you have an active posting.
-        </TextBody>
+        <TextBody size="sm">Your email address and mobile number are only visible to others if you have marked on your profile that you are looking for someone to play with or if you have an active posting.</TextBody>
         <TextInput
           inputType="text"
           placeholder="Email"
@@ -219,10 +205,7 @@ export default function EditProfilePage() {
         <TextHeadline variant="h3" size="sm">
           Profile status
         </TextHeadline>
-        <TextBody size="sm">
-          Are you currently looking for someone to play with? If you select 'not looking' your
-          profile will not appear when other musicians do a search.
-        </TextBody>
+        <TextBody size="sm">Are you currently looking for someone to play with? If you select 'not looking' your profile will not appear when other musicians do a search.</TextBody>
         <div className="">
           <ToggleButtonGroup
             selectedOption={isAvailable ? "searching" : "notSearching"}

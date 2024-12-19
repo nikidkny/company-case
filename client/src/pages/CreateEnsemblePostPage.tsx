@@ -43,11 +43,7 @@ export default function CreateEnsemblePostPage() {
     setObjectData,
   } = useStore();
 
-  const { data: fetchedInstruments, triggerFetch: instrumentsFetch } = useFetch<InstrumentType[]>(
-    [],
-    "/instruments",
-    "GET"
-  );
+  const { data: fetchedInstruments, triggerFetch: instrumentsFetch } = useFetch<InstrumentType[]>([], "/instruments", "GET");
 
   const { data: ensemble, triggerFetch: triggerFetchEnsembleDetails } = useFetch<EnsembleType>(
     {
@@ -81,10 +77,7 @@ export default function CreateEnsemblePostPage() {
   }, [instruments, ensemblesId]);
 
   useEffect(() => {
-    if (
-      fetchedInstruments.length > 0 &&
-      JSON.stringify(instruments) !== JSON.stringify(fetchedInstruments)
-    ) {
+    if (fetchedInstruments.length > 0 && JSON.stringify(instruments) !== JSON.stringify(fetchedInstruments)) {
       setInstruments(fetchedInstruments);
       // This will correctly replace the list when fetching data - avoiding duplication
     }
@@ -212,24 +205,12 @@ export default function CreateEnsemblePostPage() {
         </TextHeadline>
         //TODO: add validation on the form inputs
         <form onSubmit={handleSubmit} className="flex flex-col justify-around gap-6">
-          <TextInput
-            inputType="text"
-            value={postTitle}
-            onChange={(value) => setPostTitle(value)}
-            placeholder={"Title"}
-            id="postTitle"
-            name="postTitle"
-            className="w-auto"
-          />
+          <TextInput inputType="text" value={postTitle} onChange={(value) => setPostTitle(value)} placeholder={"Title"} id="postTitle" name="postTitle" className="w-auto" />
           <div className="flex flex-col gap-3">
             <TextBody variant="strong" size="md" className="text-blue-500">
               Description
             </TextBody>
-            <Textarea
-              textareaPlaceholder="Write a short description for your post"
-              textareaValue={postDescription}
-              onChange={(value) => setPostDescription(value)}
-            />
+            <Textarea textareaPlaceholder="Write a short description for your post" textareaValue={postDescription} onChange={(value) => setPostDescription(value)} />
           </div>
           {/* instrument selection */}
           <div className="flex flex-col gap-3">
@@ -241,9 +222,7 @@ export default function CreateEnsemblePostPage() {
               options={instruments.map((instrument) => instrument.name)}
               selectedOption={postInstrument ? postInstrument.name : ""}
               onSelect={(value) => {
-                const selectedInstrumentObj = instruments.find(
-                  (instrument) => instrument.name === value
-                );
+                const selectedInstrumentObj = instruments.find((instrument) => instrument.name === value);
                 if (selectedInstrumentObj) {
                   setPostInstrument(selectedInstrumentObj);
                 }
@@ -302,14 +281,7 @@ export default function CreateEnsemblePostPage() {
             />
           </div>
 
-          <Button
-            buttonVariant="primary"
-            buttonLabel="Create post"
-            buttonState={(loading && "disabled") || "default"}
-            iconPosition="top"
-            className="w-auto m-b-6 py-4"
-            type="submit"
-          >
+          <Button buttonVariant="primary" buttonLabel="Create post" buttonState={(loading && "disabled") || "default"} iconPosition="top" className="w-auto m-b-6 py-4" type="submit">
             {loading ? "Creating..." : "Create post"}
           </Button>
         </form>

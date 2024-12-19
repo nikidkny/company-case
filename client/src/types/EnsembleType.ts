@@ -7,7 +7,7 @@ export type EnsembleType = {
   city: string;
   numberOfMembers?: number;
   memberList: string[];
-  image?: File | null;
+  // image?: File | null;
   activeMusicians: string;
   sessionFrequency: string;
   isPermanent: boolean | null;
