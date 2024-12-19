@@ -33,9 +33,6 @@ function AccountsPage() {
     }
   }, [userId, navigate]);
 
-  // TODO:
-  // - Maybe create a utils for validating forms with all the function. Wait to implement more valdiation.
-
   // Function to validate signup form data
   const validateForm = (signupFormData: typeof signupData) => {
     const errors: { [key: string]: string } = {};

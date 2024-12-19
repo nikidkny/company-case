@@ -61,7 +61,11 @@ export default function ProfileSettingsPage() {
   );
 
   // Update the newsLetter
-  const { triggerFetch: triggerNewsletter } = useFetch(
+  const { 
+    data: newsLetterUpdateData,
+    error: newsLetterUpdateError,
+    triggerFetch: triggerNewsletterUpdate 
+  } = useFetch(
     null,
     `/users/${userId}`,
     "PUT",
@@ -130,7 +134,7 @@ export default function ProfileSettingsPage() {
 
       //If the newsLetter has changed
     } else if (newsletter !== user.isNewsletter) {
-      triggerNewsletter();
+      triggerNewsletterUpdate();
       setHasChanges(false);
     } else {
       alert("No changes to save!");
@@ -190,6 +194,20 @@ export default function ProfileSettingsPage() {
       setShowPasswordFields(false);
     }
   }, [passwordUpdateData, passwordUpdateError]);
+
+  // Handling error for newsLetter
+  useEffect(() => {
+    // Show alert if there is an error updating the password
+    if (newsLetterUpdateError) {
+      setBackendEProfileValidationErrors(newsLetterUpdateError!)
+    }
+    // Clear password fields and show alert after update is successful
+    if (newsLetterUpdateData) {
+      alert("Settings updated successfully!");
+    }
+  }, [newsLetterUpdateData, newsLetterUpdateError]);
+
+
 
   // *** Delete Profile ***
   const deleteFetch = useFetch(null, `/auth/${userId}`, "DELETE", {

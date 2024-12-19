@@ -69,7 +69,6 @@ export class AuthController {
     await this.authService.updatePassword(userId, updatePasswordDto, res);
   }
 
-  // TODO: add password validation before delete, find user before deliting it
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   @HttpCode(HttpStatus.OK)

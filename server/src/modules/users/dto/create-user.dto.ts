@@ -14,10 +14,12 @@ export class CreateUserDto {
   email: string;
 
   @IsNotEmpty({ message: 'Password should not be empty' })
-  @MinLength(8, { message: 'Password must be at least 6 characters long' })
+  @IsString({ message: 'Last name must be a string' })
+  @MinLength(8, { message: 'Password must be at least 8 characters long' })
   password: string;
 
   @IsNotEmpty({ message: 'Confirm password should not be empty' })
+  @IsString({ message: 'Last name must be a string' })
   confirmPassword: string;
 
   @IsNotEmpty({ message: 'Birthdate should not be empty' })
