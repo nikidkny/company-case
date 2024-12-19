@@ -44,7 +44,7 @@ export default defineConfig({
     },
     borderRadius: {
       base: "10px",
-      ProfileBadge: "4px",
+      Badge: "4px",
       PostBadge: "15px",
       input: "10px",
     },
@@ -110,11 +110,11 @@ export default defineConfig({
       "font-montserrat font-bold text-body-sm leading-1.5 p-2 rounded-PostBadge w-fit",
     "post-badge--offer": "bg-green-100 text-green-500",
     "post-badge--wanted": "bg-blue-100 text-blue-300",
-    //profile badge
-    "profile-badge--lg":
-      "bg-blue-200 text-blue-500 font-montserrat font-bold text-body-lg leading-1.625 p-2 rounded-ProfileBadge w-fit",
-    "profile-badge--sm":
-      "bg-blue-200 text-blue-500 font-montserrat font-bold text-body-md font-montserrat font-bold leading-1.29 p-2 rounded-ProfileBadge w-fit",
+    //badge
+    "badge--lg":
+      "bg-blue-200 text-blue-500 font-montserrat font-bold text-body-lg leading-1.625 p-2 rounded-Badge w-fit",
+    "badge--sm":
+      "bg-blue-200 text-blue-500 font-montserrat font-bold text-body-md font-montserrat font-bold leading-1.29 p-2 rounded-Badge w-fit",
     // progress bar
     "progress-bar": "bg-gray-400 h-2 rounded-1px",
     "progress-bar__fill": "bg-blue-500 h-2 rounded-1px",
@@ -172,8 +172,8 @@ export default defineConfig({
     "post-badge--sm",
     "post-badge--offer",
     "post-badge--wanted",
-    "profile-badge--lg",
-    "profile-badge--sm",
+    "badge--lg",
+    "badge--sm",
     "progress-bar",
     "progress-bar__fill",
     "radio-btn",

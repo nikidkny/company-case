@@ -1,4 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Montserrat:wght@400;700&display=swap");
+#root {
+  background-color: #f9f9f9;
+}
 /* @import "uno.css";
 #root {
   max-width: 1280px;

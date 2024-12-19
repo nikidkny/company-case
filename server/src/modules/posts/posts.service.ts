@@ -15,6 +15,7 @@ export class PostsService {
     private ensemblePostsModel: Model<Ensemble_PostsDocument>,
     @InjectModel(Post.name) private postModel: Model<PostDocument>,
   ) {}
+  // async findAll() {}
 
   async findByCreatedBy(createdById: string): Promise<Post[]> {
     return await this.postModel.find({ createdBy: createdById }).exec();
@@ -38,7 +39,21 @@ export class PostsService {
     });
   }
 
-  findOne(id: string) {}
+  async findTest() {
+    return 'Test';
+  }
+  // find one post by id and populate the ensemble details
+  async findOne(id: string): Promise<any> {
+    const post = await this.postModel.findById(id).exec();
+    const ensemblePost = await this.ensemblePostsModel
+      .findOne({ postId: post._id.toString() })
+      .populate('ensembleId')
+      .exec();
+    return {
+      post: post,
+      ensemble: ensemblePost?.ensembleId,
+    };
+  }
   async create(createPostDto: CreatePostDto): Promise<Post> {
     try {
       const createdPost = new this.postModel(createPostDto);
