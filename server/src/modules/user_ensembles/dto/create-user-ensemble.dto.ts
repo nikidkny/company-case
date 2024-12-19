@@ -2,9 +2,9 @@ import { IsNotEmpty } from 'class-validator';
 
 export class CreateUserEnseble {
   @IsNotEmpty()
-  user_id: string;
+  userId: string;
   @IsNotEmpty()
-  ensemble_id: string;
+  ensembleId: string;
   @IsNotEmpty()
-  joined_at: Date;
+  joinedAt: Date;
 }
