@@ -1,4 +1,4 @@
-import { useParams } from "@tanstack/react-router";
+import { useNavigate, useParams } from "@tanstack/react-router";
 import { useStore } from "../store/useStore";
 import TextHeadline from "../components/atoms/TextHeadline";
 import TextBody from "../components/atoms/TextBody";
@@ -18,8 +18,9 @@ import { PostWithEnsembleType } from "../types/PostWithEnsembleType";
 export default function PostDetailsPage() {
   // TO DO: add ensemble card
   const { userId } = getUserIdFromCookie();
-  const { postId } = useParams({ from: "/ensembles/posts/$postId" });
+  const { postId } = useParams({ from: "/posts/$postId" });
   const { posts } = useStore();
+  const navigate = useNavigate();
   const [post, setPost] = useState(posts.find((post) => post._id === postId));
   const [isModalOpen, setIsModalOpen] = useState(false);
   // get the post by the post id
@@ -72,11 +73,20 @@ export default function PostDetailsPage() {
     setIsModalOpen(false);
   };
   const getDescription = (level: number) => levelDescriptions[level];
+
+  const handleBackClick = () => {
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      // Navigate to a default route
+      navigate({ to: "/" });
+    }
+  };
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-4 bg-white border-b-solid border-b-1px border-b-gray-400 p-6">
         <Button
-          to="/ensembles"
+          onClick={handleBackClick}
           buttonState="default"
           buttonVariant="secondary"
           iconPosition="none"

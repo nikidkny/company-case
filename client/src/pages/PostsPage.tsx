@@ -8,46 +8,46 @@ import { InstrumentType } from "../types/InstrumentType";
 import Button from "../components/atoms/Button";
 import { ICON_NAMES } from "../components/atoms/Icon/IconNames";
 import PostCard from "../components/molecules/PostCard";
-import { EnsemblePostsType } from "../types/EnsemblePostsType";
+// import { EnsemblePostsType } from "../types/EnsemblePostsType";
 // import { EnsembleType } from "../types/EnsembleType";
 import { PostWithEnsembleType } from "../types/PostWithEnsembleType";
 
 //TODO: this page will be ensembles posts page and will need to be reworked.
-export default function EnsemblesPage() {
+export default function PostsPage() {
   const { posts, setPosts, filterOption, setFilterOption } = useStore();
   const { data: PostWithEnsembleData, triggerFetch: fetchPostWithEnsemble } = useFetch<
     PostWithEnsembleType[]
   >([], "/posts", "GET");
-  const { data: ensemblePostsData, triggerFetch: fetchEnsemblePosts } = useFetch<
-    EnsemblePostsType[]
-  >([], "/ensemblePosts", "GET");
+  // const { data: ensemblePostsData, triggerFetch: fetchEnsemblePosts } = useFetch<
+  //   EnsemblePostsType[]
+  // >([], "/ensemblePosts", "GET");
   // const ensemblesData = useFetch<EnsembleType[]>([], "/ensembles", "GET");
   const instrumentsFetch = useFetch<InstrumentType[]>([], "/instruments", "GET");
   const [filteredPosts, setFilteredPosts] = useState<PostWithEnsembleType[]>([]);
-  //resets the filterOption when coming back to the page
-  useEffect(() => {
-    setFilterOption(null);
-  }, [setFilterOption]);
-
-  // console.log(instrumentsFetch.data);
-  // console.log(filterOption);
 
   // Trigger fetch only when ensembles are empty
   useEffect(() => {
     if (posts.length === 0 && !PostWithEnsembleData.length) fetchPostWithEnsemble();
     // Only fetch if ensembles or instruments are not yet loaded
     if (instrumentsFetch.data.length === 0) instrumentsFetch.triggerFetch();
-    if (ensemblePostsData.length === 0) fetchEnsemblePosts();
+    // if (ensemblePostsData.length === 0) fetchEnsemblePosts();
     // if (ensemblesData.data.length === 0) ensemblesData.triggerFetch();
   }, [
     posts,
     fetchPostWithEnsemble,
     PostWithEnsembleData,
     instrumentsFetch,
-    ensemblePostsData,
-    fetchEnsemblePosts,
+    // ensemblePostsData,
+    // fetchEnsemblePosts,
     // ensemblesData,
   ]);
+
+  // Ensure filteredPosts is set correctly on initial load
+  useEffect(() => {
+    if (PostWithEnsembleData.length === 0) {
+      fetchPostWithEnsemble();
+    }
+  }, [PostWithEnsembleData, fetchPostWithEnsemble]);
 
   // Set fetched data into the store
   // useEffect(() => {
@@ -88,7 +88,7 @@ export default function EnsemblesPage() {
         <TextHeadline variant="h3" size="lg">
           Find ensemble
         </TextHeadline>
-        <TextBody variant="span">{posts.length} results found</TextBody>
+        <TextBody variant="span">{filteredPosts.length} results found</TextBody>
         <Dropdown
           initialSelectedLabel="Choose an instrument"
           options={instrumentsFetch.data.map((instrument) => instrument.name)}

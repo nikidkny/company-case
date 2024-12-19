@@ -11,12 +11,13 @@ interface Props {
   post: PostType;
   ensemble: EnsembleType;
   key: number;
+  variant?: "profile" | "post";
 }
 
 export default function PostCard({ post, ensemble }: Props) {
   const minumumExperience = post.experienceRequired + "+";
   return (
-    <Link to={`/ensembles/posts/${post._id}`} className="no-underline hover:bg-gray-200">
+    <Link to={`/posts/${post._id}`} className="no-underline hover:bg-gray-200">
       <div className="postcard-wrapper flex flex-col gap-4 border-solid border border-gray-400  rounded-lg shadow-md">
         <div className="flex flex-row justify-between items-center border-b-1px border-b-solid border-b-gray-400 px-6 pt-4.5">
           {/* needs to ensemble.image */}

@@ -15,7 +15,12 @@ export class PostsService {
     private ensemblePostsModel: Model<Ensemble_PostsDocument>,
     @InjectModel(Post.name) private postModel: Model<PostDocument>,
   ) {}
-  async findAll(): Promise<any[]> {
+  // async findAll() {}
+
+  async findByCreatedBy(createdById: string): Promise<Post[]> {
+    return await this.postModel.find({ createdBy: createdById }).exec();
+  }
+  async findAllWithEnsembles(): Promise<any[]> {
     const posts = await this.postModel.find().exec();
     const ensemblePosts = await this.ensemblePostsModel
       .find()
@@ -29,7 +34,7 @@ export class PostsService {
       );
       return {
         post,
-        ensemble: ensemblePost?.ensembleId || null,
+        ensemble: ensemblePost?.ensembleId,
       };
     });
   }
@@ -49,7 +54,7 @@ export class PostsService {
     console.log('ensemblePost', ensemblePost);
     return {
       post: post,
-      ensemble: ensemblePost?.ensembleId || null,
+      ensemble: ensemblePost?.ensembleId,
     };
   }
   async create(createPostDto: CreatePostDto): Promise<Post> {

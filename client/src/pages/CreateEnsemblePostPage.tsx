@@ -160,11 +160,11 @@ export default function CreateEnsemblePostPage() {
       });
 
       // Reset form fields
-      setPostTitle("");
-      setPostDescription("");
-      setPostInstrument({ _id: "", name: "" });
-      setExperienceRequired(1);
-      setPostGenres([]);
+      // setPostTitle("");
+      // setPostDescription("");
+      // setPostInstrument({ _id: "", name: "" });
+      // setExperienceRequired(1);
+      // setPostGenres([]);
       resetPostData();
     } else if (error) {
       alert("There was an error creating the post. Please try again.");
