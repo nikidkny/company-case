@@ -1,6 +1,6 @@
 import { IsNotEmpty } from 'class-validator';
 
-export class CreateUserEnseble {
+export class CreateUserEnsemble {
   @IsNotEmpty()
   userId: string;
   @IsNotEmpty()
