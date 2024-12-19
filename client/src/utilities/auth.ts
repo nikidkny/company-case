@@ -160,17 +160,24 @@ export const validateCity = (city: string) => {
   }
 };
 
-export const notEmpty = (value: string | string[], fieldName: string) => {
+export const notEmpty = (value: string | string[] | boolean, fieldName: string) => {
   console.log(fieldName);
   console.log(value);
-  
+
+  // Check if the value is an array
   if (Array.isArray(value)) {
-    // Check if the array is empty
     if (value.length === 0) {
       return `${fieldName} must not be empty`;
     }
-  } else {
-    // Check if the value is an empty string or undefined/null
+  } 
+  // Check if the value is a boolean
+  else if (typeof value === "boolean") {
+    if (value !== true) {
+      return `${fieldName} must not be empty`;
+    }
+  } 
+  // Check if the value is a string
+  else {
     if (value === "" || value === undefined || value === null) {
       return `${fieldName} must not be empty`;
     }

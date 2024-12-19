@@ -142,7 +142,7 @@ export default function CreateEnsemblePostPage() {
       experienceRequired,
       genres: postGenres,
       createdAt: new Date().toLocaleString(),
-      createdBy: user._id,
+      createdBy: userId,
       webpage: ensemble.webpage,
       location: `${ensemble.zip} ${ensemble.city}`,
     };
@@ -156,7 +156,7 @@ export default function CreateEnsemblePostPage() {
       alert("The post has been created! You will be redirected to your profile");
       navigate({
         to: "/profile/$profileId",
-        params: { profileId: user._id },
+        params: { profileId: userId },
       });
 
       // Reset form fields
@@ -210,7 +210,6 @@ export default function CreateEnsemblePostPage() {
         <TextHeadline variant="h3" size="lg">
           Create post {selectedEnsembleOption.label ? `for ${selectedEnsembleOption.label}` : null}
         </TextHeadline>
-        //TODO: add validation on the form inputs
         <form onSubmit={handleSubmit} className="flex flex-col justify-around gap-6">
           <TextInput
             inputType="text"

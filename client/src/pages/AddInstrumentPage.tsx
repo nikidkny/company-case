@@ -81,15 +81,12 @@ export default function AddInstrumentPage() {
     },
     levelOfExperience: {
       validator: (value: string) => notEmpty(value, "Experience"),
-
     },
     genres: {
       validator: (value: string[]) => notEmpty(value, "Genre"),
-
     },
     name: {
       validator: (value: string) => notEmpty(value, "Instrument name"),
-
     },
   }
 
