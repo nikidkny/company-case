@@ -52,7 +52,7 @@ export default function Hero() {
             iconWidth={13.887}
             iconViewbox={"0 0 13.887 13.887"}
             onClick={() => !loginStatus && displayPopUp(true)}
-            to={loginStatus ? "/posts" : undefined}
+            to={loginStatus ? "/musicians" : undefined}
             className="no-underline w-full"
           ></Button>
           <Button
