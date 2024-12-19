@@ -24,13 +24,6 @@ export default function EnsemblesPage() {
   // const ensemblesData = useFetch<EnsembleType[]>([], "/ensembles", "GET");
   const instrumentsFetch = useFetch<InstrumentType[]>([], "/instruments", "GET");
   const [filteredPosts, setFilteredPosts] = useState<PostWithEnsembleType[]>([]);
-  //resets the filterOption when coming back to the page
-  useEffect(() => {
-    setFilterOption(null);
-  }, [setFilterOption]);
-
-  // console.log(instrumentsFetch.data);
-  // console.log(filterOption);
 
   // Trigger fetch only when ensembles are empty
   useEffect(() => {
@@ -48,6 +41,13 @@ export default function EnsemblesPage() {
     fetchEnsemblePosts,
     // ensemblesData,
   ]);
+
+  // Ensure filteredPosts is set correctly on initial load
+  useEffect(() => {
+    if (PostWithEnsembleData.length === 0) {
+      fetchPostWithEnsemble();
+    }
+  }, [PostWithEnsembleData, fetchPostWithEnsemble]);
 
   // Set fetched data into the store
   // useEffect(() => {
@@ -88,7 +88,7 @@ export default function EnsemblesPage() {
         <TextHeadline variant="h3" size="lg">
           Find ensemble
         </TextHeadline>
-        <TextBody variant="span">{posts.length} results found</TextBody>
+        <TextBody variant="span">{filteredPosts.length} results found</TextBody>
         <Dropdown
           initialSelectedLabel="Choose an instrument"
           options={instrumentsFetch.data.map((instrument) => instrument.name)}
