@@ -102,19 +102,19 @@ export default function UserDetails() {
       </div>
       <div className="flex flex-col p-4 border-y-solid border-y-gray-400 border-y-1px gap-6">
         <TextHeadline variant="h3" size="sm">
-          Description
+          Profile text
         </TextHeadline>
         <TextBody size="lg">{user?.description}</TextBody>
       </div>
       <div className="flex flex-col p-4 border-y-solid border-y-gray-400 border-y-1px gap-6">
         <TextHeadline variant="h3" size="sm">
-          My Ensembles
+          {user?.firstName}'s Ensembles
         </TextHeadline>
         {userEnsembles?.map((ensemble, index) => <EnsembleCard key={index} ensemble={ensemble} />)}
       </div>
       <div className="flex flex-col p-4 border-y-solid border-y-gray-400 border-y-1px gap-6">
         <TextHeadline variant="h3" size="sm">
-          My Instruments
+          {user?.firstName}'s Instruments
         </TextHeadline>
         {userInstruments
           ?.sort((a, b) => b.levelOfExperience - a.levelOfExperience)
