@@ -15,6 +15,7 @@ import { activeMusiciansNumberOptions } from "../utilities/activeMusiciansNumber
 import { musicGenresOptions } from "../utilities/musicGenresOptions";
 import { musicSessionsFrequencyOptions } from "../utilities/musicSessionsFrequencyOptions";
 import { useStore } from "../store/useStore";
+import { getUserIdFromCookie } from "../hooks/getCookies";
 
 export default function EditEnsemblePage() {
   const {
@@ -25,8 +26,6 @@ export default function EditEnsemblePage() {
     webpage,
     setWebpage,
     zip,
-    // image,
-    // setImage,
     city,
     setZip,
     setCity,
@@ -39,111 +38,58 @@ export default function EditEnsemblePage() {
     genres,
     addGenre,
     removeGenre,
-
-    // resetForm,
-    // setObjectData,
-    // objectData,
-    // setEnsembles,
+    resetForm,
   } = useStore();
+  const { userId } = getUserIdFromCookie();
 
-  //  const { user } = useStore();
-  // console.log(user);
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
   const ensemble = useStore((state) => state.ensemble);
   const { ensemblesId } = useParams({ strict: false });
-  //console.log(ensemblesId);
-  //getting the ensemble's data
 
-  const { data: ensemble1, triggerFetch: triggerFetchEnsembleDetails, loading } = useFetch<EnsembleType | null>(null, ensemblesId ? `/ensembles/${ensemblesId}` : null, "GET");
+  //   const { data: ensemble1, triggerFetch: triggerFetchEnsembleDetails, loading } = useFetch<EnsembleType | null>(null, ensemblesId ? `/ensembles/${ensemblesId}` : null, "GET");
 
   console.log(ensemble);
-  const handleSubmit = () => {};
-  //   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-  //     e.preventDefault();
-  //     //this is just when the ensemble is first created. the only member is the creator itself.
-  //     const memberList = [user._id];
-  //     const ensembleData = {
-  //       name,
-  //       description,
-  //       webpage,
-  //       zip,
-  //       city,
-  //       memberList,
-  //       createdBy: user._id,
-  //       numberOfMembers: memberList.length,
-  //       createdAt: new Date().toLocaleString(),
-  //       image: "",
-  //       activeMusicians,
-  //       sessionFrequency,
-  //       isPermanent,
-  //       genres,
-  //     };
 
-  //     setObjectData(ensembleData);
-  //     setLoading(true);
+  const editedEnsembleData = {
+    name: name || ensemble?.name,
+    description: description || ensemble?.description,
+    webpage: webpage || ensemble?.webpage,
+    zip: zip || ensemble?.zip,
+    city: city || ensemble?.city,
+    memberList: ensemble?.memberList,
+    createdBy: ensemble?.createdBy,
+    numberOfMembers: ensemble?.memberList.length,
+    createdAt: ensemble?.createdAt,
+    //image: "",
+    activeMusicians: activeMusicians || ensemble?.activeMusicians,
+    sessionFrequency: sessionFrequency || ensemble?.sessionFrequency,
+    isPermanent: isPermanent || ensemble?.isPermanent,
+    genres: genres || ensemble?.genres,
+  };
 
-  //     setTimeout(() => {
-  //       triggerFetch();
-  //       if (createdEnsemble.length < 1) {
-  //         return; // Stop further execution if there's an error
-  //       } else {
-  //         alert("The ensemble has been created! You will be redirected to your profile");
-  //         navigate({
-  //           to: "/profile/$profileId",
-  //           params: { profileId: user._id },
-  //         });
-  //       }
-  //       resetForm();
-  //     }, 2000);
-  //   };
+  const { data: editedEnsemble, triggerFetch: triggerFetchEditEnsemble, loading } = useFetch<EnsembleType | null>(null, ensemblesId ? `/ensembles/${ensemblesId}` : null, "PUT", { "Content-Type": "application/json" }, editedEnsembleData);
 
-  // Reset form on component unmount
-  //   useEffect(() => {
-  //     return () => {
-  //       // Reset when navigating away
-  //       resetForm();
-  //     };
-  //   }, [resetForm]);
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-  //   useEffect(() => {
-  //     console.log("Updated objectData:", objectData);
-  //   }, [objectData]);
-
-  //   const {
-  //     data: createdEnsemble,
-  //     error,
-  //     loading,
-  //     setLoading,
-  //     triggerFetch,
-  //     shouldFetch,
-  //   } = useFetch<EnsembleType[]>(
-  //     [],
-  //     "/ensembles",
-  //     "POST",
-  //     {
-  //       "Content-Type": "application/json",
-  //     },
-  //     objectData
-  //   );
-
-  //   console.log(loading);
-
-  //   useEffect(() => {
-  //     if (createdEnsemble.length >= 1) {
-  //       console.log("Ensemble created:", createdEnsemble);
-  //       setEnsembles(createdEnsemble);
-  //     } else {
-  //       console.log("errors", error);
-  //       return;
-  //     }
-  //   }, [createdEnsemble, setEnsembles, error, shouldFetch]);
-
-  // useEffect(() => {
-  //   if (error) {
-  //     console.error("Error creating ensemble:", error);
-  //     return;
-  //   }
-  // }, [triggerFetch]);
+    try {
+      triggerFetchEditEnsemble();
+      //   if (!editedEnsemble) {
+      //     return; // Stop further execution if there's an error
+      //   } else {
+      //TODO: to fix this fetch - the ensemble is not getting edited
+      alert("The ensemble has been edited! You will be redirected to your profile");
+      navigate({
+        to: "/profile/$profileId",
+        params: { profileId: userId },
+      });
+    } catch (error) {
+      alert(`Failed to save changes: ${error}`);
+    } finally {
+      resetForm();
+    }
+  };
+  console.log("editedEnsemble", editedEnsemble);
 
   const handleTagChange = (tags: string[]) => {
     const currentTags = new Set(genres); // Get the current tags from state
@@ -254,7 +200,7 @@ export default function EditEnsemblePage() {
           </div>
 
           {/* Type of ensemble */}
-          {/* if the ensemble is working Continuously, isPermanent is true and viceversa */}
+
           <div className="flex flex-col gap-4">
             <TextBody variant="strong" size="md" className="text-blue-500">
               The ensemble plays...

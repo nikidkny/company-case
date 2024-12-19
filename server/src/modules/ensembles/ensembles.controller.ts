@@ -3,12 +3,15 @@ import {
   Get,
   Body,
   Post,
-  Patch,
   Delete,
   Param,
+  Put,
+  NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 import { EnsemblesService } from './ensembles.service';
 import { CreateEnsembleDto } from './dto/create-ensemble.dto';
+import { UpdateEnsembleDto } from './dto/update-ensemble.dto';
 
 @Controller('ensembles')
 export class EnsemblesController {
@@ -28,9 +31,22 @@ export class EnsemblesController {
     return await this.ensembleService.create(createEnsembleDto);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string) {
-    // Empty endpoint to update an ensemble
+  @Put(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() updateEnsembleDto: UpdateEnsembleDto,
+  ) {
+    try {
+      //return { message: `PUT route reached for ${id}` };
+      return await this.ensembleService.update(id, updateEnsembleDto);
+    } catch (error) {
+      if (error.message.includes('not found')) {
+        throw new NotFoundException(error.message);
+      }
+      throw new BadRequestException(
+        `Failed to update ensemble: ${error.message}`,
+      );
+    }
   }
 
   @Delete(':id')
