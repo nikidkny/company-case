@@ -40,9 +40,14 @@ export const validateForm = (
     const value = formData[field];
     const { validator, required } = validationSchema[field];
 
+    // Custom logic to set the required error message for firstName and lastName
+    const fieldName = field === "firstName" ? "First name" : field === "lastName" ? "Last name" : field;
+
     // Check if the field is required and empty
     if (required && (value === "" || value === undefined)) {
-      errors[field] = `${field} is required.`;
+      console.log(fieldName);
+      
+      errors[field] = `${fieldName} is required.`;
       continue;
     }
 
@@ -87,36 +92,49 @@ export const validatePassword = (password: string) => {
 // Birthdate validation
 export const validateBirthdate = (birthdate: string) => {
   const birthDateObj = new Date(birthdate);
+  
+  // Check if the birthdate is a valid date
   if (isNaN(birthDateObj.getTime())) {
     return "Invalid birthdate";
-  } else {
-    const today = new Date();
-    const age = today.getFullYear() - birthDateObj.getFullYear();
-    if (age < 18 || (age === 18 && today < new Date(birthDateObj.setFullYear(today.getFullYear())))) {
-      return "Invalid birthdate. You must be at least 18 years old";
-    }
+  }
+  
+  const today = new Date();
+  const age = today.getFullYear() - birthDateObj.getFullYear();
+  
+  // Check if the year is before 1924
+  if (birthDateObj.getFullYear() < 1924) {
+    return "Birthdate must be after 1924";
+  }
+  
+  // Check if the person is at least 18 years old
+  if (age < 18 || (age === 18 && today < new Date(birthDateObj.setFullYear(today.getFullYear())))) {
+    return "Invalid birthdate. You must be at least 18 years old";
   }
 };
 
 // Phone number validation
 export const validatePhoneNumber = (phoneNumber: string) => {
-  const phoneNumberRegex = /^[0-9]+$/;
+  if (phoneNumber !== "") {
+    const phoneNumberRegex = /^[0-9]+$/;
 
-  if (!phoneNumberRegex.test(phoneNumber.trim())) {
-    return `Phone number must contain only numbers`;
-  } else if (phoneNumber.trim().length !== 8) {
-    return `Phone number must be exactly 8 digits`;
+    if (!phoneNumberRegex.test(phoneNumber.trim())) {
+      return `Phone number must contain only numbers`;
+    } else if (phoneNumber.trim().length !== 8) {
+      return `Phone number must be exactly 8 digits`;
+    }
   }
 };
 
 // Zip code validation
 export const validateZipCode = (zipCode: string) => {
-  const zipCodeRegex = /^[0-9]+$/;
+  if (zipCode !== "") {
+    const zipCodeRegex = /^[0-9]+$/;
 
-  if (!zipCodeRegex.test(zipCode.trim())) {
-    return `Zip code must contain only numbers`;
-  } else if (zipCode.trim().length !== 4) {
-    return `Zip code must be exactly 4 digits`;
+    if (!zipCodeRegex.test(zipCode.trim())) {
+      return `Zip code must contain only numbers`;
+    } else if (zipCode.trim().length !== 4) {
+      return `Zip code must be exactly 4 digits`;
+    }
   }
 };
 
@@ -134,10 +152,12 @@ const cities = [
 ];
 
 export const validateCity = (city: string) => {
-  // Check if the city is in the cities array
-  const cityExists = cities.includes(city.trim());
+  if (city !== "") {
+    // Check if the city is in the cities array
+    const cityExists = cities.includes(city.trim());
 
-  if (!cityExists) {
-    return "Invalid city.";
+    if (!cityExists) {
+      return "Invalid city.";
+    }
   }
 };

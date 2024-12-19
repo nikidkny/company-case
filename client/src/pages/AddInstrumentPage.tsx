@@ -14,7 +14,6 @@ import { UserInstrumentType } from "../types/userInstrumentType";
 import { useNavigate } from "@tanstack/react-router";
 
 export default function AddInstrumentPage() {
-  // TODO: Add validation
   // TODO: Add error handling
   // states
   const [hasChanges, setHasChanges] = useState(false);

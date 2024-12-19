@@ -70,15 +70,15 @@ export default function EditProfilePage() {
   const editProfileInfoValidationSchema: ValidationSchema = {
     firstName: {
       validator: (value: string) => validateName(value, "First name"),
-      required:true
+      required: true
     },
     lastName: {
       validator: (value: string) => validateName(value, "Last name"),
-      required:true
+      required: true
     },
     email: {
       validator: (value: string) => validateEmail(value),
-      required:true
+      required: true
     },
     phoneNumber: {
       validator: (value: string) => validatePhoneNumber(value),
@@ -195,6 +195,7 @@ export default function EditProfilePage() {
         </TextHeadline>
         <div className="flex flex-row ">
           <TextInput
+            required={true}
             inputType="text"
             id="firstName"
             name="firstName"
@@ -221,6 +222,7 @@ export default function EditProfilePage() {
             className="w-full"
             isValid={!getFieldErrorMessage(combinedErrors, "Last name")}
             validityMsg={getFieldErrorMessage(combinedErrors, "Last name")}
+            required={true}
           />
         </div>
       </div>
@@ -299,6 +301,9 @@ export default function EditProfilePage() {
             setEmail(value);
             setHasChanges(true);
           }}
+          isValid={!getFieldErrorMessage(combinedErrors, "email")}
+          validityMsg={getFieldErrorMessage(combinedErrors, "email")}
+          required={true}
         />
         <TextInput
           inputType="text"
