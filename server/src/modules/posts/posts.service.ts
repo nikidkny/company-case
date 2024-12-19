@@ -33,7 +33,7 @@ export class PostsService {
       );
       return {
         post,
-        ensemble: ensemblePost?.ensembleId || null,
+        ensemble: ensemblePost?.ensembleId,
       };
     });
   }
