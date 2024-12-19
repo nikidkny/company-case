@@ -15,7 +15,8 @@ interface Props {
 }
 
 export default function PostCard({ post, ensemble }: Props) {
-  const minumumExperience = post.experienceRequired + "+";
+  const minimumExperience =
+    post.experienceRequired !== undefined ? post.experienceRequired + "+" : "0+";
   return (
     <Link to={`/posts/${post._id}`} className="no-underline hover:bg-gray-200">
       <div className="flex flex-col gap-4 border-solid border border-gray-400  rounded-lg shadow-md">
@@ -56,12 +57,10 @@ export default function PostCard({ post, ensemble }: Props) {
             <TextHeadline variant="h3" size="sm">
               {post.instrument}
             </TextHeadline>
-            {post.experienceRequired && (
-              <div className="flex flex-row items-center gap-2">
-                <TextBody size="sm">Experience</TextBody>
-                <Tag number={minumumExperience} />
-              </div>
-            )}
+            <div className="flex flex-row items-center gap-2">
+              <TextBody size="sm">Experience</TextBody>
+              <Tag number={minimumExperience} />
+            </div>
           </div>
         </div>
       </div>

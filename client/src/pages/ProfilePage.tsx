@@ -282,8 +282,7 @@ export default function ProfilePage() {
             ></Button>
           </div>
         </div>
-        {/* TO DO: map through logged in user's posts for now it is static posts */}
-        {UserPostsWithEnsemble ? (
+        {UserPostsWithEnsemble && UserPostsWithEnsemble.length > 0 ? (
           UserPostsWithEnsemble.map((item, index) => (
             <PostCard key={index} post={item.post} ensemble={item.ensemble} />
           ))
