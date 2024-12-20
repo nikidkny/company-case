@@ -94,7 +94,7 @@ export class SeederService {
       if (existingUserInstrumentsCount === 0) {
         const mockUserInstruments = [
           {
-            _id: new Types.ObjectId(),
+            _id: new Types.ObjectId('60f7b1b3b3f1f3b3b3f1f3b3'),
             userId: mockUsers[0]._id.toString(),
             instrumentId: instruments[0]._id.toString(),
             name: instruments[0].name,
@@ -102,7 +102,7 @@ export class SeederService {
             genres: ['Rock', 'Blues'],
           },
           {
-            _id: new Types.ObjectId(),
+            _id: new Types.ObjectId('60f7b1b3b3f1f3b3b3f1f3b4'),
             userId: mockUsers[1]._id.toString(),
             instrumentId: instruments[1]._id.toString(),
             name: instruments[1].name,
@@ -110,7 +110,7 @@ export class SeederService {
             genres: ['Classical', 'Jazz'],
           },
           {
-            _id: new Types.ObjectId(),
+            _id: new Types.ObjectId('60f7b1b3b3f1f3b3b3f1f3b5'),
             userId: mockUsers[2]._id.toString(),
             instrumentId: instruments[2]._id.toString(),
             name: instruments[2].name,
@@ -118,7 +118,7 @@ export class SeederService {
             genres: ['Pop', 'Rock'],
           },
           {
-            _id: new Types.ObjectId(),
+            _id: new Types.ObjectId('60f7b1b3b3f1f3b3b3f1f3b6'),
             userId: mockUsers[3]._id.toString(),
             instrumentId: instruments[3]._id.toString(),
             name: instruments[3].name,
