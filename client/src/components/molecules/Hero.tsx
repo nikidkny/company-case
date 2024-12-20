@@ -15,7 +15,6 @@ export default function Hero() {
   const handleClick = () => {
     setIsMenuOpen();
   };
-  // console.log(user);
   return (
     //hero container
     <>

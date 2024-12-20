@@ -21,7 +21,6 @@ export default function UserDetails() {
     userId ? `/users/${userId}` : null,
     "GET"
   );
-  console.log("user", user);
   const { data: userEnsembles, triggerFetch: fetchUserEnsembles } = useFetch<EnsembleType[] | null>(
     null,
     userId ? `/ensembles/user/${userId}` : null,
@@ -31,7 +30,6 @@ export default function UserDetails() {
   const { data: userInstruments, triggerFetch: fetchUserInstruments } = useFetch<
     UserInstrumentType[] | null
   >(null, userId ? `/userInstruments/user/${userId}` : null, "GET");
-  console.log("userInstruments", userInstruments);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleContactClick = () => {

@@ -1,11 +1,12 @@
-import { IsString } from 'class-validator';
-// TO DO: add actual validation
+import { IsNotEmpty, IsString, MinLength } from 'class-validator';
 export class UpdatePasswordDto {
   @IsString()
-  // @MinLength(6)
+  @IsNotEmpty({ message: 'Current password should not be empty' })
+  @MinLength(8, { message: 'Current password must be at least 8 characters long' })
   currentPassword: string;
 
   @IsString()
-  // @MinLength(6)
+  @IsNotEmpty({ message: 'New password should not be empty' })
+  @MinLength(8, { message: 'New password must be at least 8 characters long' })
   newPassword: string;
 }

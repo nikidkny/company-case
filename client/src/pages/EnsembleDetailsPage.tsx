@@ -36,7 +36,6 @@ export default function EnsembleDetailsPage() {
     `/ensembles/${ensemblesId}`,
     "GET"
   );
-  // console.log("ensemble - fetched", ensemble);
 
   // Get members' details (first name, last name) including the creator of the ensemble
   const { data: membersDetails, triggerFetch: triggerFetchMembersDetails } = useFetch(
@@ -49,13 +48,10 @@ export default function EnsembleDetailsPage() {
     { membersIds: ensemble.memberList, creatorId: ensemble.createdBy }
   );
 
-  // console.log("membersDetails", membersDetails);
-
   const membersList: User[] = membersDetails.foundMembers;
   const creator: User = membersDetails.creator;
 
   const isUserMember = ensemble.memberList.includes(user._id);
-  // console.log("isUserMember", isUserMember);
   //Join the ensemble
   const {
     data: registrationData,
@@ -80,7 +76,6 @@ export default function EnsembleDetailsPage() {
   useEffect(() => {
     if (registrationData !== null && !registrationLoading) {
       triggerFetchEnsembleDetails();
-      console.log("fetched");
     }
     // console.log("ensembles", ensemble);
   }, [registrationData, registrationLoading]);

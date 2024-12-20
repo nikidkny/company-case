@@ -7,7 +7,7 @@ interface Props {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
-  inputType: "text" | "password" | "email" | "search" | "date";
+  inputType: "text" | "password" | "email" | "search" | "date" | "number";
   icon?: ICON_NAMES;
   isValid?: boolean;
   validityMsg?: string;

@@ -63,8 +63,6 @@ export default function ProfilePage() {
     }
   }, [PostWithEnsembleData, userId]);
 
-  console.log("posts", posts);
-  console.log("UserPostsWithEnsemble", UserPostsWithEnsemble);
   // console.log("user from profile", user);
   //the user.lastLoggedIn has to be added to the createUserDTO in the backend when the user is created, that's why is appears as undefined.
 

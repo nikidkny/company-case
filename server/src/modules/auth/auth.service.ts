@@ -15,13 +15,14 @@ import { JwtService } from '@nestjs/jwt';
 import { Response, Request } from 'express';
 import * as jwt from 'jsonwebtoken';
 import { UpdatePasswordDto } from './dto/update-password.dto';
+import { UsersService } from '../users/users.service';
 
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
-    private jwtService: JwtService,
+    private jwtService: JwtService
   ) {}
 
   async signup(createUserDto: CreateUserDto): Promise<{ message: string }> {
@@ -78,7 +79,10 @@ export class AuthService {
     }
   }
 
-  async handleLogin(email: string, password: string, req: Request, res: Response) {
+  // Checks if the user is already logged in by validating the refresh token. 
+  // If valid, it verifies the user's credentials or clears cookies on failure. 
+  // If no valid token, it proceeds with normal login.
+  async validateLoginFlow(email: string, password: string, req: Request, res: Response) {
     const existingRefreshToken = req.cookies?.['refreshToken'];
 
     // Check if the user is already logged in
@@ -128,6 +132,7 @@ export class AuthService {
     }
   }
 
+  // Handles user login by validating credentials, generating JWT tokens, and setting them as cookies in the response.
   async login(email: string, password: string, res: Response) {
     try {
       // Validate user credentials
@@ -176,6 +181,7 @@ export class AuthService {
     }
   }
 
+  // Validates the user's email and password, checking if the user exists and if the password matches the stored hash. Throws errors for invalid credentials.
   async validateUser(email: string, password: string) {
     if (!email && !password) {
       throw new BadRequestException('Credentials must not be empty');
@@ -188,15 +194,13 @@ export class AuthService {
     }
 
     const user = await this.userModel.findOne({ email });
-    if (!user) {
-      console.log("Should print");
 
+    if (!user) {
       throw new NotFoundException('User not found');
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      console.log("Should NOT print");
       throw new BadRequestException('Invalid credentials');
     }
 
@@ -212,6 +216,50 @@ export class AuthService {
 
     res.clearCookie('accessToken', cookieOptions);
     res.clearCookie('refreshToken', cookieOptions);
+  }
+
+  async updatePassword(id: string, updatePasswordDto: UpdatePasswordDto, res) {
+    const { currentPassword, newPassword } = updatePasswordDto;
+
+    // Retrieve the user from the database
+    const user = await this.userModel.findById(id);
+    if (!user) {
+      console.error('No user found with ID:', id);
+      return res.status(HttpStatus.NOT_FOUND).json({
+        message: 'User not found',
+      });
+    }
+    
+    // Compare the provided current password with the stored password
+    const isPasswordValid = await bcrypt.compare(
+      currentPassword,
+      user.password,
+    );
+    if (!isPasswordValid) {
+      return res.status(HttpStatus.BAD_REQUEST).json({
+        message: 'Invalid current password',
+      });
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update the password in the database
+    user.password = hashedPassword;
+    await user.save();
+
+    return res.status(HttpStatus.OK).json({
+      message: 'Password updated correctly',
+    });
+  }
+
+  async deleteUser(id:string, password: string, req: Request, res) {
+    const email = req.user['email'];
+    await this.validateUser(email, password);
+  
+    await this.logout(res)
+    await this.userModel.findByIdAndDelete(id).exec();
+    return { message: 'User deleted successfully' };
   }
 
   async refreshToken(refreshToken: string, res: Response): Promise<{ accessToken: string }> {
@@ -249,34 +297,5 @@ export class AuthService {
       }
       throw new UnauthorizedException('Invalid or expired refresh token');
     }
-  }
-
-  async updatePassword(id: string, updatePasswordDto: UpdatePasswordDto) {
-    const { currentPassword, newPassword } = updatePasswordDto;
-
-    // Retrieve the user from the database
-    const user = await this.userModel.findById(id);
-    if (!user) {
-      console.error('No user found with ID:', id);
-      throw new NotFoundException('User not found');
-    }
-
-    // Compare the provided current password with the stored password
-    const isPasswordValid = await bcrypt.compare(
-      currentPassword,
-      user.password,
-    );
-    if (!isPasswordValid) {
-      throw new UnauthorizedException('Current password is incorrect');
-    }
-
-    // Hash the new password
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-
-    // Update the password in the database
-    user.password = hashedPassword;
-    await user.save();
-
-    return { message: 'Password updated successfully' };
   }
 }

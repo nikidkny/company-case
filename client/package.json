@@ -11,8 +11,10 @@
   },
   "dependencies": {
     "@tanstack/react-router": "^1.81.5",
+    "crypto-js": "^4.2.0",
     "jwt-decode": "^4.0.0",
     "react": "^18.3.1",
+    "react-country-state-city": "^1.1.7",
     "react-dom": "^18.3.1",
     "zustand": "^5.0.1"
   },
@@ -20,6 +22,7 @@
     "@eslint/js": "^9.13.0",
     "@tanstack/router-devtools": "^1.81.5",
     "@tanstack/router-plugin": "^1.79.0",
+    "@types/crypto-js": "^4.2.2",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@unocss/preset-uno": "^0.64.0",

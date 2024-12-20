@@ -6,6 +6,7 @@ import SignupForm from "../components/molecules/SignupForm";
 import { useFetch } from "../hooks/use-fetch";
 import { getUserIdFromCookie } from "../hooks/getCookies";
 import { User } from "../types/UserType";
+import { hashPassword, validateBirthdate, validateEmail, validateForm, validateName, validatePassword, ValidationSchema } from "../utilities/auth";
 
 export const Route = createLazyFileRoute("/accounts")({
   component: AccountsPage,
@@ -20,10 +21,39 @@ function AccountsPage() {
   const { setUser, setLoginStatus } = useStore();
   const { data: fetchedUser, triggerFetch: userFetchTrigger } = useFetch<User>({ _id: "" }, userId !== null ? `/users/${userId}` : null, "GET");
 
-  //TODO: hash password
   // State to hold validation error messages for the signup form
-  const [validationErrors, setValidationErrors] = useState<string | string[]>([]);
+  const [frontendAccountValidationErrors, setFrontendAccountValidationErrors] = useState<string | string[]>([]);
+  // State to hold validation error messages for the login form
   const [loginError, setLoginError] = useState<string | string[]>([]);
+
+  // Specify ValidationSchema
+  const signupValidationSchema: ValidationSchema = {
+    firstName: {
+      validator: (value: string) => validateName(value, "First name"),
+      required: true,
+    },
+    lastName: {
+      validator: (value: string) => validateName(value, "Last name"),
+      required: true,
+    },
+    email: {
+      validator: (value: string) => validateEmail(value),
+      required: true,
+    },
+    password: {
+      validator: (value: string) => validatePassword(value),
+      required: true,
+    },
+    confirmPassword: {
+      validator: (value: string, formData: any) => 
+        value !== formData.password ? "Passwords do not match" : undefined,
+      required: true,
+    },
+    birthdate: {
+      validator: (value: string) => validateBirthdate(value),
+      required: true,
+    },
+  };
 
   // Redirect to home if user is logged in
   useEffect(() => {
@@ -31,59 +61,6 @@ function AccountsPage() {
       navigate({ to: "/" });
     }
   }, [userId, navigate]);
-
-  // TODO:
-  // - Maybe create a utils for validating forms with all the function. Wait to implement more valdiation.
-
-  // Function to validate signup form data
-  const validateForm = (signupFormData: typeof signupData) => {
-    const errors: { [key: string]: string } = {};
-    if (signupFormData) {
-      const nameRegex = /^[A-Za-z\s]+$/;
-
-      // Validate first and last name (letters only)
-      if (!nameRegex.test(signupFormData.firstName.trim())) {
-        errors.firstName = "First name must contain only letters";
-      } else if (signupFormData.firstName.trim().length < 2) {
-        errors.firstName = "First name must be at least 2 characters";
-      }
-
-      if (!nameRegex.test(signupFormData.lastName.trim())) {
-        errors.lastName = "Last name must contain only letters";
-      } else if (signupFormData.lastName.trim().length < 2) {
-        errors.lastName = "Last name must be at least 2 characters";
-      }
-
-      // Validate email format
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(signupFormData.email.trim())) {
-        errors.email = "Invalid email format";
-      }
-
-      // Validate birthdate - check if it's a valid date and if the user is at least 18
-      const birthdate = new Date(signupFormData.birthdate);
-      if (isNaN(birthdate.getTime())) {
-        errors.birthdate = "Invalid birthdate";
-      } else {
-        const today = new Date();
-        const age = today.getFullYear() - birthdate.getFullYear();
-        if (age < 18 || (age === 18 && today < new Date(birthdate.setFullYear(today.getFullYear())))) {
-          errors.birthdate = "Invalid birthdate. You must be at least 18 years old";
-        }
-      }
-
-      // Validate password length
-      if (signupFormData.password.trim().length < 8) {
-        errors.password = "Password must be at least 8 characters";
-      }
-
-      // Check if passwords match
-      if (signupFormData.password !== signupFormData.confirmPassword) {
-        errors.confirmPassword = "Passwords do not match";
-      }
-    }
-    return errors;
-  };
 
   // Generalized change handler for both forms
   const handleChange = (name: string, value: string | boolean) => {
@@ -114,6 +91,17 @@ function AccountsPage() {
     isAvailable: false,
   });
 
+  // Define the state for sending the data
+  const [singupDataToSend, setSignupDataToSend] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    birthdate: "",
+    isAvailable: false,
+  });
+
 
   // API hooks for signup
   const signupFetch = useFetch(
@@ -123,7 +111,7 @@ function AccountsPage() {
     {
       "Content-Type": "application/json",
     },
-    signupData
+    singupDataToSend
   );
 
   // Handle signup form submission
@@ -139,22 +127,30 @@ function AccountsPage() {
     };
 
     // Validate form data
-    const errors = validateForm(trimmedData); // Assuming validateForm returns an object like { field: errorMessage }
-
+    const errors = validateForm(trimmedData, signupValidationSchema);
     // Convert errors object into an array of error messages
     const errorMessages = Object.values(errors);
 
     if (errorMessages.length > 0) {
-      setValidationErrors(errorMessages); // Set validation errors as an array
+      setFrontendAccountValidationErrors(errorMessages); // Set validation errors as an array
       return;
     }
 
-    setValidationErrors([]); // Clear previous validation errors
+    setFrontendAccountValidationErrors([]); // Clear previous validation errors
 
-    // Update the signupData state with trimmed values
-    setSignupData(trimmedData);
+    // Hash the password before sending
+    const hashedPassword = hashPassword(trimmedData.password);
+    const hashedConfirmPassword = hashPassword(trimmedData.confirmPassword);
+
+    // Prepare data to send to the backend
+    const dataToSend = {
+      ...trimmedData,
+      password: hashedPassword,
+      confirmPassword: hashedConfirmPassword,
+    };
 
     // Trigger fetch with the updated state
+    setSignupDataToSend(dataToSend);
     signupFetch.triggerFetch();
   };
 
@@ -177,6 +173,15 @@ function AccountsPage() {
         birthdate: "",
         isAvailable: false,
       });
+      setSignupDataToSend({
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        birthdate: "",
+        isAvailable: false,
+      })
 
       navigate({ to: "/accounts", search: { intent: "login" } });
     }
@@ -189,6 +194,13 @@ function AccountsPage() {
     password: "",
   });
 
+  // Define the state for sending the data
+  const [loginDataToSend, setLoginDataToSend] = useState({
+    email: "",
+    password: "",
+  });
+
+
   // API hooks for login
   const loginFetch = useFetch(
     null,
@@ -197,7 +209,7 @@ function AccountsPage() {
     {
       "Content-Type": "application/json",
     },
-    loginData
+    loginDataToSend
   );
 
   // Handle login form submission
@@ -210,8 +222,15 @@ function AccountsPage() {
       password: loginData.password.trim(),
     };
 
+    const hashedPassword = hashPassword(trimmedData.password);
+
+    const dataToSend = {
+      ...trimmedData,
+      password: hashedPassword
+    }
+
     // Update the state with trimmed data (optional, if you need state to reflect trimmed values)
-    setLoginData(trimmedData);
+    setLoginDataToSend(dataToSend);
 
     // Trigger login fetch with the trimmed data
     loginFetch.triggerFetch();
@@ -263,7 +282,7 @@ function AccountsPage() {
 
   // Combine frontend and backend errors
   const combinedErrors = [
-    ...validationErrors,  // Frontend validation errors
+    ...frontendAccountValidationErrors,  // Frontend validation errors
     ...(intent === "register" && signupFetch.error ? signupFetch.error : []),  // Backend errors for register
     ...(intent === "login" && loginError.length ? loginError : []),  // Backend errors for login
   ];
@@ -279,13 +298,27 @@ function AccountsPage() {
       birthdate: "",
       isAvailable: false,
     });
+    setSignupDataToSend({
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      birthdate: "",
+      isAvailable: false,
+    })
 
     setLoginData({
       email: "",
       password: "",
     });
+    setLoginDataToSend({
+      email: "",
+      password: "",
+    });
 
-    setValidationErrors([]); // Clear any validation errors
+    // Clear any validation errors
+    setFrontendAccountValidationErrors([]);
     setLoginError([]);
   }, [location, intent]);
 

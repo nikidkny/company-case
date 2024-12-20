@@ -12,10 +12,9 @@ import { User } from "../types/UserType";
 import { levelDescriptions } from "../utilities/levelDescriptions";
 import { UserInstrumentType } from "../types/userInstrumentType";
 import { useNavigate } from "@tanstack/react-router";
+import { getFieldErrorMessage, notEmpty, validateForm, ValidationSchema } from "../utilities/auth";
 
 export default function AddInstrumentPage() {
-  // TO DO: Add validation
-  // TO DO: Add error handling
   // states
   const [hasChanges, setHasChanges] = useState(false);
   const [level, setLevel] = useState(1);
@@ -24,6 +23,9 @@ export default function AddInstrumentPage() {
 
   const { userId } = getUserIdFromCookie();
   const navigate = useNavigate();
+
+  const [frontendInstrumentValidationErrors, setFrontendInstrumentValidationErrors] = useState<string | string[]>([]);
+  const [backendInstrumentValidationErrors, setBackendInstrumentValidationErrors] = useState<string | string[]>([]);
 
   // Fetch Data
   const instrumentsFetch = useFetch<InstrumentType[]>([], "/instruments", "GET");
@@ -38,10 +40,14 @@ export default function AddInstrumentPage() {
     instrumentId: selectedInstrument?._id || "",
     levelOfExperience: level,
     genres: selectedGenres,
-    name: selectedInstrument?.name || "",
+    name: selectedInstrument?.name || ""
   };
 
-  const { triggerFetch: fetchUserInstrumentsTrigger } = useFetch<Partial<User> | null>(
+  const {
+    triggerFetch: fetchUserInstrumentsTrigger,
+    data: userInstrumentData,
+    error: userInstrumentError
+  } = useFetch<Partial<User> | null>(
     null,
     "/userInstruments",
     "POST",
@@ -68,11 +74,47 @@ export default function AddInstrumentPage() {
   const handleIncrease = () => setLevel((prev) => Math.min(prev + 1, 10));
   const handleDecrease = () => setLevel((prev) => Math.max(prev - 1, 1));
 
-  const handleAddInstrument = () => {
-    fetchUserInstrumentsTrigger();
-    alert(`Instrument added to your profile`);
-    navigate({ to: `/profile/${userId}` });
+
+  const addInstrumentValidationSchema: ValidationSchema = {
+    instrumentId: {
+      validator: (value: string) => notEmpty(value, "Instrument"),
+    },
+    levelOfExperience: {
+      validator: (value: string) => notEmpty(value, "Experience"),
+    },
+    genres: {
+      validator: (value: string[]) => notEmpty(value, "Genre"),
+    },
+    name: {
+      validator: (value: string) => notEmpty(value, "Instrument name"),
+    },
+  }
+
+  const handleAddInstrument = async () => {
+
+    resetErrors();
+
+    const errors = validateForm(instrumentData, addInstrumentValidationSchema);
+    const errorMessages = Object.values(errors);
+    // If there are any errors, set them
+    if (errorMessages.length > 0) {
+      setFrontendInstrumentValidationErrors(errorMessages);
+      return;
+    }
+
+    await fetchUserInstrumentsTrigger();
   };
+
+  // handles delte user api response
+  useEffect(() => {
+    if (userInstrumentError) {
+      setBackendInstrumentValidationErrors(userInstrumentError);
+    } else if (userInstrumentData) {
+      resetErrors();
+      alert("Instrument added succesfully");
+      navigate({ to: `/profile/${userId}` });
+    }
+  }, [userInstrumentData, userInstrumentError])
 
   const handleBackButtonClick = () => {
     if (
@@ -94,6 +136,19 @@ export default function AddInstrumentPage() {
   // Helper function to get level description
   const getDescription = (level: number) => levelDescriptions[level];
 
+
+  const resetErrors = () => {
+    setBackendInstrumentValidationErrors([])
+    setFrontendInstrumentValidationErrors([])
+  }
+
+  // Combine frontend and backend errors
+  const combinedErrors = [
+    ...frontendInstrumentValidationErrors,
+    ...backendInstrumentValidationErrors
+  ];
+
+
   return (
     <div className="flex flex-col gap-6 p-6">
       <div className="flex flex-col items-start">
@@ -109,6 +164,11 @@ export default function AddInstrumentPage() {
         <TextHeadline variant="h2" size="sm">
           Add Instrument
         </TextHeadline>
+        {getFieldErrorMessage(combinedErrors, "Instrument") && (
+          <TextBody className="text-red-500 text-sm mt-1" >
+            {getFieldErrorMessage(combinedErrors, "Instrument")}
+          </TextBody>
+        )}
         <Dropdown
           initialSelectedLabel="Choose an instrument"
           options={availableInstruments.map((instrument) => instrument.name)}
@@ -128,6 +188,11 @@ export default function AddInstrumentPage() {
           <TextHeadline variant="h3" size="sm">
             How experienced are you?
           </TextHeadline>
+          {getFieldErrorMessage(combinedErrors, "Experience") && (
+            <TextBody className="text-red-500 text-sm mt-1" >
+              {getFieldErrorMessage(combinedErrors, "Experience")}
+            </TextBody>
+          )}
           <div className="border-solid border-1px border-gray-300 p-4 rounded-md shadow-base">
             <div className="flex flex-row gap-4">
               <TextHeadline variant="h3" size="sm">
@@ -159,6 +224,11 @@ export default function AddInstrumentPage() {
           <TextHeadline variant="h3" size="sm">
             Genre
           </TextHeadline>
+          {getFieldErrorMessage(combinedErrors, "Genre") && (
+            <TextBody className="text-red-500 text-sm mt-1" >
+              {getFieldErrorMessage(combinedErrors, "Genre")}
+            </TextBody>
+          )}
           <DropdownWithTags
             options={musicGenresOptions}
             selectedTags={selectedGenres}

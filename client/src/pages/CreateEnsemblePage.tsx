@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useFetch } from "../hooks/use-fetch";
 import { EnsembleType } from "../types/EnsembleType";
 import { useStore } from "../store/useStore";
@@ -14,8 +14,17 @@ import { DropdownWithTags } from "../components/molecules/DropdownWithTags";
 import { musicGenresOptions } from "../utilities/musicGenresOptions";
 import Button from "../components/atoms/Button";
 import { useNavigate } from "@tanstack/react-router";
-// import ImageInput from "../atoms/ImageInput";
+import {
+  getFieldErrorMessage,
+  notEmpty,
+  validateCity,
+  validateForm,
+  validateName,
+  validateZipCode,
+  ValidationSchema,
+} from "../utilities/auth";
 
+//TODO: check if we need the two use-effect
 export function CreateEnsemblePage() {
   const {
     name,
@@ -47,19 +56,53 @@ export function CreateEnsemblePage() {
 
   // const userId = "6751e7b6ef87e8376bba326e";
   const { user } = useStore();
-  // console.log(user);
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const [frontendEnsembleValidationErrors, setFrontendEnsembleValidationErrors] = useState<
+    string | string[]
+  >([]);
+  const [backendEnsembleValidationErrors, setBackendEnsembleValidationErrors] = useState<
+    string | string[]
+  >([]);
+
+  const createEnsembleValidationSchema: ValidationSchema = {
+    name: {
+      validator: (value: string) => validateName(value, "Name"),
+      required: true,
+    },
+    description: {
+      validator: (value: string) => notEmpty(value, "Description"),
+    },
+    zip: {
+      validator: (value: string) => validateZipCode(value),
+    },
+    city: {
+      validator: (value: string) => validateCity(value),
+    },
+    activeMusicians: {
+      validator: (value: string) => notEmpty(value, "Musicians"),
+    },
+    sessionFrequency: {
+      validator: (value: string) => notEmpty(value, "Frequency"),
+    },
+    isPermanent: {
+      validator: (value: string) => notEmpty(value, "Value"),
+    },
+    genres: {
+      validator: (value: string) => notEmpty(value, "Genre"),
+    },
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     //this is just when the ensemble is first created. the only member is the creator itself.
     const memberList = [user._id];
     const ensembleData = {
-      name,
-      description,
-      webpage,
-      zip,
-      city,
+      name: name.trim(),
+      description: description.trim(),
+      webpage: webpage.trim(),
+      zip: zip.trim(),
+      city: city.trim(),
       memberList,
       createdBy: user._id,
       numberOfMembers: memberList.length,
@@ -67,25 +110,34 @@ export function CreateEnsemblePage() {
       image: "",
       activeMusicians,
       sessionFrequency,
-      isPermanent,
-      genres,
+      isPermanent: isPermanent,
+      genres: genres,
     };
+
+    const errors = validateForm(ensembleData, createEnsembleValidationSchema);
+    const errorMessages = Object.values(errors);
+    // If there are any errors, set them
+    if (errorMessages.length > 0) {
+      setFrontendEnsembleValidationErrors(errorMessages);
+      return;
+    }
 
     setObjectData(ensembleData);
     setLoading(true);
 
     setTimeout(() => {
-      triggerFetch();
+      createEnsembleFetch();
       if (createdEnsemble.length < 1) {
         return; // Stop further execution if there's an error
       } else {
         alert("The ensemble has been created! You will be redirected to your profile");
+        resetForm();
+        resetErrors();
         navigate({
           to: "/profile/$profileId",
           params: { profileId: user._id },
         });
       }
-      resetForm();
     }, 2000);
   };
 
@@ -97,16 +149,14 @@ export function CreateEnsemblePage() {
     };
   }, [resetForm]);
 
-  useEffect(() => {
-    console.log("Updated objectData:", objectData);
-  }, [objectData]);
+  useEffect(() => {}, [objectData]);
 
   const {
     data: createdEnsemble,
-    error,
+    error: createEnsembleError,
     loading,
     setLoading,
-    triggerFetch,
+    triggerFetch: createEnsembleFetch,
     shouldFetch,
   } = useFetch<EnsembleType[]>(
     [],
@@ -118,17 +168,21 @@ export function CreateEnsemblePage() {
     objectData
   );
 
-  console.log(loading);
-
   useEffect(() => {
     if (createdEnsemble.length >= 1) {
-      console.log("Ensemble created:", createdEnsemble);
       setEnsembles(createdEnsemble);
-    } else {
-      console.log("errors", error);
+      // resetForm();
+      // alert("The ensemble has been created! You will be redirected to your profile");
+      // navigate({
+      //   to: "/profile/$profileId",
+      //   params: { profileId: user._id },
+      // });
+    } else if (createEnsembleError) {
+      setBackendEnsembleValidationErrors(createEnsembleError);
+      console.error("errors", createEnsembleError);
       return;
     }
-  }, [createdEnsemble, setEnsembles, error, shouldFetch]);
+  }, [createdEnsemble, setEnsembles, createEnsembleError, shouldFetch]);
 
   // useEffect(() => {
   //   if (error) {
@@ -151,15 +205,32 @@ export function CreateEnsemblePage() {
     });
   };
 
+  const resetErrors = () => {
+    setFrontendEnsembleValidationErrors([]);
+    setBackendEnsembleValidationErrors([]);
+  };
+
+  // Combine frontend and backend errors
+  const combinedErrors = [...frontendEnsembleValidationErrors, ...backendEnsembleValidationErrors];
+
   return (
     <>
       <div className="p-6 flex flex-col justify-around gap-6 bg-gray-300">
         <TextHeadline variant="h3" size="lg">
           Create an ensemble
         </TextHeadline>
-        //TODO: add validation on the form inputs
         <form onSubmit={handleSubmit} className="flex flex-col justify-around gap-6">
-          <TextInput inputType="text" value={name} onChange={(value) => setName(value)} placeholder={"Ensemble's name"} id="ensembleName" name="ensembleName" className="w-auto" />
+          <TextInput
+            inputType="text"
+            value={name}
+            onChange={(value) => setName(value)}
+            placeholder={"Ensemble's name"}
+            id="ensembleName"
+            name="ensembleName"
+            className="w-auto"
+            isValid={!getFieldErrorMessage(combinedErrors, "name")}
+            validityMsg={getFieldErrorMessage(combinedErrors, "name")}
+          />
 
           {/* image */}
           {/* <ImageInput variant="cover" onImageChange={(file) => setImage(file)} /> */}
@@ -169,14 +240,31 @@ export function CreateEnsemblePage() {
             <TextBody variant="strong" size="md" className="text-blue-500">
               Description
             </TextBody>
-            <Textarea textareaPlaceholder="Write a short description of your ensemble or orchestra" textareaValue={description} onChange={(value) => setDescription(value)} />
+            {getFieldErrorMessage(combinedErrors, "Description") && (
+              <TextBody className="text-red-500 text-sm mt-1">
+                {getFieldErrorMessage(combinedErrors, "Description")}
+              </TextBody>
+            )}
+            <Textarea
+              textareaPlaceholder="Write a short description of your ensemble or orchestra"
+              textareaValue={description}
+              onChange={(value) => setDescription(value)}
+            />
           </div>
           {/* homepage link */}
           <div className="flex flex-col gap-3">
             <TextBody variant="strong" size="md" className="text-blue-500">
               Webpage
             </TextBody>
-            <TextInput inputType="text" value={webpage} onChange={(value) => setWebpage(value)} placeholder="Insert the link" id="webpage" name="webpage" className="w-auto" />
+            <TextInput
+              inputType="text"
+              value={webpage}
+              onChange={(value) => setWebpage(value)}
+              placeholder="Insert the link"
+              id="webpage"
+              name="webpage"
+              className="w-auto"
+            />
           </div>
           {/* location */}
           <div className="flex flex-col gap-3">
@@ -194,6 +282,8 @@ export function CreateEnsemblePage() {
                 id="zip"
                 name="zip"
                 className="w-auto"
+                isValid={!getFieldErrorMessage(combinedErrors, "Zip")}
+                validityMsg={getFieldErrorMessage(combinedErrors, "Zip")}
               />
               <TextInput
                 inputType="text"
@@ -205,6 +295,8 @@ export function CreateEnsemblePage() {
                 id="city"
                 name="city"
                 className="w-auto"
+                isValid={!getFieldErrorMessage(combinedErrors, "City")}
+                validityMsg={getFieldErrorMessage(combinedErrors, "City")}
               />
             </div>
           </div>
@@ -213,6 +305,11 @@ export function CreateEnsemblePage() {
             <TextBody variant="strong" size="md" className="text-blue-500">
               Number of active musicians
             </TextBody>
+            {getFieldErrorMessage(combinedErrors, "Musician") && (
+              <TextBody className="text-red-500 text-sm mt-1">
+                {getFieldErrorMessage(combinedErrors, "Musician")}
+              </TextBody>
+            )}
             <Dropdown
               initialSelectedLabel="Select a number"
               options={activeMusiciansNumberOptions}
@@ -229,6 +326,11 @@ export function CreateEnsemblePage() {
             <TextBody variant="strong" size="md" className="text-blue-500">
               Frequency of music sessions
             </TextBody>
+            {getFieldErrorMessage(combinedErrors, "Frequency") && (
+              <TextBody className="text-red-500 text-sm mt-1">
+                {getFieldErrorMessage(combinedErrors, "Frequency")}
+              </TextBody>
+            )}
             <Dropdown
               initialSelectedLabel="Select a frequency"
               options={musicSessionsFrequencyOptions}
@@ -246,8 +348,23 @@ export function CreateEnsemblePage() {
             <TextBody variant="strong" size="md" className="text-blue-500">
               The ensemble plays...
             </TextBody>
-            <Checkbox name="checkbox" label="Continuously" checked={isPermanent === true} onChange={() => setEnsembleType(isPermanent === true ? null : true)} />
-            <Checkbox name="checkbox" label="On a project basis" checked={isPermanent === false} onChange={() => setEnsembleType(isPermanent === false ? null : false)} />
+            {getFieldErrorMessage(combinedErrors, "Value") && (
+              <TextBody className="text-red-500 text-sm mt-1">
+                {getFieldErrorMessage(combinedErrors, "Value")}
+              </TextBody>
+            )}
+            <Checkbox
+              name="checkbox"
+              label="Continuously"
+              checked={isPermanent === true}
+              onChange={() => setEnsembleType(isPermanent === true ? null : true)}
+            />
+            <Checkbox
+              name="checkbox"
+              label="On a project basis"
+              checked={isPermanent === false}
+              onChange={() => setEnsembleType(isPermanent === false ? null : false)}
+            />
           </div>
 
           {/* music genre */}
@@ -255,6 +372,11 @@ export function CreateEnsemblePage() {
             <TextBody variant="strong" size="md" className="text-blue-500">
               Genres
             </TextBody>
+            {getFieldErrorMessage(combinedErrors, "Genre") && (
+              <TextBody className="text-red-500 text-sm mt-1">
+                {getFieldErrorMessage(combinedErrors, "Genre")}
+              </TextBody>
+            )}
             <DropdownWithTags
               options={musicGenresOptions}
               selectedTags={genres}
@@ -264,7 +386,14 @@ export function CreateEnsemblePage() {
             />
           </div>
 
-          <Button buttonVariant="primary" buttonLabel="Create ensemble" buttonState={(loading && "disabled") || "default"} iconPosition="top" className="w-auto m-b-6 py-4" type="submit">
+          <Button
+            buttonVariant="primary"
+            buttonLabel="Create ensemble"
+            buttonState={(loading && "disabled") || "default"}
+            iconPosition="top"
+            className="w-auto m-b-6 py-4"
+            type="submit"
+          >
             {loading ? "Creating..." : "Create Ensemble"}
           </Button>
         </form>

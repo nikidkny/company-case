@@ -7,7 +7,10 @@ import {
   Req,
   Res,
   UseGuards,
-  UnauthorizedException
+  UnauthorizedException,
+  Delete,
+  Param,
+  Put
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
@@ -17,7 +20,7 @@ import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Post('signup')
   @HttpCode(HttpStatus.CREATED)
@@ -31,7 +34,7 @@ export class AuthController {
     @Body() body: { email: string, password: string },
     @Res() res: Response,
     @Req() req: Request,) {
-    await this.authService.handleLogin(body.email, body.password, req, res);
+    await this.authService.validateLoginFlow(body.email, body.password, req, res);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -41,7 +44,7 @@ export class AuthController {
     try {
       // Call the logout method from the service
       this.authService.logout(res);
-  
+
       // Send a response back indicating logout was successful
       return res.status(HttpStatus.OK).json({
         message: 'Logout successful, cookies cleared',
@@ -51,6 +54,33 @@ export class AuthController {
         message: 'Logout failed',
       });
     }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('password')
+  @HttpCode(HttpStatus.OK)
+  async updatePassword(
+    @Body() updatePasswordDto: UpdatePasswordDto,
+    @Req() req: Request,
+    @Res() res: Response 
+  ) {
+    const userId = req.user['userId'];
+    await this.authService.updatePassword(userId, updatePasswordDto, res);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  @HttpCode(HttpStatus.OK)
+  async remove(
+    @Param('id') id: string,
+    @Body() body: { password: string },
+    @Req() req: Request,
+    @Res() res: Response
+  ) {
+    await this.authService.deleteUser(id, body.password, req, res);
+    return res.status(HttpStatus.OK).json({
+      message: 'User deleted successfully, cookies cleared',
+    });
   }
 
   //TODO:
@@ -78,19 +108,5 @@ export class AuthController {
     const { accessToken } = await this.authService.refreshToken(refreshToken, res);
 
     return res.json({ message: 'Access token refreshed' });
-  }
-
-  @UseGuards(JwtAuthGuard) // Protect the route
-  @Post('update-password')
-  @HttpCode(HttpStatus.OK)
-  async updatePassword(
-    @Body() updatePasswordDto: UpdatePasswordDto,
-    @Req() req: Request, // Extract user information from the JWT payload
-  ) {
-    const userId = req.user['userId']; // JWT payload contains the user ID
-    console.log('REQ:', req.user);
-    await this.authService.updatePassword(userId, updatePasswordDto);
-    console.log('Extracted user ID:', userId);
-    return { message: 'Password updated successfully' };
   }
 }
