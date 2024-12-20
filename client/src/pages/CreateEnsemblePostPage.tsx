@@ -16,6 +16,7 @@ import { EnsembleType } from "../types/EnsembleType";
 import { levelDescriptions } from "../utilities/levelDescriptions";
 import { getUserIdFromCookie } from "../hooks/getCookies";
 
+//TODO: add validation
 export default function CreateEnsemblePostPage() {
   const { ensemblesId } = useParams({ strict: false });
   const navigate = useNavigate();

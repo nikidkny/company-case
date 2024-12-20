@@ -15,8 +15,8 @@ import { musicGenresOptions } from "../utilities/musicGenresOptions";
 import Button from "../components/atoms/Button";
 import { useNavigate } from "@tanstack/react-router";
 import { getFieldErrorMessage, notEmpty, validateCity, validateForm, validateName, validateZipCode, ValidationSchema } from "../utilities/auth";
-// import ImageInput from "../atoms/ImageInput";
 
+//TODO: check if we need the two use-effect
 export function CreateEnsemblePage() {
   const {
     name,
@@ -98,7 +98,7 @@ export function CreateEnsemblePage() {
       image: "",
       activeMusicians,
       sessionFrequency,
-      isPermanent,
+      isPermanent: isPermanent,
       genres: genres,
     };
 
@@ -163,6 +163,12 @@ export function CreateEnsemblePage() {
   useEffect(() => {
     if (createdEnsemble.length >= 1) {
       setEnsembles(createdEnsemble);
+      resetForm();
+      alert("The ensemble has been created! You will be redirected to your profile");
+      navigate({
+        to: "/profile/$profileId",
+        params: { profileId: user._id },
+      });
     } else if (createEnsembleError) {
       setBackendEnsembleValidationErrors(createEnsembleError)
       console.error("errors", createEnsembleError);
