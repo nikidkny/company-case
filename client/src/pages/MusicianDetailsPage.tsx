@@ -8,7 +8,7 @@ import TextHeadline from "../components/atoms/TextHeadline";
 import EnsembleCard from "../components/molecules/EnsembleCard";
 import { EnsembleType } from "../types/EnsembleType";
 import { useParams } from "@tanstack/react-router";
-import ProfileBadge from "../components/atoms/ProfileBadge";
+import Badge from "../components/atoms/Badge";
 import { User } from "../types/UserType";
 import Button from "../components/atoms/Button";
 import InstrumentCard from "../components/molecules/InstrumentCard";
@@ -83,9 +83,7 @@ export default function UserDetails() {
               <TextHeadline variant="h1" size="sm">
                 {fullName}
               </TextHeadline>
-              {user?.isAvailable && (
-                <ProfileBadge ProfileBadgeLabel="Seeking" ProfileBadgeSize="sm" />
-              )}
+              {user?.isAvailable && <Badge BadgeLabel="Seeking" BadgeSize="sm" />}
             </div>
             <TextBody>{formatDate(user?.createdAt)}</TextBody>
             <TextBody>{formatDate(user?.lastLoggedIn)}</TextBody>

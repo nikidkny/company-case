@@ -1,5 +1,5 @@
 import Button from "../components/atoms/Button";
-import ProfileBadge from "../components/atoms/ProfileBadge";
+import Badge from "../components/atoms/Badge";
 import TextBody from "../components/atoms/TextBody";
 import TextHeadline from "../components/atoms/TextHeadline";
 import { useStore } from "../store/useStore";
@@ -148,9 +148,7 @@ export default function ProfilePage() {
               <TextHeadline variant="h1" size="sm">
                 {fullName}
               </TextHeadline>
-              {user?.isAvailable && (
-                <ProfileBadge ProfileBadgeLabel="Seeking" ProfileBadgeSize="sm" />
-              )}
+              {user?.isAvailable && <Badge BadgeLabel="Seeking" BadgeSize="sm" />}
             </div>
             <TextBody>{formatDate(user.createdAt)}</TextBody>
             <TextBody>{formatDate(user.lastLoggedIn)}</TextBody>
@@ -282,8 +280,7 @@ export default function ProfilePage() {
             ></Button>
           </div>
         </div>
-        {/* TO DO: map through logged in user's posts for now it is static posts */}
-        {UserPostsWithEnsemble ? (
+        {UserPostsWithEnsemble && UserPostsWithEnsemble.length > 0 ? (
           UserPostsWithEnsemble.map((item, index) => (
             <PostCard key={index} post={item.post} ensemble={item.ensemble} />
           ))
@@ -299,8 +296,7 @@ export default function ProfilePage() {
               No posts
             </TextHeadline>
             <TextBody className="text-center">
-              Create a post to let other musicians or ensembles ensbmbles know what you are looking
-              for.
+              Create a post to let other musicians or ensembles know what you are looking for.
             </TextBody>
           </div>
         )}
