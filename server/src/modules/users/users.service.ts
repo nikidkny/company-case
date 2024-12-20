@@ -5,8 +5,8 @@ import { Model, Types } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { GetMembersDetailsDto } from './dto/get-members-details.dto';
-import { error, log } from 'console';
-import { Response } from 'express';
+import { Request, Response } from 'express';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class UsersService {
@@ -33,16 +33,55 @@ export class UsersService {
     return createdUser.save();
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto, res: Response): Promise<User> {
+  async update(id: string, updateUserDto: UpdateUserDto, res: Response, req: Request): Promise<User> {
     try {
-      const {email} = updateUserDto
-      const userFound = await this.userModel.findOne({ email: email });
 
-      if(userFound) {
+      const cookies = req.headers.cookie;
+    if (!cookies) {
+      res.status(HttpStatus.BAD_REQUEST).json({
+        message: 'Cookies not found',
+      });
+      return; 
+    }
+
+    const accessToken = cookies
+      .split('; ')
+      .find((cookie) => cookie.startsWith('accessToken='))
+      ?.split('=')[1];
+
+    if (!accessToken) {
+      res.status(HttpStatus.BAD_REQUEST).json({
+        message: 'Access token not found in cookies',
+      });
+      return;
+    }
+
+    // Decode the access token
+    const secretKey = process.env.JWT_SECRET || 'defaultSecret'; // Replace with your JWT secret
+    const decoded = jwt.verify(accessToken, secretKey) as { email: string };
+
+    const currentEmail = decoded.email;
+
+    if (!currentEmail) {
+      res.status(HttpStatus.BAD_REQUEST).json({
+        message: 'Email not found in token',
+      });
+      return;
+    }
+
+    const { email } = updateUserDto;
+
+    if (currentEmail !== email) {
+      const userFound = await this.userModel.findOne({ email });
+
+      if (userFound) {
         res.status(HttpStatus.BAD_REQUEST).json({
-          message: "Invalid email",
+          message: 'Invalid email',
         });
+        return;
       }
+    }
+
       return this.userModel
         .findByIdAndUpdate(id, updateUserDto, { new: true })
         .exec();
