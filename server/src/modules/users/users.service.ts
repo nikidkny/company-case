@@ -1,17 +1,19 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './user.entity';
 import { Model, Types } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { GetMembersDetailsDto } from './dto/get-members-details.dto';
-import { error } from 'console';
+import { error, log } from 'console';
 import { Response } from 'express';
 
 @Injectable()
 export class UsersService {
   //injecting the user model based on the schema we made
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<User>
+  ) {}
 
   async findAll(excludedUserId: string): Promise<User[]> {
     return await this.userModel
@@ -33,6 +35,14 @@ export class UsersService {
 
   async update(id: string, updateUserDto: UpdateUserDto, res: Response): Promise<User> {
     try {
+      const {email} = updateUserDto
+      const userFound = await this.userModel.findOne({ email: email });
+
+      if(userFound) {
+        res.status(HttpStatus.BAD_REQUEST).json({
+          message: "Invalid email",
+        });
+      }
       return this.userModel
         .findByIdAndUpdate(id, updateUserDto, { new: true })
         .exec();

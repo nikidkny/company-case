@@ -161,9 +161,6 @@ export const validateCity = (city: string) => {
 };
 
 export const notEmpty = (value: string | string[] | boolean, fieldName: string) => {
-  console.log(fieldName);
-  console.log(value);
-
   // Check if the value is an array
   if (Array.isArray(value)) {
     if (value.length === 0) {

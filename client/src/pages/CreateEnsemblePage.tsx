@@ -48,7 +48,6 @@ export function CreateEnsemblePage() {
 
   // const userId = "6751e7b6ef87e8376bba326e";
   const { user } = useStore();
-  // console.log(user);
   const navigate = useNavigate();
 
   const [frontendEnsembleValidationErrors, setFrontendEnsembleValidationErrors] = useState<string | string[]>([]);
@@ -163,11 +162,10 @@ export function CreateEnsemblePage() {
 
   useEffect(() => {
     if (createdEnsemble.length >= 1) {
-      console.log("Ensemble created:", createdEnsemble);
       setEnsembles(createdEnsemble);
     } else if (createEnsembleError) {
       setBackendEnsembleValidationErrors(createEnsembleError)
-      console.log("errors", createEnsembleError);
+      console.error("errors", createEnsembleError);
       return;
     }
   }, [createdEnsemble, setEnsembles, createEnsembleError, shouldFetch]);

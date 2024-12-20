@@ -67,8 +67,6 @@ export default function PostsPage() {
       setPosts(transformedPosts);
     }
   }, [PostWithEnsembleData, setPosts]);
-  console.log("posts", posts);
-  console.log("PostWithEnsembleData", PostWithEnsembleData);
 
   // Filter posts based on selected instrument
   useEffect(() => {

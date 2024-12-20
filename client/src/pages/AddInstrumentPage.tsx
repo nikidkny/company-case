@@ -110,8 +110,6 @@ export default function AddInstrumentPage() {
     if (userInstrumentError) {
       setBackendInstrumentValidationErrors(userInstrumentError);
     } else if (userInstrumentData) {
-      console.log("Should print");
-      
       resetErrors();
       alert("Instrument added succesfully");
       navigate({ to: `/profile/${userId}` });
