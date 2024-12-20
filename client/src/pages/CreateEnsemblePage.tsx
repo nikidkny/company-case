@@ -14,7 +14,15 @@ import { DropdownWithTags } from "../components/molecules/DropdownWithTags";
 import { musicGenresOptions } from "../utilities/musicGenresOptions";
 import Button from "../components/atoms/Button";
 import { useNavigate } from "@tanstack/react-router";
-import { getFieldErrorMessage, notEmpty, validateCity, validateForm, validateName, validateZipCode, ValidationSchema } from "../utilities/auth";
+import {
+  getFieldErrorMessage,
+  notEmpty,
+  validateCity,
+  validateForm,
+  validateName,
+  validateZipCode,
+  ValidationSchema,
+} from "../utilities/auth";
 
 //TODO: check if we need the two use-effect
 export function CreateEnsemblePage() {
@@ -50,13 +58,17 @@ export function CreateEnsemblePage() {
   const { user } = useStore();
   const navigate = useNavigate();
 
-  const [frontendEnsembleValidationErrors, setFrontendEnsembleValidationErrors] = useState<string | string[]>([]);
-  const [backendEnsembleValidationErrors, setBackendEnsembleValidationErrors] = useState<string | string[]>([]);
+  const [frontendEnsembleValidationErrors, setFrontendEnsembleValidationErrors] = useState<
+    string | string[]
+  >([]);
+  const [backendEnsembleValidationErrors, setBackendEnsembleValidationErrors] = useState<
+    string | string[]
+  >([]);
 
   const createEnsembleValidationSchema: ValidationSchema = {
     name: {
       validator: (value: string) => validateName(value, "Name"),
-      required: true
+      required: true,
     },
     description: {
       validator: (value: string) => notEmpty(value, "Description"),
@@ -79,7 +91,7 @@ export function CreateEnsemblePage() {
     genres: {
       validator: (value: string) => notEmpty(value, "Genre"),
     },
-  }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -102,7 +114,6 @@ export function CreateEnsemblePage() {
       genres: genres,
     };
 
-
     const errors = validateForm(ensembleData, createEnsembleValidationSchema);
     const errorMessages = Object.values(errors);
     // If there are any errors, set them
@@ -114,22 +125,20 @@ export function CreateEnsemblePage() {
     setObjectData(ensembleData);
     setLoading(true);
 
-
     setTimeout(() => {
       createEnsembleFetch();
       if (createdEnsemble.length < 1) {
         return; // Stop further execution if there's an error
       } else {
         alert("The ensemble has been created! You will be redirected to your profile");
+        resetForm();
+        resetErrors();
         navigate({
           to: "/profile/$profileId",
           params: { profileId: user._id },
         });
       }
-      resetForm();
-      resetErrors();
     }, 2000);
-
   };
 
   // Reset form on component unmount
@@ -140,8 +149,7 @@ export function CreateEnsemblePage() {
     };
   }, [resetForm]);
 
-  useEffect(() => {
-  }, [objectData]);
+  useEffect(() => {}, [objectData]);
 
   const {
     data: createdEnsemble,
@@ -163,14 +171,14 @@ export function CreateEnsemblePage() {
   useEffect(() => {
     if (createdEnsemble.length >= 1) {
       setEnsembles(createdEnsemble);
-      resetForm();
-      alert("The ensemble has been created! You will be redirected to your profile");
-      navigate({
-        to: "/profile/$profileId",
-        params: { profileId: user._id },
-      });
+      // resetForm();
+      // alert("The ensemble has been created! You will be redirected to your profile");
+      // navigate({
+      //   to: "/profile/$profileId",
+      //   params: { profileId: user._id },
+      // });
     } else if (createEnsembleError) {
-      setBackendEnsembleValidationErrors(createEnsembleError)
+      setBackendEnsembleValidationErrors(createEnsembleError);
       console.error("errors", createEnsembleError);
       return;
     }
@@ -198,15 +206,12 @@ export function CreateEnsemblePage() {
   };
 
   const resetErrors = () => {
-    setFrontendEnsembleValidationErrors([])
-    setBackendEnsembleValidationErrors([])
-  }
+    setFrontendEnsembleValidationErrors([]);
+    setBackendEnsembleValidationErrors([]);
+  };
 
   // Combine frontend and backend errors
-  const combinedErrors = [
-    ...frontendEnsembleValidationErrors,
-    ...backendEnsembleValidationErrors
-  ];
+  const combinedErrors = [...frontendEnsembleValidationErrors, ...backendEnsembleValidationErrors];
 
   return (
     <>
@@ -236,18 +241,30 @@ export function CreateEnsemblePage() {
               Description
             </TextBody>
             {getFieldErrorMessage(combinedErrors, "Description") && (
-              <TextBody className="text-red-500 text-sm mt-1" >
+              <TextBody className="text-red-500 text-sm mt-1">
                 {getFieldErrorMessage(combinedErrors, "Description")}
               </TextBody>
             )}
-            <Textarea textareaPlaceholder="Write a short description of your ensemble or orchestra" textareaValue={description} onChange={(value) => setDescription(value)} />
+            <Textarea
+              textareaPlaceholder="Write a short description of your ensemble or orchestra"
+              textareaValue={description}
+              onChange={(value) => setDescription(value)}
+            />
           </div>
           {/* homepage link */}
           <div className="flex flex-col gap-3">
             <TextBody variant="strong" size="md" className="text-blue-500">
               Webpage
             </TextBody>
-            <TextInput inputType="text" value={webpage} onChange={(value) => setWebpage(value)} placeholder="Insert the link" id="webpage" name="webpage" className="w-auto" />
+            <TextInput
+              inputType="text"
+              value={webpage}
+              onChange={(value) => setWebpage(value)}
+              placeholder="Insert the link"
+              id="webpage"
+              name="webpage"
+              className="w-auto"
+            />
           </div>
           {/* location */}
           <div className="flex flex-col gap-3">
@@ -289,7 +306,7 @@ export function CreateEnsemblePage() {
               Number of active musicians
             </TextBody>
             {getFieldErrorMessage(combinedErrors, "Musician") && (
-              <TextBody className="text-red-500 text-sm mt-1" >
+              <TextBody className="text-red-500 text-sm mt-1">
                 {getFieldErrorMessage(combinedErrors, "Musician")}
               </TextBody>
             )}
@@ -310,7 +327,7 @@ export function CreateEnsemblePage() {
               Frequency of music sessions
             </TextBody>
             {getFieldErrorMessage(combinedErrors, "Frequency") && (
-              <TextBody className="text-red-500 text-sm mt-1" >
+              <TextBody className="text-red-500 text-sm mt-1">
                 {getFieldErrorMessage(combinedErrors, "Frequency")}
               </TextBody>
             )}
@@ -332,12 +349,22 @@ export function CreateEnsemblePage() {
               The ensemble plays...
             </TextBody>
             {getFieldErrorMessage(combinedErrors, "Value") && (
-              <TextBody className="text-red-500 text-sm mt-1" >
+              <TextBody className="text-red-500 text-sm mt-1">
                 {getFieldErrorMessage(combinedErrors, "Value")}
               </TextBody>
             )}
-            <Checkbox name="checkbox" label="Continuously" checked={isPermanent === true} onChange={() => setEnsembleType(isPermanent === true ? null : true)} />
-            <Checkbox name="checkbox" label="On a project basis" checked={isPermanent === false} onChange={() => setEnsembleType(isPermanent === false ? null : false)} />
+            <Checkbox
+              name="checkbox"
+              label="Continuously"
+              checked={isPermanent === true}
+              onChange={() => setEnsembleType(isPermanent === true ? null : true)}
+            />
+            <Checkbox
+              name="checkbox"
+              label="On a project basis"
+              checked={isPermanent === false}
+              onChange={() => setEnsembleType(isPermanent === false ? null : false)}
+            />
           </div>
 
           {/* music genre */}
@@ -346,7 +373,7 @@ export function CreateEnsemblePage() {
               Genres
             </TextBody>
             {getFieldErrorMessage(combinedErrors, "Genre") && (
-              <TextBody className="text-red-500 text-sm mt-1" >
+              <TextBody className="text-red-500 text-sm mt-1">
                 {getFieldErrorMessage(combinedErrors, "Genre")}
               </TextBody>
             )}
@@ -359,7 +386,14 @@ export function CreateEnsemblePage() {
             />
           </div>
 
-          <Button buttonVariant="primary" buttonLabel="Create ensemble" buttonState={(loading && "disabled") || "default"} iconPosition="top" className="w-auto m-b-6 py-4" type="submit">
+          <Button
+            buttonVariant="primary"
+            buttonLabel="Create ensemble"
+            buttonState={(loading && "disabled") || "default"}
+            iconPosition="top"
+            className="w-auto m-b-6 py-4"
+            type="submit"
+          >
             {loading ? "Creating..." : "Create Ensemble"}
           </Button>
         </form>
