@@ -37,7 +37,7 @@ export class UpdateUserDto {
   @IsString()
   @IsNotEmpty({ message: 'Confirm password should not be empty' })
   confirmPassword?: string;
-  
+
   @IsOptional()
   @IsNotEmpty({ message: 'Birthdate should not be empty' })
   @Type(() => Date)
@@ -45,7 +45,7 @@ export class UpdateUserDto {
   birthdate?: Date;
 
   @IsOptional()
-  @IsNotEmpty({ message: 'Availability should not be empty' })
+  // @IsNotEmpty({ message: 'Availability should not be empty' })
   @IsBoolean({ message: 'isAvailable must be a boolean value' })
   isAvailable?: boolean;
 
@@ -59,16 +59,16 @@ export class UpdateUserDto {
 
   @IsOptional()
   @IsString()
-  @Length(4, 4, {
-    message: 'Phone number must be exactly 4 digits',
-  })
+  // @Length(4, 4, {
+  //   message: 'ZIP code must be exactly 4 digits',
+  // })
   zip?: string;
 
   @IsOptional()
   @IsString()
-  @Length(8, 8, {
-    message: 'Phone number must be exactly 8 digits',
-  })
+  // @Length(8, 8, {
+  //   message: 'Phone number must be exactly 8 digits',
+  // })
   phoneNumber?: string;
 
   @IsOptional()

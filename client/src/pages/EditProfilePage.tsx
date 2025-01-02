@@ -10,11 +10,19 @@ import { useFetch } from "../hooks/use-fetch";
 import { User } from "../types/UserType";
 import { getUserIdFromCookie } from "../hooks/getCookies";
 import { useNavigate } from "@tanstack/react-router";
-import { getFieldErrorMessage, validateCity, validateEmail, validateForm, validateName, validatePhoneNumber, validateZipCode, ValidationSchema } from "../utilities/auth";
+import {
+  getFieldErrorMessage,
+  validateCity,
+  validateEmail,
+  validateForm,
+  validateName,
+  validatePhoneNumber,
+  validateZipCode,
+  ValidationSchema,
+} from "../utilities/auth";
 
 export default function EditProfilePage() {
-
-  const { user } = useStore();
+  const { user, setObjectData, objectData } = useStore();
   const { userId } = getUserIdFromCookie();
   const navigate = useNavigate();
   const [hasChanges, setHasChanges] = useState(false);
@@ -28,29 +36,33 @@ export default function EditProfilePage() {
   const [phoneNumber, setPhoneNumber] = useState(user.phoneNumber);
   const [isAvailable, setIsAvailable] = useState(user.isAvailable);
 
-  const [frontendProfileEditValidationErrors, setFrontendProfileEditValidationErrors] = useState<string | string[]>([]);
-  const [backendProfileEditValidationErrors, setBackendEditProfileValidationErrors] = useState<string | string[]>([]);
+  const [frontendProfileEditValidationErrors, setFrontendProfileEditValidationErrors] = useState<
+    string | string[]
+  >([]);
+  const [backendProfileEditValidationErrors, setBackendEditProfileValidationErrors] = useState<
+    string | string[]
+  >([]);
 
-  const userData = {
-    firstName,
-    lastName,
-    description,
-    zip,
-    city,
-    email,
-    phoneNumber,
-    isAvailable,
-  };
+  // const userData = {
+  //   firstName,
+  //   lastName,
+  //   description,
+  //   zip,
+  //   city,
+  //   email,
+  //   phoneNumber,
+  //   isAvailable,
+  // };
   const {
     triggerFetch: userFetchTrigger,
     error: userFetchError,
-    data: userFetchData
+    data: userFetchData,
   } = useFetch<Partial<User> | null>(
     null,
     userId ? `/users/${userId}` : null,
     "PUT",
     { "Content-Type": "application/json" },
-    userData
+    objectData
   );
   // populate the data from the user object
   useEffect(() => {
@@ -70,15 +82,14 @@ export default function EditProfilePage() {
   const editProfileInfoValidationSchema: ValidationSchema = {
     firstName: {
       validator: (value: string) => validateName(value, "First name"),
-      required: true
+      required: true,
     },
     lastName: {
       validator: (value: string) => validateName(value, "Last name"),
-      required: true
+      required: true,
     },
     email: {
       validator: (value: string) => validateEmail(value),
-      required: true
     },
     phoneNumber: {
       validator: (value: string) => validatePhoneNumber(value),
@@ -88,36 +99,59 @@ export default function EditProfilePage() {
     },
     city: {
       validator: (value: string) => validateCity(value),
-    }
-  }
+    },
+  };
 
   const handleSaveChanges = async () => {
     if (hasChanges) {
+      // Prepare the user data to validate
+      const userDataToValidate = {
+        firstName,
+        lastName,
+        description,
+        zip,
+        city,
+        email,
+        phoneNumber,
+      };
       try {
         resetErrors();
+        // check what fields are optional and empty and remove them from the payload
+        console.log("zip", user.zip);
+        console.log("zip field", zip);
+        // did the field change? if no don't include it in payload to validate
+        // if yes include it in payload to validate
 
-        // Manually trim each field before validation
-        const trimmedFirstName = firstName?.trim();
-        const trimmedLastName = lastName?.trim();
-        const trimmedDescription = description?.trim();
-        const trimmedZip = zip?.trim();
-        const trimmedCity = city?.trim();
-        const trimmedEmail = email?.trim();
-        const trimmedPhoneNumber = phoneNumber?.trim();
+        if (user.firstName !== firstName) {
+          userDataToValidate.firstName = firstName;
+        }
+        if (user.lastName !== lastName) {
+          userDataToValidate.lastName = lastName;
+        }
+        if (user.description !== description) {
+          userDataToValidate.description = description;
+        }
+        if (user.zip !== zip || zip !== undefined || zip !== "") {
+          userDataToValidate.zip = zip;
+        }
+        if (user.city !== city) {
+          userDataToValidate.city = city;
+        }
+        if (user.email !== email) {
+          userDataToValidate.email = email;
+        }
+        if (user.phoneNumber !== phoneNumber) {
+          userDataToValidate.phoneNumber = phoneNumber;
+        }
+        // // Manually trim each field before validation
+        // userDataToValidate.lastName = lastName?.trim();
+        // userDataToValidate.description = description?.trim();
+        // userDataToValidate.zip = zip?.trim();
+        // userDataToValidate.city = city?.trim();
+        // userDataToValidate.email = email?.trim();
+        // userDataToValidate.phoneNumber = phoneNumber?.trim();
 
-        // Prepare the user data to validate
-        const userDataToValidate = {
-          firstName: trimmedFirstName,
-          lastName: trimmedLastName,
-          description: trimmedDescription,
-          zip: trimmedZip,
-          city: trimmedCity,
-          email: trimmedEmail,
-          phoneNumber: trimmedPhoneNumber,
-          isAvailable,
-        };
-
-
+        console.log(userDataToValidate);
         const errors = validateForm(userDataToValidate, editProfileInfoValidationSchema);
         const errorMessages = Object.values(errors);
         // If there are any errors, set them
@@ -125,13 +159,13 @@ export default function EditProfilePage() {
           setFrontendProfileEditValidationErrors(errorMessages);
           return;
         }
-
+        setObjectData(userDataToValidate);
         await userFetchTrigger();
       } catch (error) {
         if (error instanceof Error) {
           alert(`Failed to save changes: ${error.message}`);
         } else {
-          alert('An unknown error occurred.');
+          alert("An unknown error occurred.");
         }
       }
     } else {
@@ -143,7 +177,7 @@ export default function EditProfilePage() {
   useEffect(() => {
     // Show alert if there is an error updating the password
     if (userFetchError) {
-      setBackendEditProfileValidationErrors(userFetchError!)
+      setBackendEditProfileValidationErrors(userFetchError!);
     }
     // Clear password fields and show alert after update is successful
     if (userFetchData) {
@@ -164,9 +198,9 @@ export default function EditProfilePage() {
   };
 
   const resetErrors = () => {
-    setBackendEditProfileValidationErrors([])
-    setFrontendProfileEditValidationErrors([])
-  }
+    setBackendEditProfileValidationErrors([]);
+    setFrontendProfileEditValidationErrors([]);
+  };
 
   // Combine frontend and backend errors
   const combinedErrors = [
@@ -175,7 +209,7 @@ export default function EditProfilePage() {
   ];
 
   return (
-    <div className="edit-page-wrapper flex flex-col gap-6 p-6 " >
+    <div className="edit-page-wrapper flex flex-col gap-6 p-6 ">
       <div className="back-button-wrapper flex flex-col items-start">
         <Button
           onClick={handleBackButtonClick}
@@ -258,7 +292,7 @@ export default function EditProfilePage() {
             placeholder="ZIP"
             id="zip"
             name="zip"
-            value={zip || ""}
+            value={zip === undefined ? "" : zip}
             onChange={(value: string) => {
               setZip(value);
               setHasChanges(true);
@@ -342,6 +376,6 @@ export default function EditProfilePage() {
           Save changes
         </Button>
       </div>
-    </div >
+    </div>
   );
 }
